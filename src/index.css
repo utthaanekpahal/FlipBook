@@ -1,3 +1,4 @@
+@import "tailwindcss";
 body{
     margin: 0;
     font-family: "Poppins", sans-serif;
@@ -29,7 +30,7 @@ body{
  align-items: center;
  flex-direction: column;
  gap: 11px;
- height: 70vh;
+ height: 80vh;
  width: 26vw;
  border-radius: 10px;
  box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -46,16 +47,16 @@ body{
 
 }
 form h1{
-    margin-bottom: 1px;
-    margin-top: -5px;
+   font-weight: bolder;
+   font-size: 27px;
 }
 
 .label{
-margin-right:52% ;
+margin-right:48% ;
 }
 
 .label1{
-    margin-right: 35%;
+    margin-right: 31%;
 }
 
 form input{
@@ -124,19 +125,7 @@ form input{
   color: black;
 }
 /* LOGIN PAGE ----------------------------------------------*/
-.login{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: aqua;
-    
-}
-.login h1{
-    text-align: center;
-    background-color: #99582A;
-    color: white;
-    border-radius: 10px;
-}
+
 /*dashboard------------------------------------------------------------*/
 
 .header{
@@ -170,10 +159,8 @@ form input{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 20px;
     margin-left: 22%;
     width: 75vw;
-    padding-bottom: 20px;
 }
 
 .Maindiv{
@@ -185,10 +172,11 @@ form input{
     margin-top:20px;
 }
 .box1{
-    height: 40vh;
+    height: 45vh;
     width: 156vh;  
     background-color:#F5F5F5; 
-    border-radius: 10px;     
+    border-radius: 10px;  
+   
 }
 .Recent1{
  display: flex;
@@ -199,12 +187,12 @@ form input{
  height: 48px;
 }
 .Recent1 h4 {
-font-size: bolder;
+font-weight: bolder;
 }
 .Recent1 button{
     border: 2px solid rgb(231, 229, 229);
     border-radius:4px;
-    padding: 5px;
+    padding: 2px;
     width:65px;
 }
 .Temps{
@@ -232,8 +220,8 @@ gap: 5px;
     font-size: 12px;
 }
 .box2{
-    height: 40vh;
-    width: 105vh;  
+    height: 46vh;
+    width: 110vh;  
     background-color:#F5F5F5; 
     border-radius: 10px;     
 }
@@ -246,12 +234,12 @@ gap: 5px;
  height: 48px;
 }
 .Recent2 h4 {
-font-size: bolder;
+font-weight: bolder;
 }
 .Recent2 button{
     border: 2px solid rgb(231, 229, 229);
     border-radius:4px;
-    padding: 5px;
+    padding: 2px;
     width:65px;
 }
 .table1 table{
@@ -270,7 +258,7 @@ font-size: bolder;
     background-color: rgb(226, 223, 223);
 }
 .card{
-    height: 34vh;
+    height: 45vh;
     width: 20vw;
     background-color: #F5F5F5;
     padding: 20px;
@@ -281,23 +269,22 @@ font-size: bolder;
  justify-content: space-around;
  align-items: center;
  background-color: #F5F5F5;
- gap: 65px;
+ gap: 25px;
  height: 48px;
  margin-top: -20px;
 }
 .Recent3 h4 {
-font-size: bolder;
+font-weight: bolder;
 }
 .Recent3 button{
     border: 2px solid rgb(231, 229, 229);
     border-radius:4px;
-    padding: 5px;
-    width:65px;
+    padding: 2px;
 }
 
 .table2{
     font-family: arial,sans-serif;
-    width:32vw;
+    width:25vw;
     border-collapse: collapse;
     padding: 10px;
      margin-top: 2px;

@@ -26,9 +26,10 @@ function SignupForm() {
   const matchvalue = () => {
 
     if (first.password === first.confirmPassword) {
-      navigate("/Loginform");
+      localStorage.setItem("username" ,first.username)
+      localStorage.setItem("password" ,first.confirmPassword)
+       navigate("/Loginform", { replace: true });  // replaces current page
     }
-
     else {
       navigate("/Dashboard");
     }

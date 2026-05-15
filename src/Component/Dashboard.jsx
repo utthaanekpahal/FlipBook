@@ -47,10 +47,8 @@ function Dashboard() {
               <span>class 8</span>
               <span>May , 25 2026</span></div>
              </div>
-             
           </div>
          </div>
-
         <div className="Maindiv">
           <div className="box2">
             <div className='Recent2'>
