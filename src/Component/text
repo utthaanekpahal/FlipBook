@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Category Overview</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f5f5f5;
+    }
+    .card {
+      width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    .legend {
+      list-style: none;
+      padding: 0;
+    }
+    .legend li {
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="cards">
+  <canvas id="myChart" width="250" height="250"></canvas>
+
+  <ul class="legend">
+    <li>Education <span>40%</span></li>
+    <li>Science <span>25%</span></li>
+    <li>Language <span>15%</span></li>
+    <li>Social Science <span>10%</span></li>
+    <li>Others <span>10%</span></li>
+  </ul>
+</div>
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Education', 'Science', 'Language', 'Social Science', 'Others'],
+      datasets: [{
+        data: [40, 25, 15, 10, 10],
+        backgroundColor: [
+          '#6C63FF',
+          '#2196F3',
+          '#4CAF50',
+          '#FFC107',
+          '#9E9E9E'
+        ]
+      }]
+    },
+    options: {
+      cutout: '70%', // makes it donut shape
+      plugins: {
+        legend: {
+          display: false // we are using custom legend
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

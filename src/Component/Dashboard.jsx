@@ -2,7 +2,7 @@ import React from 'react'
 
 function Dashboard() {
   return (
-    <>
+    <div className='Dashboard'>
       <header className="header">
         de
       </header>
@@ -15,17 +15,122 @@ function Dashboard() {
       </main>
 
       <footer className="footer">
-        <div className="boxf">
-          <div className="boxs">dewd</div>
-          <div className="card">dew</div>
-        </div>
+        <div className="Maindiv">
+          <div className="box1">
+            <div className='Recent1'>
+              <h4>Recent Book</h4>
+              <button>view all</button>
+            </div>
+             <div className='Temps'>
+              <div className='TempM'><div className='Tem'>tem</div>
+              <span>Mathematics</span>
+              <span>class 8</span>
+              <span>May 25 2026</span></div>
+              <div className='TempM'><div className='Tem'>tem</div>
+              <span>Mathematics</span>
+              <span>class 8</span>
+              <span>May 25 2026</span></div>
+              <div className='TempM'><div className='Tem'>tem</div>
+              <span>Mathematics</span>
+              <span>class 8</span>
+              <span>May 25 2026</span></div>
+              <div className='TempM'><div className='Tem'>tem</div>
+              <span>Mathematics</span>
+              <span>class 8</span>
+              <span>May 25 2026</span></div>
+              <div className='TempM'><div className='Tem'>tem</div>
+              <span>Mathematics</span>
+              <span>class 8</span>
+              <span>May , 25 2026</span></div>
+              <div className='TempM'><div className='Tem'>tem</div>
+              <span>Mathematics</span>
+              <span>class 8</span>
+              <span>May , 25 2026</span></div>
+             </div>
+             
+          </div>
+         </div>
 
-        <div className="boxf">
-          <div className="boxs">dewd</div>
-          <div className="card">dew</div>
+        <div className="Maindiv">
+          <div className="box2">
+            <div className='Recent2'>
+              <h4>Active Agent</h4>
+              <button>view all</button>
+            </div>
+            <div className='table1'>
+              <table>
+                 <tr>
+                  <th>Agent Name</th>
+                   <th>Email</th>
+                     <th>Last Active</th>
+                      <th>Book Viwed</th>
+                      <th>Status</th>
+                 </tr>
+                <tr>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                </tr>
+                <tr>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                </tr>
+                <tr>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                </tr>
+                <tr>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                  <td>name</td>
+                </tr>
+                
+              </table>
+            </div>
+          </div>
+          <div className="card">
+            <div className='Recent3'>
+              <h4>Top Viewed Books</h4>
+              <button>view all</button>
+            </div>
+            <div>
+              <table className='table2'>
+                <tr>
+                  <td>value</td>
+                  <td>value</td>
+                </tr>
+                <tr>
+                  <td>value</td>
+                  <td>value</td>
+                </tr>
+                <tr>
+                  <td>value</td>
+                  <td>value</td>
+                </tr>
+                <tr>
+                  <td>value</td>
+                  <td>value</td>
+                </tr>
+                 <tr>
+                  <td>value</td>
+                  <td>value</td>
+                </tr>
+              </table>
+            </div>
+          </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 
