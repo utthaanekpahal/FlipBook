@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaLock, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-
+import bgimg from "../assets/imges/bgimg.PNG";
 export default function Login() {
   const navigate = useNavigate();
 
@@ -23,14 +23,11 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const user = "admin";
-    const pass = "1234";
+    const user=localStorage.getItem("username")
+    const pass=localStorage.getItem("password")
 
-    if (
-      data.username === user &&
-      data.password === pass
-    ) {
-      navigate("/dashboard");
+    if (data.username === user && data.password === pass ) {
+      navigate("/Dashboard", { replace: true });
     } else {
       setError("Invalid Username or Password");
     }
@@ -39,7 +36,7 @@ export default function Login() {
   return (
     <div
       className="h-screen flex justify-center items-center bg-cover bg-center"
-      style={{ backgroundImage: "url('/IMG_4608.PNG')" }}
+  style={{ backgroundImage: `url(${bgimg})` }}
     >
 
       <div className="w-full max-w-sm mx-4 p-6 md:p-10 bg-white/70 backdrop-blur-sm rounded-2xl text-center shadow-lg">
