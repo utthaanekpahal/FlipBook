@@ -103,42 +103,49 @@ function Dashboard() {
             </div>
             <div className='table1'>
               <table>
-                 <tr>
-                  <th>Agent Name</th>
-                   <th>Email</th>
-                     <th>Last Active</th>
-                      <th>Book Viwed</th>
-                      <th>Status</th>
-                 </tr>
-                <tr>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                </tr>
-                <tr>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                </tr>
-                <tr>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                </tr>
-                <tr>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                  <td>name</td>
-                </tr>
-                
+                  <thead>
+    <tr>
+      <th>Agent Name</th>
+      <th>Email</th>
+      <th>Last Active</th>
+      <th>Book Viewed</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+    </tr>
+
+    <tr>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+    </tr>
+
+    <tr>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+    </tr>
+
+    <tr>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+      <td>name</td>
+    </tr>
+  </tbody>
               </table>
             </div>
           </div>
@@ -149,27 +156,33 @@ function Dashboard() {
             </div>
             <div>
               <table className='table2'>
-                <tr>
-                  <td>value</td>
-                  <td>value</td>
-                </tr>
-                <tr>
-                  <td>value</td>
-                  <td>value</td>
-                </tr>
-                <tr>
-                  <td>value</td>
-                  <td>value</td>
-                </tr>
-                <tr>
-                  <td>value</td>
-                  <td>value</td>
-                </tr>
-                 <tr>
-                  <td>value</td>
-                  <td>value</td>
-                </tr>
-              </table>
+  <tbody>
+    <tr>
+      <td>value</td>
+      <td>value</td>
+    </tr>
+
+    <tr>
+      <td>value</td>
+      <td>value</td>
+    </tr>
+
+    <tr>
+      <td>value</td>
+      <td>value</td>
+    </tr>
+
+    <tr>
+      <td>value</td>
+      <td>value</td>
+    </tr>
+
+    <tr>
+      <td>value</td>
+      <td>value</td>
+    </tr>
+  </tbody>
+</table>
             </div>
           </div>
         </div>
