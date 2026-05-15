@@ -1,3 +1,4 @@
+@import "tailwindcss";
 body{
     margin: 0;
     font-family: "Poppins", sans-serif;
@@ -124,19 +125,7 @@ form input{
   color: black;
 }
 /* LOGIN PAGE ----------------------------------------------*/
-.login{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: aqua;
-    
-}
-.login h1{
-    text-align: center;
-    background-color: #99582A;
-    color: white;
-    border-radius: 10px;
-}
+
 /*dashboard------------------------------------------------------------*/
 .header{
     background-color: #C2D099;
