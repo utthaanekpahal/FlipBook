@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect ,useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { FaBookOpen } from "react-icons/fa";
@@ -12,6 +12,17 @@ import {
 } from 'react-icons/fa';
 
 function Dashboard() {
+  const [sliced, setsliced] = useState([])
+  async function fetchdata() {
+  const response = await   fetch("https://jsonplaceholder.typicode.com/users")
+  const data = await response.json()
+  const slic = data.slice(0,7);
+  setsliced(slic)
+  console.log(sliced)
+}
+useEffect(()=>{
+fetchdata();
+  },[])
 
   const navigate = useNavigate();
 
@@ -192,24 +203,29 @@ function Dashboard() {
 
                 <tbody>
 
-                  {[...Array(4)].map((_,i)=>(
+                 {sliced.map((value, index) => (
+    <tr key={index}>
+      <td className="text-left p-[12px] border-b border-amber-50">
+        {value.name}
+      </td>
 
-                    <tr key={i}>
+      <td className="text-left p-[12px] border-b border-amber-50">
+        {value.email}
+      </td>
 
-                      {[...Array(5)].map((_,j)=>(
+      <td className="text-left p-[12px] border-b border-amber-50">
+        {new Date().toLocaleDateString()}
+      </td>
 
-                        <td
-                          key={j}
-                          className='p-[10px] border-b'
-                        >
-                          name
-                        </td>
+      <td className="text-left p-[12px] border-b border-amber-50">
+        N/A
+      </td>
 
-                      ))}
-
-                    </tr>
-
-                  ))}
+      <td className="text-left p-[12px] border-b border-amber-50">
+        Active
+      </td>
+    </tr>
+  ))}    
 
                 </tbody>
 
