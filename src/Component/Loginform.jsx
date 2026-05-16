@@ -88,9 +88,9 @@ export default function Login() {
           </div>
 
           {/* Remember */}
-          <div className="flex items-center mb-4">
+          <div className="flex items-center mb-4 justify-center">
             <input type="checkbox" className="accent-[#99582A]" />
-            <label className="ml-2 text-sm text-gray-700">
+            <label className="ml-2 text-sm text-gray-700 ">
               Remember Me
             </label>
           </div>

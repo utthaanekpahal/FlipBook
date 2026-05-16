@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { FaBookOpen } from "react-icons/fa";
 import {
@@ -11,19 +12,23 @@ import {
 } from 'react-icons/fa';
 
 function Dashboard() {
+
+  const navigate = useNavigate();
+
   return (
     <div>
 
       {/* HEADER */}
-      <header className="flex items-center justify-between px-[20px] py-[12px]">
-        <div className='flex items-center gap-[8px] font-bold'>
+      <header className="flex items-center justify-between px-[20px] py-[12px] border-b">
+
+        <div className='flex items-center gap-[8px] font-bold text-[20px]'>
           <FaBookOpen size={22} />
           Digital Book Library
         </div>
 
         <input
           type="text"
-          placeholder='search Book, Categories'
+          placeholder='Search Book, Categories'
           className='w-[600px] px-[12px] py-[8px] rounded-[20px] border border-[#ccc] outline-none'
         />
 
@@ -31,146 +36,235 @@ function Dashboard() {
           <IoNotificationsOutline size={24} />
         </div>
 
-        <div>Profile</div>
+        <div className='cursor-pointer'>
+          Profile
+        </div>
+
       </header>
 
       {/* BODY */}
-      <div className='flex justify-center items-center gap-[60px]'>
+      <div className='flex gap-[40px] p-[20px]'>
 
         {/* SIDEBAR */}
-        <aside className="mt-[-37%]">
-          <ul className="list-none">
+        <aside className="w-[220px]">
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer">
-              <FaTachometerAlt /> Dashboard
+          <ul className="list-none flex flex-col gap-[10px]">
+
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+              <FaTachometerAlt />
+              Dashboard
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer">
-              <FaBook /> Books
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+              <FaBook />
+              Books
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer">
-              <FaList /> Categories
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+              <FaList />
+              Categories
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer">
-              <FaUpload /> Upload Books
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+              <FaUpload />
+              Upload Books
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer">
-              <FaUsers /> Agents
+            <li
+              className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded"
+              onClick={() => navigate("/agent")}
+            >
+              <FaUsers />
+              Agents
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer">
-              <FaCog /> Settings
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+              <FaCog />
+              Settings
             </li>
 
           </ul>
+
         </aside>
 
         {/* MAIN CONTENT */}
-        <footer className="flex flex-col justify-center items-center w-[75vw] mr-[5%]">
+        <main className="flex-1 flex flex-col gap-[20px]">
 
           {/* TOP BOXES */}
-          <main className="flex justify-center items-center gap-[10px] mt-[20px]">
-            <div className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center items-center text-[20px]">1</div>
-            <div className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center items-center text-[20px]">2</div>
-            <div className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center items-center text-[20px]">3</div>
-            <div className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center items-center text-[20px]">4</div>
-          </main>
+          <div className="flex gap-[10px]">
 
-          {/* RECENT BOOK */}
-          <div className="flex justify-center items-center gap-[20px] mt-[20px]">
-            <div className="h-[45vh] w-[173vh] bg-[#F5F5F5] rounded-[10px]">
+            {[1,2,3,4].map((item)=>(
 
-              <div className='flex justify-around items-center bg-[#F5F5F5] gap-[70%] h-[48px]'>
-                <h4 className="font-bold">Recent Book</h4>
-                <button className="border-2 border-[rgb(231,229,229)] rounded-[4px] px-[2px] w-[65px]">
-                  view all
-                </button>
+              <div
+                key={item}
+                className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center items-center text-[20px]"
+              >
+                {item}
               </div>
 
-              <div className='flex justify-center items-center gap-[40px]'>
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className='flex flex-col justify-center items-center gap-[5px]'>
-                    <div className='w-[9vw] h-[22vh] bg-[rgb(0,255,128)] rounded-[5px] mt-[5px] text-center'>tem</div>
-                    <span className="text-[12px]">Mathematics</span>
-                    <span className="text-[12px]">class 8</span>
-                    <span className="text-[12px]">May 25 2026</span>
-                  </div>
-                ))}
-              </div>
+            ))}
 
-            </div>
           </div>
 
-          {/* TABLE + CARD */}
-          <div className="flex justify-center items-center gap-[20px] mt-[20px]">
 
-            {/* TABLE */}
-            <div className="h-[46vh] w-[127vh] bg-[#F5F5F5] rounded-[7px]">
+          {/* RECENT BOOK */}
+          <div className="bg-[#F5F5F5] rounded-[10px] p-[20px]">
 
-              <div className='flex justify-around items-center bg-[#F5F5F5] gap-[450px] h-[48px]'>
-                <h4 className="font-bold">Active Agent</h4>
-                <button className="border-2 border-[rgb(231,229,229)] rounded-[4px] px-[2px] w-[65px]">
-                  view all
-                </button>
-              </div>
+            <div className='flex justify-between items-center mb-[20px]'>
 
-              <div>
-                <table className="w-full border-collapse mt-[2px]">
-                  <thead>
-                    <tr className="bg-[rgb(226,223,223)]">
-                      <th className="text-left p-[12px] border-b">Agent Name</th>
-                      <th className="text-left p-[12px] border-b">Email</th>
-                      <th className="text-left p-[12px] border-b">Last Active</th>
-                      <th className="text-left p-[12px] border-b">Book Viewed</th>
-                      <th className="text-left p-[12px] border-b">Status</th>
-                    </tr>
-                  </thead>
+              <h4 className="font-bold">
+                Recent Book
+              </h4>
 
-                  <tbody>
-                    {[...Array(4)].map((_, i) => (
-                      <tr key={i}>
-                        {[...Array(5)].map((_, j) => (
-                          <td key={j} className="text-left p-[12px] border-b border-amber-50">name</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <button className="border rounded px-[10px] py-[5px]">
+                View all
+              </button>
 
             </div>
 
-            {/* CARD */}
-            <div className="h-[45vh] w-[20vw] bg-[#F5F5F5] p-[20px] rounded-[5px]">
+            <div className='flex justify-center gap-[30px]'>
 
-              <div className='flex justify-around items-center bg-[#F5F5F5] gap-[25px] h-[48px] mt-[-20px]'>
-                <h4 className="font-bold">Top Viewed Books</h4>
-                <button className="border-2 border-[rgb(231,229,229)] rounded-[4px] px-[2px]">
-                  view all
+              {[...Array(6)].map((_, i) => (
+
+                <div
+                  key={i}
+                  className='flex flex-col items-center gap-[5px]'
+                >
+
+                  <div className='w-[120px] h-[160px] bg-green-400 rounded flex items-center justify-center'>
+                    item
+                  </div>
+
+                  <span className="text-[12px]">
+                    Mathematics
+                  </span>
+
+                  <span className="text-[12px]">
+                    Class 8
+                  </span>
+
+                  <span className="text-[12px]">
+                    May 25 2026
+                  </span>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+
+          {/* TABLE + CARD */}
+          <div className='flex gap-[20px]'>
+
+            {/* TABLE */}
+            <div className="flex-1 bg-[#F5F5F5] rounded-[10px] p-[20px]">
+
+              <div className='flex justify-between mb-[20px]'>
+
+                <h4 className='font-bold'>
+                  Active Agent
+                </h4>
+
+                <button className='border px-[10px] py-[5px] rounded'>
+                  View all
                 </button>
+
               </div>
 
-              <table className='w-[25vw] border-collapse mt-[2px]'>
+              <table className='w-full'>
+
+                <thead>
+
+                  <tr className='bg-gray-200'>
+
+                    <th className='p-[10px]'>Agent Name</th>
+                    <th>Email</th>
+                    <th>Last Active</th>
+                    <th>Book Viewed</th>
+                    <th>Status</th>
+
+                  </tr>
+
+                </thead>
+
                 <tbody>
-                  {[...Array(5)].map((_, i) => (
+
+                  {[...Array(4)].map((_,i)=>(
+
                     <tr key={i}>
-                      <td className="text-left p-[12px]">value</td>
-                      <td className="text-left p-[12px]">value</td>
+
+                      {[...Array(5)].map((_,j)=>(
+
+                        <td
+                          key={j}
+                          className='p-[10px] border-b'
+                        >
+                          name
+                        </td>
+
+                      ))}
+
                     </tr>
+
                   ))}
+
                 </tbody>
+
+              </table>
+
+            </div>
+
+
+            {/* CARD */}
+            <div className="w-[300px] bg-[#F5F5F5] rounded-[10px] p-[20px]">
+
+              <div className='flex justify-between mb-[20px]'>
+
+                <h4 className='font-bold'>
+                  Top Viewed Books
+                </h4>
+
+                <button className='border px-[10px] py-[5px] rounded'>
+                  View all
+                </button>
+
+              </div>
+
+              <table className='w-full'>
+
+                <tbody>
+
+                  {[...Array(5)].map((_,i)=>(
+
+                    <tr key={i}>
+
+                      <td className='p-[10px]'>
+                        value
+                      </td>
+
+                      <td>
+                        value
+                      </td>
+
+                    </tr>
+
+                  ))}
+
+                </tbody>
+
               </table>
 
             </div>
 
           </div>
 
-        </footer>
+        </main>
 
       </div>
+
     </div>
   )
 }
