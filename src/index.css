@@ -6,128 +6,11 @@ body{
 
 /* SIGNUP PAGE ---------------------------------------------------------------------------------*/
 
-.form1{
 
-    background-image: url("./assets/imges/bgimg.PNG");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-@media (max-width:770px){
-    .form1{
-        background-size: 100% 105%;
-    }
-}
-
-.form{
- display: flex;
- justify-content: center;
- align-items: center;
- flex-direction: column;
- gap: 11px;
- height: 70vh;
- width: 26vw;
- border-radius: 10px;
- box-shadow: 0 0 10px rgba(0,0,0,0.2);
- background-color: #fffbff;
-}
-@media (max-width:770px){
-
-    .form{
-        margin-top: -10%;
-        width: 45%;
-        height: auto;
-        padding: 20px;
-    }
-
-}
-form h1{
-    margin-bottom: 1px;
-    margin-top: -5px;
-}
-
-.label{
-margin-right:52% ;
-}
-
-.label1{
-    margin-right: 35%;
-}
-
-form input{
-    padding: 6px;
-    width: 18vw;
-    border-radius: 5px;
-    outline: none;
-    border: 2px solid rgba(128, 128, 128, 0.3);
-}
-
-.btn button{
-   width: 15vw;
-   margin-top: 10px;
-   padding: 10px;
-   border-radius: 10px;
-   border: none;
-   background-color: #99582A;
-   color: white;
-   font-weight: bold;
-   cursor: pointer;
-}
-
-.Nhead {
-   margin-top:2px;
-}
-
-.icons{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 2px;
-}
-
-.cr,
-.fb,
-.insta{
-    display:flex ;
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
-    border-radius: 25px;
-    border: none;
-    cursor: pointer;
-}
-
-.cr img,
-.fb img,
-.insta img{
-    height: 15px;
-    width: 15px;
-}
-
-.acc{
-    margin-top: 2px;
-}
-
-.acc span a{
-    text-decoration: none;
-    font-weight: bold;
-    color:#99582A;
-    cursor: pointer;
-}
-
-.acc span a:hover{
-  color: black;
-}
 /* LOGIN PAGE ----------------------------------------------*/
 
 /*dashboard------------------------------------------------------------*/
-.header {
+/*.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -148,6 +31,20 @@ form input{
   border: 1px solid #ccc;
   outline: none;
 }
+
+.whole{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ gap: 60px;
+}
+
+
+.sidebar{
+    margin-top: -37%;
+}
+
+
 .sidebarList {
   list-style: none;
    
@@ -166,12 +63,11 @@ form input{
     align-items: center;
     gap: 10px;
     margin-top: 20px;
-    margin-left: 20%;
 }
 
 .box{
    height: 20vh;
-   width: 18vw;
+   width: 20vw;
    background-color: #F5F5F5;
    border-radius: 9px;
    display: flex;
@@ -186,8 +82,9 @@ form input{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-left: 22%;
     width: 75vw;
+    margin-right: 5%;
+
 }
 
 .Maindiv{
@@ -200,7 +97,7 @@ form input{
 }
 .box1{
     height: 45vh;
-    width: 156vh;  
+    width: 173vh;  
     background-color:#F5F5F5; 
     border-radius: 10px;  
    
@@ -248,9 +145,9 @@ gap: 5px;
 }
 .box2{
     height: 46vh;
-    width: 110vh;  
+    width: 127vh;  
     background-color:#F5F5F5; 
-    border-radius: 10px;     
+    border-radius: 7px;     
 }
 .Recent2{
  display: flex;
@@ -319,4 +216,4 @@ font-weight: bolder;
 .table2 td,th{
     text-align: left;
     padding: 12px;
-}
+}*/
