@@ -28,7 +28,7 @@ function SignupForm() {
       localStorage.setItem("password", first.confirmPassword);
       navigate("/Loginform", { replace: true });
     } else {
-      navigate("/Dashboard");
+      navigate("/AgentDashboard");
     }
   };
 
@@ -102,8 +102,8 @@ function SignupForm() {
         <div className="mt-[2px]">
           <span>
             Do you already have an account?
-            <a className="no-underline font-bold text-[#99582A] cursor-pointer hover:text-black">
-              {" "}Click here
+            <a href="#Loginform" className="no-underline font-bold text-[#99582A] cursor-pointer hover:text-black">
+              Click here
             </a>
           </span>
         </div>

@@ -4,7 +4,9 @@ import Loginform from './Component/Loginform'
 import { Routes, Route } from "react-router-dom";
 import Dashboard from './Component/Dashboard';
 import Agentlogin from './Component/Agentlogin';
+import AgentDashboard from './Component/AgentDashboard';
 import Category from './pages/Category';
+
 const App = () => {
   return (
     <div>
@@ -13,8 +15,8 @@ const App = () => {
         <Route path="/Loginform" element={<Loginform />} />
         <Route path="/Dashboard" element={<Dashboard/>}/>
         <Route path="/agent" element={<Agentlogin/>}/>
-        <Route path="/category" element={<Category/>}/>
-      
+        <Route path="/AgentDashboard" element={<AgentDashboard/>}/>
+        <Route path="/Category"  element={<Category/>}/>
       </Routes>
     </div>
   )

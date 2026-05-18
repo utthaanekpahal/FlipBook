@@ -19,14 +19,18 @@ export default function Login() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-
+    e.preventDefault();  
     const user = localStorage.getItem("username");
     const pass = localStorage.getItem("password");
-
-    if (data.username === user && data.password === pass) {
-      navigate("/dashboard", { replace: true });
-    } else {
+    const admin="admins"
+    const adminpass="1234"
+    if(data.username === admin && data.password === adminpass){
+        navigate("/Dashboard",  { replace: true })                                                                                                                                                                                                                                                                                                               
+    } 
+    else if (data.username === user && data.password === pass) {
+      navigate("/AgentDashboard", { replace: true });
+    }
+    else {
       setError("Invalid Username or Password");
     }
   };
