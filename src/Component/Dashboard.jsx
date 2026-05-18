@@ -71,7 +71,9 @@ fetchdata();
               Books
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded"
+              onClick={() => navigate("/category")}
+            >
               <FaList />
               Categories
             </li>
