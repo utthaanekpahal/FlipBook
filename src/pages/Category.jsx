@@ -1,7 +1,6 @@
 import React from "react";
 import { FaBook, FaFolderOpen } from "react-icons/fa";
 
-
 const Category = () => {
   const data = [
     {
@@ -15,10 +14,10 @@ const Category = () => {
   ];
 
   return (
-  <div
-  className="min-h-screen bg-cover bg-center"
-  style={{ backgroundImage: "url('/background img.png')" }}
->
+    <div
+      className="min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/background img.png')" }}
+    >
       <h1 className="text-4xl font-bold flex justify-center text-[#99582A] mb-10 p-20 ">
         Categories
       </h1>
@@ -29,7 +28,6 @@ const Category = () => {
             key={item.category}
             className="bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-xl w-[300px]"
           >
-            
             <h2 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
               <FaFolderOpen className="text-[#99582A]" />
               {item.category}
@@ -48,6 +46,12 @@ const Category = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="flex justify-center mt-15">
+        <button className="bg-[#99582A] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#7a431f] transition">
+          View More Categories
+        </button>
       </div>
     </div>
   );

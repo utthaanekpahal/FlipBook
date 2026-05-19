@@ -10,7 +10,7 @@ const Agentlogin = () => {
       <form className="w-[400px] bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-lg flex flex-col gap-4">
 
         <h2 className="text-3xl font-bold text-center mb-4">
-          Agent Login
+       Agent Add
         </h2>
 
         <div className="flex flex-col">
@@ -21,7 +21,7 @@ const Agentlogin = () => {
           <input
             type="text"
             id="agentName"
-            placeholder="Enter your Agent Name"
+            placeholder="Enter Agent Name"
             className="border p-3 rounded-lg outline-none  "
           />
         </div>
@@ -34,7 +34,7 @@ const Agentlogin = () => {
           <input
             type="email"
             id="email"
-            placeholder="Enter your Email"
+            placeholder="Enter Agent Email"
             className="border p-3 rounded-lg outline-none "
           />
         </div>
@@ -47,7 +47,7 @@ const Agentlogin = () => {
           <input
             type="password"
             id="password"
-            placeholder="Enter your Password"
+            placeholder="Enter Agent Password"
             className="border p-3 rounded-lg outline-none focus:ring-2 focus:ring-[#99582A]"
           />
         </div>
@@ -69,7 +69,7 @@ const Agentlogin = () => {
           type="submit"
           className="bg-[#99582A] text-white font-bold rounded-xl py-3 mt-2 text-2xl"
         >
-          View Books
+         Submit
         </button>
 
       </form>
