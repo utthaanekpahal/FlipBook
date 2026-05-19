@@ -2,9 +2,9 @@ import React from 'react'
 
 const AgentDashboard = () => {
   return (
-    <div className='flex h-screen'>
+    <div className='flex h-screen overflow-hidden'>
     {/* Sidebar */}
-    <header className='w-[250px] bg-red-700 text-white'>
+    <header className='w-[250px] bg-red-700 text-white h-full '>
         <div className='flex flex-col items-center gap-5 h-full py-5'>
             {/* Logo Section */}
             <div className='bg-amber-400 text-black p-3'>
@@ -26,7 +26,7 @@ const AgentDashboard = () => {
         </div>
     </header>
     {/* Main Section */}
-    <section className='flex flex-col '>
+    <section className='flex flex-col'>
         {/* Top Navbar */}
         <div className='flex justify-between items-center bg-amber-500 p-4'>
             <span  className='ml-[10px]'>Hii Agent</span>
@@ -49,19 +49,21 @@ const AgentDashboard = () => {
                <h1> Browser Category</h1>
                <button className='font-bold'>View all</button>
             </div>
-            <div className='flex justify-center h-screen gap-[20%]'>
-                <div className='bg-green-900 h-[18%] w-[15%] rounded-sm text-center text-white'>Navbodh</div>
-                <div className='bg-purple-950 h-[18%] w-[15%] rounded-sm text-center text-white'>GyanBodh</div>
+            <div className='flex justify-center gap-[20%]'>
+                <div className='bg-green-900 h-[120px] w-[150px] rounded-sm text-center text-white'>Navbodh</div>
+                <div className='bg-purple-950 h-[120px] w-[150px] rounded-sm text-center text-white'>GyanBodh</div>
             </div>
             </div>
-            <div className='bg-amber-200 h-[220px] ml-[20px] w-[96%] rounded-sm'>
+            <div className='bg-amber-200 h-[210px] ml-[20px] w-[96%] rounded-sm'>
             <div className='flex justify-around gap-[60%] font-bold p-[2px] mt-[10px]'>
                <h1> Recent Add Books</h1>
                <button className='font-bold'>View all</button>
             </div>
-            <div className='flex justify-center h-screen gap-[20%]'>
-                <div className='bg-blue-900 h-[25%] w-[15%] rounded-sm text-center text-white'>Books</div>
-                <div className='bg-red-950 h-[25%] w-[15%] rounded-sm text-center text-white'>Books</div>
+            <div className='flex justify-center gap-[10px]'>
+                <div className='bg-blue-900 h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
+                 <div className='bg-red-950 h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
+                <div className='bg-red-950 h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
+                <div className='bg-red-950 h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
             </div>
             </div>
         </div>
