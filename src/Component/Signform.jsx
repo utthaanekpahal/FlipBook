@@ -28,7 +28,7 @@ function SignupForm() {
       localStorage.setItem("password", first.confirmPassword);
       navigate("/Loginform", { replace: true });
     } else {
-      navigate("/AgentDashboard");
+      navigate("/FlipPage");
     }
   };
 

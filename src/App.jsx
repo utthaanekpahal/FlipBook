@@ -6,6 +6,7 @@ import Dashboard from './Component/Dashboard';
 import Agentlogin from './Component/Agentlogin';
 import AgentDashboard from './Component/AgentDashboard';
 import Category from './pages/Category';
+import FlipPage from './pages/FlipPage';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/agent" element={<Agentlogin/>}/>
         <Route path="/AgentDashboard" element={<AgentDashboard/>}/>
         <Route path="/Category"  element={<Category/>}/>
+        <Route path="/FlipPage"  element={<FlipPage/>}/>
       </Routes>
     </div>
   )

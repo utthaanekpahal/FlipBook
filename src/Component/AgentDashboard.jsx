@@ -6,17 +6,15 @@ const AgentDashboard = () => {
     <div className='flex h-screen overflow-hidden'>
 
       {/* Sidebar */}
-      <header className='w-[250px] bg-red-700 text-white h-full '>
-        <div className='flex flex-col items-center gap-5 h-full py-5'>
+      <header className='w-[250px] h-full '>
+        <div className='flex flex-col items-center gap-5 h-full py-5 '>
 
           {/* Logo Section */}
-          <div className='text-black p-3 text-3xl flex items-center gap-3'>
-
-            <FaBookOpen className='text-4xl text-white' />
-
-            <div className='flex flex-col justify-center'>
-              <h1 className='font-bold'>BookHub</h1>
-              <span className='font-bold text-lg'>Agent panel</span>
+          <div className='text-black p-3 text-3xl flex items-center gap-3 '>
+            <FaBookOpen className='text-4xl mt-[-26px] ' />
+            <div className='flex flex-col justify-center mt-[-24px]'>
+              <h1 className='font-bold  text-[25px]'>BookHub</h1>
+              <span className='font-bold text-[17px]'>Agent panel</span>
             </div>
 
           </div>
@@ -26,24 +24,24 @@ const AgentDashboard = () => {
 
             <ul className='flex flex-col gap-5'>
 
-              <li className='flex items-center gap-3 p-[8px] text-2xl font-bold rounded-lg cursor-pointer'>
+              <li className='flex items-center gap-3 p-[8px] text-xl hover:bg-[#995F2F] hover:text-white font-bold rounded-lg cursor-pointer'>
                 <FaHome className='text-2xl' />
                 Home
               </li>
 
-              <li className='flex items-center gap-3 p-[8px] text-2xl font-bold rounded-lg cursor-pointer'>
+              <li className='flex items-center gap-3 p-[8px] text-xl hover:bg-[#995F2F] hover:text-white   font-bold rounded-lg cursor-pointer'>
                
                 <FaBook className='text-2xl' />
                 
                 Categories
               </li>
 
-              <li className='flex items-center gap-3 p-[8px] text-2xl font-bold rounded-lg cursor-pointer'>
+              <li className='flex items-center gap-3 p-[8px] text-xl  hover:bg-[#995F2F] hover:text-white  font-bold rounded-lg cursor-pointer'>
                 <FaBook className='text-2xl' />
                 All Books
               </li>
 
-              <li className='flex items-center gap-3 p-[8px] text-2xl font-bold rounded-lg cursor-pointer'>
+              <li className='flex items-center gap-3 p-[8px] text-xl  hover:bg-[#995F2F] hover:text-white   font-bold rounded-lg cursor-pointer'>
                 <FaCog className='text-2xl' />
                 Setting
               </li>
@@ -55,29 +53,29 @@ const AgentDashboard = () => {
 
 
       {/* Main Section */}
-      <section className='flex flex-col w-full'>
+      <section className='flex flex-col w-full '>
 
         {/* Top Navbar */}
-        <div className='flex justify-between items-center bg-amber-500 p-4'>
-
-          <span className='ml-[10px] text-2xl font-bold'>
+        <div className='flex justify-between items-center bg-[#995F2F] p-3 rounded-[4px]'>
+            
+          <span className='ml-[10px] text-xl font-bold text-white'>
             Hii Agent
           </span>
 
           {/* Search Input */}
           <div className='relative w-[50%]'>
 
-            <FaSearch className='absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xl' />
+            <FaSearch className='absolute left-4 top-1/2 -translate-y-1/2  text-xl invert' />
 
             <input
-              className='border border-gray-800 p-2 px-[50px] w-full rounded-md outline-none text-xl font-bold'
+              className='border border-[#BBBBBB] p-1 px-[50px] w-full rounded-[15px] placeholder-white outline-none  '
               type="text"
               placeholder='Search Books'
             />
 
           </div>
 
-          <a href="#" className='mr-[15px] text-2xl font-bold'>
+          <a href="#" className='mr-[15px] text-xl text-white font-bold'>
             Agent
           </a>
 
@@ -86,15 +84,15 @@ const AgentDashboard = () => {
 
         {/* Main Content */}
         <div className='p-5 flex gap-[20px]'>
-          <div className='bg-green-700 h-[120px] w-[250px] rounded-sm'>ed</div>
-          <div className='bg-pink-700 h-[120px] w-[250px] rounded-sm'>ed</div>
-          <div className='bg-slate-900 h-[120px] w-[250px] rounded-sm'>d</div>
-          <div className='bg-yellow-600 h-[120px] w-[250px] rounded-sm'>d</div>
+          <div className=' bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm'>ed</div>
+          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm'>ed</div>
+          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm'>d</div>
+          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm'>d</div>
         </div>
 
         <div className='flex flex-col gap-[20px]'>
 
-          <div className='bg-amber-200 h-[170px] ml-[20px] w-[96%] rounded-sm'>
+          <div className='bg-[#DFF1F1] h-[170px] ml-[20px] w-[96%] rounded-sm'>
 
             <div className='flex justify-around gap-[60%] font-bold p-[2px] mt-[10px]'>
               <h1>Browser Category</h1>
@@ -102,11 +100,11 @@ const AgentDashboard = () => {
             </div>
 
             <div className='flex justify-center gap-[20%]'>
-              <div className='bg-green-900 h-[120px] w-[150px] rounded-sm text-center text-white'>
+              <div className='bg-[#BBD5DA]  h-[120px] w-[150px] rounded-sm text-center text-white'>
                 Navbodh
               </div>
 
-              <div className='bg-purple-950 h-[120px] w-[150px] rounded-sm text-center text-white'>
+              <div className='bg-[#BBD5DA]  h-[120px] w-[150px] rounded-sm text-center text-white'>
                 GyanBodh
               </div>
             </div>
@@ -114,7 +112,7 @@ const AgentDashboard = () => {
           </div>
 
 
-          <div className='bg-amber-200 h-[210px] ml-[20px] w-[96%] rounded-sm'>
+          <div className='bg-[#DFF1F1] h-[210px] ml-[20px] w-[96%] rounded-sm'>
 
             <div className='flex justify-around gap-[60%] font-bold p-[2px] mt-[10px]'>
               <h1>Recent Add Books</h1>
@@ -122,10 +120,10 @@ const AgentDashboard = () => {
             </div>
 
             <div className='flex justify-center gap-[10px]'>
-              <div className='bg-blue-900 h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
-              <div className='bg-red-950 h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
-              <div className='bg-red-950 h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
-              <div className='bg-red-950 h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
+              <div className='bg-[#BBD5DA] h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
+              <div className=' bg-[#BBD5DA] h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
+              <div className=' bg-[#BBD5DA]   h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
+              <div className=' bg-[#BBD5DA]  h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
             </div>
 
           </div>
