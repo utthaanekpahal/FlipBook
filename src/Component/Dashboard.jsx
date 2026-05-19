@@ -16,7 +16,7 @@ function Dashboard() {
   async function fetchdata() {
   const response = await   fetch("https://jsonplaceholder.typicode.com/users")
   const data = await response.json()
-  const slic = data.slice(0,7);
+  const slic = data.slice(0,4);
   setsliced(slic)
   console.log(sliced)
 }
@@ -30,9 +30,9 @@ fetchdata();
     <div>
 
       {/* HEADER */}
-      <header className="flex items-center justify-between px-[20px] py-[12px] border-b">
+      <header className="flex items-center justify-between px-[20px] py-[12px]  bg-[#995F2F] ">
 
-        <div className='flex items-center gap-[8px] font-bold text-[20px]'>
+        <div className='flex items-center gap-[8px] font-bold text-[20px] text-white'>
           <FaBookOpen size={22} />
           Digital Book Library
         </div>
@@ -40,15 +40,16 @@ fetchdata();
         <input
           type="text"
           placeholder='Search Book, Categories'
-          className='w-[600px] px-[12px] py-[8px] rounded-[20px] border border-[#ccc] outline-none'
+          className='w-[600px] px-[12px] py-[8px] rounded-[20px] text-white border border-[#BBBBBB] placeholder-white outline-none'
         />
 
-        <div>
+        <div className='flex justify-center gap-[15px]'>
+          <div className='invert'>
           <IoNotificationsOutline size={24} />
         </div>
-
-        <div className='cursor-pointer'>
+        <div className='cursor-pointer text-white font-bold'>
           Profile
+        </div>
         </div>
 
       </header>
@@ -61,37 +62,37 @@ fetchdata();
 
           <ul className="list-none flex flex-col gap-[10px]">
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded">
               <FaTachometerAlt />
               Dashboard
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded">
               <FaBook />
               Books
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded"
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px]  font-bold cursor-pointer hover:bg-gray-100 rounded"
               onClick={() => navigate("/category")}
             >
               <FaList />
               Categories
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded">
               <FaUpload />
               Upload Books
             </li>
 
             <li
-              className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded"
+              className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold  cursor-pointer hover:bg-gray-100 rounded"
               onClick={() => navigate("/agent")}
             >
               <FaUsers />
               Agents
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] cursor-pointer hover:bg-gray-100 rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px]  font-bold cursor-pointer hover:bg-gray-100 rounded">
               <FaCog />
               Settings
             </li>
