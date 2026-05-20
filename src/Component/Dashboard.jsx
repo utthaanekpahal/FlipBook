@@ -67,7 +67,9 @@ fetchdata();
               Dashboard
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded"
+              onClick={() => navigate("/FlipPage")}
+            >
               <FaBook />
               Books
             </li>
@@ -80,6 +82,7 @@ fetchdata();
             </li>
 
             <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded">
+             
               <FaUpload />
               Upload Books
             </li>
