@@ -1,15 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaBook, FaFolderOpen } from "react-icons/fa";
 
 const Category = () => {
+  const [selectedBook, setSelectedBook] = useState(null);
+
   const data = [
     {
       category: "Navbodh",
-      books: ["Book N1", "Book N2"],
+      books: [
+        {
+          title: "Book N1",
+          classes: [
+            "Class 1",
+            "Class 2",
+            "Class 3",
+            "Class 4",
+            "Class 5",
+            "Class 6",
+            "Class 7",
+            "Class 8",
+          ],
+        },
+        {
+          title: "Book N2",
+          classes: [
+            "Class 1",
+            "Class 2",
+            "Class 3",
+            "Class 4",
+            "Class 5",
+            "Class 6",
+            "Class 7",
+            "Class 8",
+          ],
+        },
+      ],
     },
+
     {
       category: "Gyanbodh",
-      books: ["Book G1", "Book G2"],
+      books: [
+        {
+          title: "Book G1",
+          classes: [
+            "Class 1",
+            "Class 2",
+            "Class 3",
+            "Class 4",
+            "Class 5",
+            "Class 6",
+            "Class 7",
+            "Class 8",
+            "Class 9",
+            "Class 10",
+          ],
+        },
+        {
+          title: "Book G2",
+          classes: [
+            "Class 1",
+            "Class 2",
+            "Class 3",
+            "Class 4",
+            "Class 5",
+            "Class 6",
+            "Class 7",
+            "Class 8",
+          ],
+        },
+      ],
     },
   ];
 
@@ -18,11 +77,11 @@ const Category = () => {
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/background img.png')" }}
     >
-      <h1 className="text-4xl font-bold flex justify-center text-[#99582A] mb-10 p-20 ">
+      <h1 className="text-4xl font-bold flex justify-center text-[#99582A] mb-10 p-20">
         Categories
       </h1>
 
-      <div className="flex gap-10 justify-center flex-wrap ">
+      <div className="flex gap-10 justify-center flex-wrap">
         {data.map((item) => (
           <div
             key={item.category}
@@ -37,10 +96,11 @@ const Category = () => {
               {item.books.map((book, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 bg-gray-100 p-3 rounded-lg font-bold text-2xl hover:bg-gray-200 transition"
+                  onClick={() => setSelectedBook(book)}
+                  className="flex items-center gap-3 bg-gray-100 p-3 rounded-lg font-bold text-2xl hover:bg-gray-200 transition cursor-pointer"
                 >
                   <FaBook className="text-blue-500" />
-                  {book}
+                  {book.title}
                 </div>
               ))}
             </div>
@@ -53,6 +113,37 @@ const Category = () => {
           View More Categories
         </button>
       </div>
+
+      {/* Popup */}
+      {selectedBook && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+
+          <div className="bg-white p-6 rounded-2xl shadow-xl w-[350px]">
+
+            <h2 className="text-2xl font-bold text-center mb-5">
+              {selectedBook.title}
+            </h2>
+
+            {selectedBook.classes.map((cls, index) => (
+              <div
+                key={index}
+                className="bg-gray-100 p-3 rounded-lg mb-2"
+              >
+                {cls}
+              </div>
+            ))}
+
+            <button
+              onClick={() => setSelectedBook(null)}
+              className="w-full mt-4 bg-red-500 text-white p-3 rounded-lg"
+            >
+              Close
+            </button>
+
+          </div>
+
+        </div>
+      )}
     </div>
   );
 };
