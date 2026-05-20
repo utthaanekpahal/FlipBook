@@ -1,81 +1,68 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HTMLFlipBook from "react-pageflip";
 import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
-// worker setup
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 function FlipPage() {
   const [pages, setPages] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  const handlePDFUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  useEffect(() => {
+    loadPDF();
+  }, []);
 
-    setLoading(true);
+  const loadPDF = async () => {
+    const pdf = await pdfjsLib.getDocument("/Math Fun With Abby.pdf").promise;
+    console.log("Total Pages:", pdf.numPages);
+    let loadedPages = [];
 
-    const fileReader = new FileReader();
+    const maxPages = Math.min(pdf.numPages, 20);
 
-    fileReader.onload = async function () {
-      const typedArray = new Uint8Array(this.result);
+    for (let i = 1; i <= maxPages; i++) {
+      const page = await pdf.getPage(i);
 
-      const pdf = await pdfjsLib.getDocument(typedArray).promise;
+      const viewport = page.getViewport({ scale: 1.5 });
 
-      const images = [];
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
 
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
 
-        const viewport = page.getViewport({ scale: 1.5 });
+      await page.render({
+        canvasContext: context,
+        viewport: viewport,
+      }).promise;
 
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
+      loadedPages.push(canvas.toDataURL());
+    }
 
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        await page.render({
-          canvasContext: context,
-          viewport,
-        }).promise;
-
-        images.push(canvas.toDataURL());
-      }
-
-      setPages(images);
-      setLoading(false);
-    };
-
-    fileReader.readAsArrayBuffer(file);
+    setPages(loadedPages);
   };
 
   return (
-    <div className="flex flex-col items-center bg-gray-900 min-h-screen p-4">
-
-      <input
-        type="file"
-        accept="application/pdf"
-        onChange={handlePDFUpload}
-        className="mb-4 text-white"
-      />
-
-      {loading && <p className="text-white">Processing PDF...</p>}
-
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden">
+      
+      <h1 className="text-4xl font-bold mb-6 text-gray-800">
+        PDF Flipbook
+      </h1>
       {pages.length > 0 && (
-        <HTMLFlipBook width={400} height={600} showCover={true}>
-          {pages.map((img, i) => (
-            <div className="page" key={i}>
-              <img
-                src={img}
-                alt={`page-${i}`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))}
-        </HTMLFlipBook>
-      )}
+      <HTMLFlipBook width={400} height={500} showCover={false} mobileScrollSupport={false}  minWidth={400} maxWidth={400} minHeight={500} maxHeight={500}>
+        {pages.map((page, index) => (
+          <div
+            key={index}
+            className="bg-white shadow-lg flex items-center justify-center"
+          >
+            <img
+              src={page}
+              alt=""
+              className="w-full h-full object-contain"
+            />
+          </div>
+        ))}
+      </HTMLFlipBook>
+       )}
     </div>
   );
 }
