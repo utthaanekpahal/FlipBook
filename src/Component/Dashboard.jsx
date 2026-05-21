@@ -2,100 +2,99 @@ import React, { useEffect ,useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { FaBookOpen } from "react-icons/fa";
+import { FaSearch , FaUser, FaThList ,FaUserTie } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import {
   FaTachometerAlt,
   FaBook,
   FaList,
   FaUpload,
   FaUsers,
-  FaCog
+  FaCog,
 } from 'react-icons/fa';
-
 function Dashboard() {
-  const [sliced, setsliced] = useState([])
-  async function fetchdata() {
-  const response = await   fetch("https://jsonplaceholder.typicode.com/users")
-  const data = await response.json()
-  const slic = data.slice(0,4);
-  setsliced(slic)
-  console.log(sliced)
-}
-useEffect(()=>{
-fetchdata();
-  },[])
-
+  const agentData = {
+  name: localStorage.getItem("Aname"),
+  password: localStorage.getItem("Apass"),
+  email: localStorage.getItem("Aemail"),
+  confirmPassword: localStorage.getItem("Acpass"),
+};
+const arr = [agentData];
   const navigate = useNavigate();
-
   return (
     <div>
 
       {/* HEADER */}
-      <header className="flex items-center justify-between px-[20px] py-[12px]  bg-[#995F2F] ">
+      <header className="flex items-center justify-between px-[20px] py-[12px]  bg-[#F5F5F5]  ">
 
-        <div className='flex items-center gap-[8px] font-bold text-[20px] text-white'>
+        <div className='flex items-center gap-[5px] font-bold text-[20px] text-[#572C10]'>
           <FaBookOpen size={22} />
           Digital Book Library
         </div>
-
-        <input
-          type="text"
-          placeholder='Search Book, Categories'
-          className='w-[600px] px-[12px] py-[8px] rounded-[20px] text-white border border-[#BBBBBB] placeholder-white outline-none'
-        />
-
-        <div className='flex justify-center gap-[15px]'>
-          <div className='invert'>
-          <IoNotificationsOutline size={24} />
+      <div className="relative w-[600px]">
+       <FaSearch  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A77F60] text-lg"/>
+       <input
+         type="text"
+         placeholder="Search Book, Categories"
+         className="w-full pl-12 pr-4 py-2 rounded-full text-[#A77F60] font-bold border-2 border-[#A77F60] placeholder:text-[#A77F60] outline-none"/>
+      </div>
+        <div className='flex justify-center gap-[15px] '>
+          <div >
+          <IoNotificationsOutline size={24}  color="572C10" />
         </div>
-        <div className='cursor-pointer text-white font-bold'>
+        <div className='flex justify-center gap-[10px]'>
+          <FaUser size={25} color="572C10" className='mt-[-2px] '/>
+           <div className='cursor-pointer text-[#572C10] font-bold'>
           Profile
+        </div>
+        
         </div>
         </div>
 
       </header>
 
       {/* BODY */}
-      <div className='flex gap-[40px] p-[20px]'>
+      <div className='flex gap-[20px] p-[20px] bg-[#EFE6DD]'>
 
         {/* SIDEBAR */}
-        <aside className="w-[220px]">
+        <aside className="w-[220px] bg-[#F5F5F5] ml-[-10px] rounded-[5px]">
 
-          <ul className="list-none flex flex-col gap-[10px]">
+          <ul className="list-none flex flex-col gap-[10px] ">
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px]  text-[#572C10] font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded">
               <FaTachometerAlt />
               Dashboard
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded"
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px]   text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10]  hover:text-white rounded"
               onClick={() => navigate("/FlipPage")}
             >
               <FaBook />
               Books
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px]  font-bold cursor-pointer hover:bg-gray-100 rounded"
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
               onClick={() => navigate("/category")}
             >
               <FaList />
               Categories
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded">
              
               <FaUpload />
               Upload Books
             </li>
 
             <li
-              className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold  cursor-pointer hover:bg-gray-100 rounded"
+              className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold text-[#572C10]  cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
               onClick={() => navigate("/agent")}
             >
               <FaUsers />
               Agents
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px]  font-bold cursor-pointer hover:bg-gray-100 rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded">
               <FaCog />
               Settings
             </li>
@@ -105,22 +104,55 @@ fetchdata();
         </aside>
 
         {/* MAIN CONTENT */}
-        <main className="flex-1 flex flex-col gap-[20px]">
+        <main className="flex-1 flex flex-col gap-[20px] ">
 
           {/* TOP BOXES */}
-          <div className="flex gap-[10px]">
-
-            {[1,2,3,4].map((item)=>(
-
+          <div className="flex gap-[10px] ">
               <div
-                key={item}
-                className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center items-center text-[20px]"
-              >
-                {item}
+                className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
+               <FaBook className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
+               </div>
+                <div className='flex flex-col justify-center gap-[5px]'>
+                  <span className='font-bold text-[14px] text-[#572C10] '>Total Books</span>
+                  <span className='font-bold text-[17px]'>500</span>
+                  <span className='font-bold text-[12px] text-[#995F2F]'>+12 this month</span>
+                </div>
               </div>
-
-            ))}
-
+               <div
+                className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
+               <FaThList  className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
+               </div>
+                <div className='flex flex-col justify-center gap-[5px]'>
+                  <span className='font-bold text-[14px] text-[#572C10] '>Total Categories</span>
+                  <span className='font-bold text-[17px]'>85</span>
+                  <span className='font-bold text-[12px] text-[#995F2F]'>4 this month</span>
+                </div>
+              </div>
+               <div
+                className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
+               <FaUserTie  className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
+               </div>
+                <div className='flex flex-col justify-center gap-[5px]'>
+                  <span className='font-bold text-[14px] text-[#572C10] '>Active Agents</span>
+                  <span className='font-bold text-[17px]'>10</span>
+                  <span className='font-bold text-[12px] text-[#995F2F]'>+5 this month</span>
+                </div>
+              </div>
+             <div
+                className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
+               <FaEye   className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
+               </div>
+                <div className='flex flex-col justify-center gap-[5px]'>
+                  <span className='font-bold text-[14px] text-[#572C10] '>Total views</span>
+                  <span className='font-bold text-[17px]'>200</span>
+                  <span className='font-bold text-[12px] text-[#995F2F]'>+17.8% this month</span>
+                </div>
+              </div>
+              
           </div>
 
 
@@ -129,11 +161,11 @@ fetchdata();
 
             <div className='flex justify-between items-center mb-[20px]'>
 
-              <h4 className="font-bold">
+              <h4 className="font-bold text-[#572C10]">
                 Recent Book
               </h4>
 
-              <button className="border rounded px-[10px] py-[5px]">
+              <button className="border rounded text-[#572C10] font-bold border-[#EFE6DD] px-[10px] py-[5px]">
                 View all
               </button>
 
@@ -148,7 +180,7 @@ fetchdata();
                   className='flex flex-col items-center gap-[5px]'
                 >
 
-                  <div className='w-[120px] h-[160px] bg-green-400 rounded flex items-center justify-center'>
+                  <div className='w-[120px] h-[160px] bg-[#FFDBB5]  rounded flex items-center justify-center'>
                     item
                   </div>
 
@@ -181,11 +213,11 @@ fetchdata();
 
               <div className='flex justify-between mb-[20px]'>
 
-                <h4 className='font-bold'>
+                <h4 className='font-bold text-[#572C10]'>
                   Active Agent
                 </h4>
 
-                <button className='border px-[10px] py-[5px] rounded'>
+                <button className='border px-[10px] py-[5px] text-[#572C10] border-[#EFE6DD] font-bold  rounded'>
                   View all
                 </button>
 
@@ -197,11 +229,11 @@ fetchdata();
 
                   <tr className='bg-gray-200'>
 
-                    <th className='p-[10px]'>Agent Name</th>
-                    <th>Email</th>
-                    <th>Last Active</th>
-                    <th>Book Viewed</th>
-                    <th>Status</th>
+                    <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Agent Name</th>
+                    <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Email</th>
+                    <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Password</th>
+                    <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>ConfirmPassword</th>
+                    <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Status</th>
 
                   </tr>
 
@@ -209,25 +241,25 @@ fetchdata();
 
                 <tbody>
 
-                 {sliced.map((value, index) => (
-    <tr key={index}>
-      <td className="text-left p-[12px] border-b border-amber-50">
+                 {arr.map((value, index) => (
+              <tr key={index}>
+             <td className="text-center p-[12px] border-b border-amber-50">
         {value.name}
       </td>
 
-      <td className="text-left p-[12px] border-b border-amber-50">
+      <td className="text-center p-[12px] border-b border-amber-50">
         {value.email}
       </td>
 
-      <td className="text-left p-[12px] border-b border-amber-50">
-        {new Date().toLocaleDateString()}
+      <td className="text-center p-[12px] border-b border-amber-50">
+        {value.password}
       </td>
 
-      <td className="text-left p-[12px] border-b border-amber-50">
-        N/A
+      <td className="text-center p-[12px] border-b border-amber-50">
+        {value.confirmPassword}
       </td>
 
-      <td className="text-left p-[12px] border-b border-amber-50">
+      <td className="text-center p-[12px] border-b border-amber-50">
         Active
       </td>
     </tr>
@@ -245,11 +277,11 @@ fetchdata();
 
               <div className='flex justify-between mb-[20px]'>
 
-                <h4 className='font-bold'>
+                <h4 className='font-bold text-[#572C10]'>
                   Top Viewed Books
                 </h4>
 
-                <button className='border px-[10px] py-[5px] rounded'>
+                <button className='border px-[10px] py-[5px] text-[#572C10] border-[#EFE6DD] font-bold rounded'>
                   View all
                 </button>
 

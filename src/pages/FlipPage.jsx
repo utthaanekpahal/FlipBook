@@ -44,7 +44,7 @@ function FlipPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 overflow-hidden">
       
-      <h1 className="text-4xl font-bold mb-6 text-gray-800">
+      <h1 className="text-4xl font-bold mb-6 text-[#572C10]">
         PDF Flipbook
       </h1>
       {pages.length > 0 && (

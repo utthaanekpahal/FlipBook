@@ -20,8 +20,7 @@ function SignupForm() {
     const { name, value } = e.target;
 
     setfirst((prev) => ({
-      ...prev,
-      [name]: value,
+      ...prev, [name]: value
     }));
   };
 
@@ -48,7 +47,7 @@ function SignupForm() {
   return (
     <div className="bg-[url('./assets/imges/bgimg.PNG')] bg-no-repeat bg-cover bg-center h-screen w-full flex justify-center items-center max-[770px]:bg-[length:100%_105%]">
 
-      <form className="flex flex-col justify-center items-center gap-[11px] h-[75vh] w-[26vw] rounded-[10px] shadow-[0_0_10px_rgba(0,0,0,0.2)] bg-[#fffbff] max-[770px]:mt-[-10%] max-[770px]:w-[45%] max-[770px]:h-auto max-[770px]:p-[20px]">
+      <form className="flex flex-col justify-center items-center gap-[11px] h-[80vh] w-[26vw] rounded-[10px] shadow-[0_0_10px_rgba(0,0,0,0.2)] bg-[#fffbff] max-[770px]:mt-[-10%] max-[770px]:w-[45%] max-[770px]:h-auto max-[770px]:p-[20px]">
 
         <h1 className="mt-[-5px] mb-[1px] font-bold text-2xl">
           Sign in

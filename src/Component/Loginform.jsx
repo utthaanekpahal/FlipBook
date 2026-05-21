@@ -22,13 +22,13 @@ export default function Login() {
     e.preventDefault();  
     const user = localStorage.getItem("username");
     const pass = localStorage.getItem("password");
-    const admin="admins"
-    const adminpass="1234"
-    if(data.username === admin && data.password === adminpass){
-        navigate("/Dashboard",  { replace: true })                                                                                                                                                                                                                                                                                                               
+    const agent = localStorage.getItem("Aname");
+    const agentpass = localStorage.getItem("Acpass");
+    if(data.username === agent && data.password === agentpass){
+        navigate("/AgentDashboard",  { replace: true })                                                                                                                                                                                                                                                                                                               
     } 
     else if (data.username === user && data.password === pass) {
-      navigate("/AgentDashboard", { replace: true });
+      navigate("/Dashboard", { replace: true });
     }
     else {
       setError("Invalid Username or Password");

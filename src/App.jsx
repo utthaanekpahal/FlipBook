@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Signupform from './Component/Signform'
 import Loginform from './Component/Loginform'
 import { Routes, Route } from "react-router-dom";
@@ -9,13 +9,14 @@ import Category from './pages/Category';
 import FlipPage from './pages/FlipPage';
 
 const App = () => {
+  const [childval, setchildval] = useState([])
   return (
     <div>
       <Routes>
         <Route path="/" element={<Signupform />} />
         <Route path="/Loginform" element={<Loginform />} />
-        <Route path="/Dashboard" element={<Dashboard/>}/>
-        <Route path="/agent" element={<Agentlogin/>}/>
+        <Route path="/Dashboard" element={<Dashboard childval={childval}/>}/>
+        <Route path="/agent" element={<Agentlogin setchildval={setchildval} />}/>
         <Route path="/AgentDashboard" element={<AgentDashboard/>}/>
         <Route path="/Category"  element={<Category/>}/>
         <Route path="/FlipPage"  element={<FlipPage/>}/>

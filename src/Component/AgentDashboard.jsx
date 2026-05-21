@@ -5,49 +5,40 @@ import { FaC } from 'react-icons/fa6';
 
 const AgentDashboard = () => {
   return (
-    <div className='flex h-screen overflow-hidden'>
+    <div className='flex h-screen overflow-hidden bg-[#EFE6DD]'>
 
       {/* Sidebar */}
-      <header className='w-[250px] h-full '>
+      <header className='w-[250px] h-full bg-[#F5F5F5] '>
         <div className='flex flex-col items-center gap-5 h-full py-5 '>
 
           {/* Logo Section */}
-          <div className='text-black p-3 text-3xl flex items-center gap-3 '>
+          <div className='text-[#572C10] p-3 text-3xl flex items-center gap-3 '>
             <FaBookOpen className='text-4xl mt-[-26px] ' />
             <div className='flex flex-col justify-center mt-[-24px]'>
-              <h1 className='font-bold  text-[25px]'>BookHub</h1>
-              <span className='font-bold text-[17px]'>Agent panel</span>
+              <h1 className='font-bold  text-[25px] text-[#572C10]'>BookHub</h1>
+              <span className='font-bold text-[17px] text-[#572C10]'>Agent panel</span>
             </div>
-
           </div>
 
           {/* Menu */}
           <div>
-
             <ul className='flex flex-col gap-5'>
-
-              <li className='flex items-center gap-3 p-[8px] text-xl hover:bg-[#995F2F] hover:text-white font-bold rounded-lg cursor-pointer'>
+              <li className='flex items-center gap-3 p-[8px] text-xl  text-[#572C10]  hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'>
                 <FaHome className='text-2xl' />
                 Home
               </li>
-
-              <li className='flex items-center gap-3 p-[8px] text-xl hover:bg-[#995F2F] hover:text-white   font-bold rounded-lg cursor-pointer'>
-               
+              <li className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white   font-bold rounded-lg cursor-pointer'>
                 <FaBook className='text-2xl' />
-                
                 Categories
               </li>
-
-              <li className='flex items-center gap-3 p-[8px] text-xl  hover:bg-[#995F2F] hover:text-white  font-bold rounded-lg cursor-pointer'>
+              <li className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white  font-bold rounded-lg cursor-pointer'>
                 <FaBook className='text-2xl' />
                 All Books
               </li>
-
-              <li className='flex items-center gap-3 p-[8px] text-xl  hover:bg-[#995F2F] hover:text-white   font-bold rounded-lg cursor-pointer'>
+              <li className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white   font-bold rounded-lg cursor-pointer'>
                 <FaCog className='text-2xl' />
                 Setting
               </li>
-
             </ul>
           </div>
         </div>
@@ -58,7 +49,7 @@ const AgentDashboard = () => {
       <section className='flex flex-col w-full '>
 
         {/* Top Navbar */}
-        <div className='flex justify-between items-center bg-[#995F2F] p-3 rounded-[4px]'>
+        <div className='flex justify-between items-center bg-[#F5F5F5] p-3 rounded-[4px]'>
             
           <span className='ml-[10px] text-xl font-bold text-white'>
             Hii Agent
