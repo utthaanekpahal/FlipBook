@@ -7,6 +7,7 @@ import Agentlogin from './Component/Agentlogin';
 import AgentDashboard from './Component/AgentDashboard';
 import Category from './pages/Category';
 import FlipPage from './pages/FlipPage';
+import Books from './pages/books';
 
 const App = () => {
   const [childval, setchildval] = useState([])
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/AgentDashboard" element={<AgentDashboard/>}/>
         <Route path="/Category"  element={<Category/>}/>
         <Route path="/FlipPage"  element={<FlipPage/>}/>
+        <Route path="/books"  element={<Books/>}/>
       </Routes>
     </div>
   )

@@ -61,13 +61,15 @@ const arr = [agentData];
 
           <ul className="list-none flex flex-col gap-[10px] ">
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px]  text-[#572C10] font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded">
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded"
+              onClick={() => navigate("/dashboard")}
+            >
               <FaTachometerAlt />
               Dashboard
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px]   text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10]  hover:text-white rounded"
-              onClick={() => navigate("/FlipPage")}
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded"
+              onClick={() => navigate("/books")}
             >
               <FaBook />
               Books
