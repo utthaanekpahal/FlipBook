@@ -73,11 +73,14 @@ const Category = () => {
       </div>
 
       {/* Button */}
-      <div className="flex justify-center mt-15">
-        <button className="bg-[#99582A] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#7a431f] transition">
-          View More Categories
-        </button>
-      </div>
+    <div className="flex justify-center mt-15">
+      <button
+        onClick={() => navigate("/dashboard")}
+        className="bg-[#99582A] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#7a431f] transition"
+      >
+      Back
+      </button>
+    </div>
 
       {/* Popup */}
       {selectedBook && (

@@ -92,7 +92,7 @@ export default function Login() {
           </div>
 
           {/* Remember */}
-          <div className="flex items-center mb-4 justify-center">
+          <div className="flex items-center mb-4 justify-start">
             <input type="checkbox" className="accent-[#99582A]" />
             <label className="ml-2 text-sm text-gray-700 ">
               Remember Me
@@ -119,7 +119,7 @@ export default function Login() {
 
           <div className="flex justify-center gap-3 mt-4">
             <button
-              type="button"
+              type="button" onClick={() => window.open("https://www.google.com", "_blank")}
               className="flex items-center gap-2 border px-4 py-2 rounded-lg hover:bg-gray-100"
             >
               <FcGoogle size={20} />
@@ -127,7 +127,7 @@ export default function Login() {
             </button>
 
             <button
-              type="button"
+              type="button" onClick={() => window.open("https://www.facebook.com", "_blank")}
               className="flex items-center gap-2 border px-4 py-2 rounded-lg hover:bg-gray-100"
             >
               <FaFacebook className="text-blue-600" />

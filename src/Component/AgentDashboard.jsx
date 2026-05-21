@@ -1,5 +1,7 @@
 import React from 'react'
 import { FaHome, FaBook, FaCog, FaSearch, FaBookOpen } from "react-icons/fa";
+import { FaUsers, FaFolder } from "react-icons/fa6";
+import { FaC } from 'react-icons/fa6';
 
 const AgentDashboard = () => {
   return (
@@ -84,12 +86,30 @@ const AgentDashboard = () => {
 
         {/* Main Content */}
         <div className='p-5 flex gap-[20px]'>
-          <div className=' bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm'>ed</div>
-          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm'>ed</div>
-          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm'>d</div>
-          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm'>d</div>
+          <div className=' bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm flex flex-col justify-center items-center text-center text-black font-bold '> 
+           
+              <FaBook />
+              
+              <h1 className='text-xl font-bold'>Total Books</h1>
+    <p className='text-3xl font-bold mt-4'>120</p>
+  
+          </div>
+          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm flex flex-col justify-center items-center text-center text-black font-bold'>
+            <h1 className='text-xl font-bold'>Total Users</h1>
+            <p className='text-3xl font-bold mt-4'>50</p>
+            <FaUsers />
+          </div>
+          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm flex flex-col justify-center items-center text-center text-black font-bold'>
+            <h1 className='text-xl font-bold'>New Books</h1>
+            <p className='text-3xl font-bold mt-4'>10</p>
+            <FaBook />
+          </div>
+          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm flex flex-col justify-center items-center text-center text-black font-bold'>
+            <h1 className='text-xl font-bold'>Categories</h1>
+            <p className='text-3xl font-bold mt-4'>2</p>
+            <FaFolder />
+          </div>
         </div>
-
         <div className='flex flex-col gap-[20px]'>
 
           <div className='bg-[#DFF1F1] h-[170px] ml-[20px] w-[96%] rounded-sm'>
@@ -100,11 +120,11 @@ const AgentDashboard = () => {
             </div>
 
             <div className='flex justify-center gap-[20%]'>
-              <div className='bg-[#BBD5DA]  h-[120px] w-[150px] rounded-sm text-center text-white'>
+              <div className='bg-[#BBD5DA]  h-[120px] w-[150px] rounded-sm text-center flex items-center justify-center text-black font-bold text-2xl'>
                 Navbodh
               </div>
 
-              <div className='bg-[#BBD5DA]  h-[120px] w-[150px] rounded-sm text-center text-white'>
+              <div className='bg-[#BBD5DA]  h-[120px] w-[150px] rounded-sm text-center flex items-center justify-center text-black font-bold text-2xl'>
                 GyanBodh
               </div>
             </div>
@@ -120,10 +140,18 @@ const AgentDashboard = () => {
             </div>
 
             <div className='flex justify-center gap-[10px]'>
-              <div className='bg-[#BBD5DA] h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
-              <div className=' bg-[#BBD5DA] h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
-              <div className=' bg-[#BBD5DA]   h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
-              <div className=' bg-[#BBD5DA]  h-[150px] w-[150px] rounded-sm text-center text-white'>Books</div>
+              <div className='bg-[#BBD5DA] h-[150px] w-[150px] rounded-sm text-center text-white'>
+            <img src="book 1.jpg " alt="" className='w-full h-full object-cover' />
+               </div>
+              <div className=' bg-[#BBD5DA] h-[150px] w-[150px] rounded-sm text-center text-white'>
+              <img src="book2.jfif " alt="" className='w-full h-full object-cover' />
+              </div>
+              <div className=' bg-[#BBD5DA]   h-[150px] w-[150px] rounded-sm text-center text-white'>
+              <img src="book 3.jfif " alt="" className='w-full h-full object-cover' />
+              </div>
+              <div className=' bg-[#BBD5DA]  h-[150px] w-[150px] rounded-sm text-center text-white'>
+                <img src="book 4.jfif " alt="" className='w-full h-full object-cover' />
+              </div>
             </div>
 
           </div>
