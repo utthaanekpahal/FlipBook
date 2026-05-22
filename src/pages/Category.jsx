@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { FaBook, FaFolderOpen } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Category = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedBook, setSelectedBook] = useState(null);
 
   const data = [
@@ -12,11 +13,29 @@ const Category = () => {
       books: [
         {
           title: "Book N1",
-          classes: ["Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","Class 7","Class 8"],
+          classes: [
+            "Class 1",
+            "Class 2",
+            "Class 3",
+            "Class 4",
+            "Class 5",
+            "Class 6",
+            "Class 7",
+            "Class 8",
+          ],
         },
         {
           title: "Book N2",
-          classes: ["Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","Class 7","Class 8"],
+          classes: [
+            "Class 1",
+            "Class 2",
+            "Class 3",
+            "Class 4",
+            "Class 5",
+            "Class 6",
+            "Class 7",
+            "Class 8",
+          ],
         },
       ],
     },
@@ -25,11 +44,31 @@ const Category = () => {
       books: [
         {
           title: "Book G1",
-          classes: ["Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","Class 7","Class 8","Class 9","Class 10"],
+          classes: [
+            "Class 1",
+            "Class 2",
+            "Class 3",
+            "Class 4",
+            "Class 5",
+            "Class 6",
+            "Class 7",
+            "Class 8",
+            "Class 9",
+            "Class 10",
+          ],
         },
         {
           title: "Book G2",
-          classes: ["Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","Class 7","Class 8"],
+          classes: [
+            "Class 1",
+            "Class 2",
+            "Class 3",
+            "Class 4",
+            "Class 5",
+            "Class 6",
+            "Class 7",
+            "Class 8",
+          ],
         },
       ],
     },
@@ -72,26 +111,30 @@ const Category = () => {
         ))}
       </div>
 
-      {/* Button */}
-    <div className="flex justify-center mt-15">
-      <button
-        onClick={() => navigate("/dashboard")}
-        className="bg-[#99582A] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#7a431f] transition"
-      >
-      Back
-      </button>
-    </div>
+      {/* Back Button */}
+      <div className="flex justify-center mt-15">
+        <button
+          onClick={() => {
+            if (location.state?.from === "agent") {
+              navigate("/agentdashboard");
+            } else {
+              navigate("/dashboard");
+            }
+          }}
+          className="bg-[#99582A] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#7a431f] transition"
+        >
+          Back
+        </button>
+      </div>
 
       {/* Popup */}
       {selectedBook && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-2xl shadow-xl w-[350px]">
-
             <h2 className="text-2xl font-bold text-center mb-5">
               {selectedBook.title}
             </h2>
 
-            {/* Classes */}
             {selectedBook.classes.map((cls, index) => (
               <div
                 key={index}
@@ -109,15 +152,12 @@ const Category = () => {
               </div>
             ))}
 
-            {/* Close */}
             <button
               onClick={() => setSelectedBook(null)}
-              className="w-full mt-4 bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition"
+              className="w-full mt-4 bg-[#7a431f] font-medium text-2xl text-white p-3 rounded-lg hover:bg-red-600 transition"
             >
               Close
             </button>
-            
-
           </div>
         </div>
       )}

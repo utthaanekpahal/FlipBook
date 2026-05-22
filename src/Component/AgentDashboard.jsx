@@ -5,8 +5,11 @@ import { FaC } from 'react-icons/fa6';
 import { FaUser } from "react-icons/fa";
 import {  FaThList ,FaUserTie } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import { FaSignOutAlt } from "react-icons/fa";
 
 const AgentDashboard = () => {
+  const navigate = useNavigate();
   return (
     <div className='flex h-screen overflow-hidden bg-[#EFE6DD]'>
 
@@ -27,21 +30,43 @@ const AgentDashboard = () => {
           <div>
             <ul className='flex flex-col gap-5'>
               <li className='flex items-center gap-3 p-[8px] text-xl  text-[#572C10]  hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'>
+              
                 <FaHome className='text-2xl' />
                 Home
               </li>
-              <li className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white   font-bold rounded-lg cursor-pointer'>
-                <FaBook className='text-2xl' />
-                Categories
-              </li>
-              <li className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white  font-bold rounded-lg cursor-pointer'>
-                <FaBook className='text-2xl' />
-                All Books
-              </li>
-              <li className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white   font-bold rounded-lg cursor-pointer'>
-                <FaCog className='text-2xl' />
-                Setting
-              </li>
+             <li
+  className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'
+  onClick={() =>
+    navigate("/category", {
+      state: { from: "agent" }
+    })
+  }
+>
+  <FaBook className='text-2xl' />
+  Categories
+</li>
+             <li
+  className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'
+  onClick={() =>
+    navigate("/books", {
+      state: { from: "agent" }
+    })
+  }
+>
+  <FaBook className='text-2xl' />
+  All Books
+</li>
+              <li
+  className='flex items-center gap-3 p-[8px] text-xl text-red-600 hover:bg-red-600 hover:text-white font-bold rounded-lg cursor-pointer'
+  onClick={() => {
+    localStorage.removeItem("user");
+    navigate("/loginform");
+  }}
+>
+  <FaSignOutAlt className='text-2xl' />
+  Logout
+</li>
+              
             </ul>
           </div>
         </div>
@@ -130,27 +155,30 @@ const AgentDashboard = () => {
 
           <div className='bg-[#F5F5F5]  h-[170px] ml-[20px] w-[96%] rounded-sm'>
 
-            <div className='flex justify-around gap-[60%] font-bold p-[2px] mt-[10px]'>
+            <div className='flex justify-start gap-[60%] font-bold p-[2px] mt-[10px] text-[#572C10] text-2xl '>
               <h1>Browser Category</h1>
-              <button className='font-bold'>View all</button>
+             
             </div>
 
             <div className='flex justify-center gap-[20%]'>
-              <div className='bg-[#F5F5F5]  h-[120px] w-[150px] rounded-sm text-center flex items-center justify-center text-black font-bold text-2xl'>
-                Navbodh
+              <div className='bg-[#F5F5F5]  h-[120px] w-[150px] rounded-md flex items-center justify-center text-black font-bold text-2xl'>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQjUOnvHB-eJ11uevsZc_4FUQINV8pPTP9Lg&s" alt="" className='w-full h-full object-cover ' />
+      
               </div>
               <div className='bg-[#F5F5F5]   h-[120px] w-[150px] rounded-sm text-center flex items-center justify-center text-black font-bold text-2xl'>
-                GyanBodh
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9uhqo9C1byKl7dmz29-E47DNhPFTRSg3aMQ&s" alt="" className='w-full h-full object-cover' />
+              
               </div>
             </div>
           </div>
 
           <div className=' bg-[#F5F5F5] h-[210px] ml-[20px] w-[96%] rounded-sm'>
 
-            <div className='flex justify-around gap-[60%] font-bold p-[2px] mt-[10px]'>
+            <div className='flex justify-start gap-[60%] font-bold p-[2px] mt-[10px] text-[#572C10] text-2xl'>
               <h1>Recent Add Books</h1>
-              <button className='font-bold'>View all</button>
+             
             </div>
+
 
             <div className='flex justify-center gap-[10px]'>
               <div className='bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white'>

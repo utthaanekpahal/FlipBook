@@ -68,20 +68,29 @@ const arr = [agentData];
               Dashboard
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded"
-              onClick={() => navigate("/books")}
-            >
-              <FaBook />
-              Books
-            </li>
+       <li
+  className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded"
+  onClick={() =>
+    navigate("/books", {
+      state: { from: "admin" }
+    })
+  }
+>
+  <FaBook />
+  Books
+</li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
-              onClick={() => navigate("/category")}
-            >
-              <FaList />
-              Categories
-            </li>
-
+           <li
+  className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10] font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
+  onClick={() =>
+    navigate("/category", {
+      state: { from: "admin" }
+    })
+  }
+>
+  <FaList />
+  Categories
+</li>
             <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded">
              
               <FaUpload />
@@ -96,10 +105,7 @@ const arr = [agentData];
               Agents
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded">
-              <FaCog />
-              Settings
-            </li>
+            
 
           </ul>
 
