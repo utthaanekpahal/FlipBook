@@ -2,6 +2,9 @@ import React from 'react'
 import { FaHome, FaBook, FaCog, FaSearch, FaBookOpen } from "react-icons/fa";
 import { FaUsers, FaFolder } from "react-icons/fa6";
 import { FaC } from 'react-icons/fa6';
+import { FaUser } from "react-icons/fa";
+import {  FaThList ,FaUserTie } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 
 const AgentDashboard = () => {
   return (
@@ -51,59 +54,81 @@ const AgentDashboard = () => {
         {/* Top Navbar */}
         <div className='flex justify-between items-center bg-[#F5F5F5] p-3 rounded-[4px]'>
             
-          <span className='ml-[10px] text-xl font-bold text-white'>
+          <span className='ml-[10px] text-xl font-bold text-[#572C10]'>
             Hii Agent
           </span>
 
           {/* Search Input */}
           <div className='relative w-[50%]'>
 
-            <FaSearch className='absolute left-4 top-1/2 -translate-y-1/2  text-xl invert' />
+            <FaSearch className='absolute left-4 top-1/2 -translate-y-1/2  text-[#A77F60] text-xl ' />
 
             <input
-              className='border border-[#BBBBBB] p-1 px-[50px] w-full rounded-[15px] placeholder-white outline-none  '
+              className='p-1 px-[50px] w-full rounded-[15px] text-[#A77F60] font-bold border-2 border-[#A77F60] placeholder:text-[#A77F60]  outline-none  '
               type="text"
               placeholder='Search Books'
             />
-
           </div>
-
-          <a href="#" className='mr-[15px] text-xl text-white font-bold'>
+           <div className='flex justify-center gap-[10px]'>
+            <FaUser size={25} color="572C10" className='mt-[-2px] '/>
+            <a href="#" className='mr-[15px] text-xl text-[#572C10] font-bold'>
             Agent
           </a>
-
+           </div>
         </div>
 
 
         {/* Main Content */}
         <div className='p-5 flex gap-[20px]'>
-          <div className=' bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm flex flex-col justify-center items-center text-center text-black font-bold '> 
-           
-              <FaBook />
-              
-              <h1 className='text-xl font-bold'>Total Books</h1>
-    <p className='text-3xl font-bold mt-4'>120</p>
-  
-          </div>
-          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm flex flex-col justify-center items-center text-center text-black font-bold'>
-            <h1 className='text-xl font-bold'>Total Users</h1>
-            <p className='text-3xl font-bold mt-4'>50</p>
-            <FaUsers />
-          </div>
-          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm flex flex-col justify-center items-center text-center text-black font-bold'>
-            <h1 className='text-xl font-bold'>New Books</h1>
-            <p className='text-3xl font-bold mt-4'>10</p>
-            <FaBook />
-          </div>
-          <div className='bg-[#DFF1F1] h-[120px] w-[260px] rounded-sm flex flex-col justify-center items-center text-center text-black font-bold'>
-            <h1 className='text-xl font-bold'>Categories</h1>
-            <p className='text-3xl font-bold mt-4'>2</p>
-            <FaFolder />
-          </div>
+         <div
+                        className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                        <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
+                       <FaBook className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
+                       </div>
+                        <div className='flex flex-col justify-center gap-[5px]'>
+                          <span className='font-bold text-[14px] text-[#572C10] '>Total Books</span>
+                          <span className='font-bold text-[17px]'>500</span>
+                          <span className='font-bold text-[12px] text-[#995F2F]'>+12 this month</span>
+                        </div>
+                      </div>
+                        <div className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                          <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
+                          <FaThList  className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
+                          </div>
+                        <div className='flex flex-col justify-center gap-[5px]'>
+                          <span className='font-bold text-[14px] text-[#572C10] '>Total Categories</span>
+                          <span className='font-bold text-[17px]'>85</span>
+                          <span className='font-bold text-[12px] text-[#995F2F]'>4 this month</span>
+                          </div>
+                          </div>
+                        <div className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                            <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
+                                      <FaUserTie  className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
+                            </div>
+                            <div className='flex flex-col justify-center gap-[5px]'>
+                                         <span className='font-bold text-[14px] text-[#572C10] '>Active Agents</span>
+                                         <span className='font-bold text-[17px]'>10</span>
+                                         <span className='font-bold text-[12px] text-[#995F2F]'>+5 this month</span>
+                           </div>
+                        </div>
+                        <div
+                                        className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                                        <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
+                                       <FaEye   className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
+                                       </div>
+                                        <div className='flex flex-col justify-center gap-[5px]'>
+                                          <span className='font-bold text-[14px] text-[#572C10] '>Total views</span>
+                                          <span className='font-bold text-[17px]'>200</span>
+                                          <span className='font-bold text-[12px] text-[#995F2F]'>+17.8% this month</span>
+                                        </div>
+                                      </div>
+                                     
+      
+          
         </div>
         <div className='flex flex-col gap-[20px]'>
 
-          <div className='bg-[#DFF1F1] h-[170px] ml-[20px] w-[96%] rounded-sm'>
+          <div className='bg-[#F5F5F5]  h-[170px] ml-[20px] w-[96%] rounded-sm'>
 
             <div className='flex justify-around gap-[60%] font-bold p-[2px] mt-[10px]'>
               <h1>Browser Category</h1>
@@ -111,19 +136,16 @@ const AgentDashboard = () => {
             </div>
 
             <div className='flex justify-center gap-[20%]'>
-              <div className='bg-[#BBD5DA]  h-[120px] w-[150px] rounded-sm text-center flex items-center justify-center text-black font-bold text-2xl'>
+              <div className='bg-[#F5F5F5]  h-[120px] w-[150px] rounded-sm text-center flex items-center justify-center text-black font-bold text-2xl'>
                 Navbodh
               </div>
-
-              <div className='bg-[#BBD5DA]  h-[120px] w-[150px] rounded-sm text-center flex items-center justify-center text-black font-bold text-2xl'>
+              <div className='bg-[#F5F5F5]   h-[120px] w-[150px] rounded-sm text-center flex items-center justify-center text-black font-bold text-2xl'>
                 GyanBodh
               </div>
             </div>
-
           </div>
 
-
-          <div className='bg-[#DFF1F1] h-[210px] ml-[20px] w-[96%] rounded-sm'>
+          <div className=' bg-[#F5F5F5] h-[210px] ml-[20px] w-[96%] rounded-sm'>
 
             <div className='flex justify-around gap-[60%] font-bold p-[2px] mt-[10px]'>
               <h1>Recent Add Books</h1>
@@ -131,16 +153,16 @@ const AgentDashboard = () => {
             </div>
 
             <div className='flex justify-center gap-[10px]'>
-              <div className='bg-[#BBD5DA] h-[150px] w-[150px] rounded-sm text-center text-white'>
-            <img src="book 1.jpg " alt="" className='w-full h-full object-cover' />
-               </div>
-              <div className=' bg-[#BBD5DA] h-[150px] w-[150px] rounded-sm text-center text-white'>
+              <div className='bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white'>
+              <img src="book 1.jpg " alt="" className='w-full h-full object-cover' />
+              </div>
+              <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white'>
               <img src="book2.jfif " alt="" className='w-full h-full object-cover' />
               </div>
-              <div className=' bg-[#BBD5DA]   h-[150px] w-[150px] rounded-sm text-center text-white'>
+              <div className=' bg-[#F5F5F5]    h-[150px] w-[150px] rounded-sm text-center text-white'>
               <img src="book 3.jfif " alt="" className='w-full h-full object-cover' />
               </div>
-              <div className=' bg-[#BBD5DA]  h-[150px] w-[150px] rounded-sm text-center text-white'>
+              <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white'>
                 <img src="book 4.jfif " alt="" className='w-full h-full object-cover' />
               </div>
             </div>

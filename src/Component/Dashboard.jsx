@@ -61,7 +61,7 @@ const arr = [agentData];
 
           <ul className="list-none flex flex-col gap-[10px] ">
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded"
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
               onClick={() => navigate("/dashboard")}
             >
               <FaTachometerAlt />

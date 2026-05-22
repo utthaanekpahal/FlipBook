@@ -7,21 +7,21 @@ import Agentlogin from './Component/Agentlogin';
 import AgentDashboard from './Component/AgentDashboard';
 import Category from './pages/Category';
 import FlipPage from './pages/FlipPage';
-import Books from './pages/books';
+import Books from './pages/Books';
+
 
 const App = () => {
-  const [childval, setchildval] = useState([])
   return (
     <div>
       <Routes>
         <Route path="/" element={<Signupform />} />
         <Route path="/Loginform" element={<Loginform />} />
-        <Route path="/Dashboard" element={<Dashboard childval={childval}/>}/>
-        <Route path="/agent" element={<Agentlogin setchildval={setchildval} />}/>
+        <Route path="/Dashboard" element={<Dashboard />}/>
+        <Route path="/agent" element={<Agentlogin />}/>
         <Route path="/AgentDashboard" element={<AgentDashboard/>}/>
         <Route path="/Category"  element={<Category/>}/>
         <Route path="/FlipPage"  element={<FlipPage/>}/>
-        <Route path="/books"  element={<Books/>}/>
+        <Route path="/Books"  element={<Books/>}/>
       </Routes>
     </div>
   )

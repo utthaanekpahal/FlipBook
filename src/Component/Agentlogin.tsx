@@ -38,9 +38,9 @@ const Agentlogin = () => {
     }
     if(infodata.Password === infodata.AgentconfirmPassword){
      localStorage.setItem("Aname", infodata.agentname);
-     localStorage.setItem("Acpass", infodata.AgentconfirmPassword);
+     localStorage.setItem("Acpass",infodata.AgentconfirmPassword);
      localStorage.setItem("Apass", infodata.Password);
-     localStorage.setItem("Aemail", infodata.email);
+     localStorage.setItem("Aemail",infodata.email);
      navigate("/Dashboard")
     }
     else{
