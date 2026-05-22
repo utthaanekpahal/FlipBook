@@ -6,6 +6,7 @@ import Facebook from "../assets/imges/fsvg.svg";
 import Insta from "../assets/imges/isvg.svg";
 
 function SignupForm() {
+
   const navigate = useNavigate();
 
   const [first, setfirst] = useState({
@@ -14,17 +15,58 @@ function SignupForm() {
     confirmPassword: "",
   });
 
+  // ✅ ADDED: Error state for validations
+  const [errors, setErrors] = useState({});
+
   const [message, setMessage] = useState("");
 
   const getvalue = (e) => {
+
     const { name, value } = e.target;
 
     setfirst((prev) => ({
-      ...prev, [name]: value
+      ...prev,
+      [name]: value
     }));
   };
 
   const matchvalue = () => {
+
+    // ✅ ADDED: Empty object for storing errors
+    let newErrors = {};
+
+    // ✅ ADDED: Gmail validation regex
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+    // ✅ ADDED: Strong password regex
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8}$/;
+
+    // ✅ Username Validation
+    if (!gmailRegex.test(first.username)) {
+      newErrors.username = "Only Gmail IDs are allowed";
+    }
+
+    // ✅ Password Validation
+    if (!passwordRegex.test(first.password)) {
+      newErrors.password =
+        "Only 8 chars, upper, lower, number symbol req";
+    }
+
+    // ✅ Confirm Password Validation
+    if (first.password !== first.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    // ✅ ADDED: If errors exist stop form submission
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // ✅ ADDED: Clear errors if validation passes
+    setErrors({});
+
     // Get already stored username
     const existingUser = localStorage.getItem("username");
 
@@ -34,36 +76,45 @@ function SignupForm() {
       return;
     }
 
-    if (first.password === first.confirmPassword) {
-      localStorage.setItem("username", first.username);
-      localStorage.setItem("password", first.confirmPassword);
+    // Store data
+    localStorage.setItem("username", first.username);
+    localStorage.setItem("password", first.confirmPassword);
 
-      navigate("/Loginform", { replace: true });
-    } else {
-      navigate("/FlipPage");
-    }
+    navigate("/Loginform", { replace: true });
   };
 
   return (
+
     <div className="bg-[url('./assets/imges/bgimg.PNG')] bg-no-repeat bg-cover bg-center h-screen w-full flex justify-center items-center max-[770px]:bg-[length:100%_105%]">
 
-      <form className="flex flex-col justify-center items-center gap-[11px] h-[80vh] w-[26vw] rounded-[10px] shadow-[0_0_10px_rgba(0,0,0,0.2)] bg-[#fffbff] max-[770px]:mt-[-10%] max-[770px]:w-[45%] max-[770px]:h-auto max-[770px]:p-[20px]">
+      <form className="flex flex-col justify-center items-center gap-[11px] h-[90vh] w-[30vw] rounded-[10px] shadow-[0_0_10px_rgba(0,0,0,0.2)] bg-[#fffbff] max-[770px]:mt-[-10%] max-[770px]:w-[45%] max-[770px]:h-auto max-[770px]:p-[20px]">
 
         <h1 className="mt-[-5px] mb-[1px] font-bold text-2xl">
           Sign in
         </h1>
 
-        <label className="mr-[49%]">Username</label>
+        {/* USERNAME */}
+
+        <label className="mr-[42%]">Username</label>
 
         <input
           type="text"
           name="username"
-          placeholder="Enter your Username"
+          placeholder="Enter your Gmail"
           onChange={getvalue}
           className="p-[6px] w-[18vw] rounded-[5px] outline-none border-2 border-[rgba(128,128,128,0.3)]"
         />
 
-        <label className="mr-[50%]">Password</label>
+        {/* ✅ ADDED: Username Error */}
+        {errors.username && (
+          <p className="text-red-500 text-sm mr-[18%]">
+            {errors.username}
+          </p>
+        )}
+
+        {/* PASSWORD */}
+
+        <label className="mr-[42%]">Password</label>
 
         <input
           type="password"
@@ -73,7 +124,16 @@ function SignupForm() {
           className="p-[6px] w-[18vw] rounded-[5px] outline-none border-2 border-[rgba(128,128,128,0.3)]"
         />
 
-        <label className="mr-[33%]">Confirm Password</label>
+        {/* ✅ ADDED: Password Error */}
+        {errors.password && (
+          <p className="text-red-500 text-sm ml-[50px]">
+            {errors.password}
+          </p>
+        )}
+
+        {/* CONFIRM PASSWORD */}
+
+        <label className="mr-[28%]">Confirm Password</label>
 
         <input
           type="password"
@@ -83,6 +143,13 @@ function SignupForm() {
           className="p-[6px] w-[18vw] rounded-[5px] outline-none border-2 border-[rgba(128,128,128,0.3)]"
         />
 
+        {/* ✅ ADDED: Confirm Password Error */}
+        {errors.confirmPassword && (
+          <p className="text-red-500 text-sm mr-[90px]">
+            {errors.confirmPassword}
+          </p>
+        )}
+
         {message && (
           <p className="text-red-500 text-sm">
             {message}
@@ -90,6 +157,7 @@ function SignupForm() {
         )}
 
         <div className="mt-[10px]">
+
           <button
             type="button"
             onClick={matchvalue}
@@ -97,6 +165,7 @@ function SignupForm() {
           >
             Sign in
           </button>
+
         </div>
 
         <div className="mt-[2px]">
@@ -132,18 +201,23 @@ function SignupForm() {
         </div>
 
         <div className="mt-[2px]">
+
           <span>
             Do you already have an account?{" "}
+
             <Link
               to="/Loginform"
               className="no-underline font-bold text-[#99582A] cursor-pointer hover:text-black"
             >
               Click here
             </Link>
+
           </span>
+
         </div>
 
       </form>
+
     </div>
   );
 }
