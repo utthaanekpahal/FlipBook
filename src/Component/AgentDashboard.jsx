@@ -1,4 +1,5 @@
 import React from 'react'
+import { useEffect } from 'react';
 import { FaHome, FaBook, FaCog, FaSearch, FaBookOpen } from "react-icons/fa";
 import { FaUsers, FaFolder } from "react-icons/fa6";
 import { FaC } from 'react-icons/fa6';
@@ -10,6 +11,19 @@ import { FaSignOutAlt } from "react-icons/fa";
 
 const AgentDashboard = () => {
   const navigate = useNavigate();
+useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+
+    const handleBackButton = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, []);
   return (
     <div className='flex h-screen overflow-hidden bg-[#EFE6DD]'>
 
@@ -57,7 +71,7 @@ const AgentDashboard = () => {
   All Books
 </li>
               <li
-  className='flex items-center gap-3 p-[8px] text-xl text-red-600 hover:bg-red-600 hover:text-white font-bold rounded-lg cursor-pointer'
+  className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'
   onClick={() => {
     localStorage.removeItem("user");
     navigate("/loginform");
@@ -155,18 +169,18 @@ const AgentDashboard = () => {
 
           <div className='bg-[#F5F5F5]  h-[170px] ml-[20px] w-[96%] rounded-sm'>
 
-            <div className='flex justify-start gap-[60%] font-bold p-[2px] mt-[10px] text-[#572C10] text-2xl '>
+            <div className='flex justify-start gap-[60%] font-bold p-[2px] mt-[10px] text-[#572C10] text-[20px] ml-[15px] '>
               <h1>Browser Category</h1>
              
             </div>
 
-            <div className='flex justify-center gap-[20%]'>
-              <div className='bg-[#F5F5F5]  h-[120px] w-[150px] rounded-md flex items-center justify-center text-black font-bold text-2xl'>
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQjUOnvHB-eJ11uevsZc_4FUQINV8pPTP9Lg&s" alt="" className='w-full h-full object-cover ' />
+            <div className='flex justify-center gap-[10%]'>
+              <div className='bg-[#F5F5F5] mt-[-20px]  h-[120px] w-[150px] rounded-md flex items-center justify-center text-black bg-amber-700 font-bold text-2xl'>
+              <img src="/nav.png" alt="" className='w-[150px] h-[150px] rounded-[5px] object-cover ' />
       
               </div>
-              <div className='bg-[#F5F5F5]   h-[120px] w-[150px] rounded-sm text-center flex items-center justify-center text-black font-bold text-2xl'>
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9uhqo9C1byKl7dmz29-E47DNhPFTRSg3aMQ&s" alt="" className='w-full h-full object-cover' />
+              <div className='bg-[#F5F5F5] mt-[-20px]  h-[120px] w-[150px] rounded-sm text-center flex items-center bg-amber-800 justify-center text-black font-bold text-2xl'>
+              <img src="/gyan.png" alt="" className='w-[150px] h-[150px] rounded-[5px] object-cover' />
               
               </div>
             </div>
@@ -174,26 +188,30 @@ const AgentDashboard = () => {
 
           <div className=' bg-[#F5F5F5] h-[210px] ml-[20px] w-[96%] rounded-sm'>
 
-            <div className='flex justify-start gap-[60%] font-bold p-[2px] mt-[10px] text-[#572C10] text-2xl'>
+            <div className='flex justify-start gap-[60%] font-bold p-[2px] mt-[10px] text-[#572C10] text-[20px] ml-[15px] '>
               <h1>Recent Add Books</h1>
              
             </div>
 
 
-            <div className='flex justify-center gap-[10px]'>
-              <div className='bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white'>
-              <img src="book 1.jpg " alt="" className='w-full h-full object-cover' />
+            <div className='flex justify-center gap-[25px] ml-[15%]'>
+              <div className='bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white mt-[-23px]'>
+              <img src="book4.png " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
               </div>
-              <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white'>
-              <img src="book2.jfif " alt="" className='w-full h-full object-cover' />
+              <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white mt-[-23px]'>
+              <img src="book2.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
               </div>
-              <div className=' bg-[#F5F5F5]    h-[150px] w-[150px] rounded-sm text-center text-white'>
-              <img src="book 3.jfif " alt="" className='w-full h-full object-cover' />
+              <div className=' bg-[#F5F5F5]    h-[150px] w-[150px] rounded-sm text-center text-white  mt-[-23px]'>
+              <img src="book 3.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
               </div>
-              <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white'>
-                <img src="book 4.jfif " alt="" className='w-full h-full object-cover' />
+              <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white mt-[-23px]'>
+                <img src="book 4.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
+              </div>
+               <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white mt-[-23px]'>
+                <img src="book 4.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
               </div>
             </div>
+            
 
           </div>
 

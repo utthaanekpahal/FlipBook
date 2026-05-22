@@ -74,15 +74,15 @@ const arr = [agentData];
 
        <li
   className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded"
-  onClick={() =>
-    navigate("/books", {
+              onClick={() =>
+navigate("/books", {
       state: { from: "admin" }
     })
-  }
->
-  <FaBook />
-  Books
-</li>
+}
+            >
+              <FaBook />
+              Books
+            </li>
 
            <li
   className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10] font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
@@ -91,10 +91,11 @@ const arr = [agentData];
       state: { from: "admin" }
     })
   }
->
-  <FaList />
-  Categories
-</li>
+            >
+              <FaList />
+              Categories
+            </li>
+
             <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded">
              
               <FaUpload />
