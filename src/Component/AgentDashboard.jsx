@@ -42,7 +42,7 @@ const AgentDashboard = () => {
     })
   }
 >
-  <FaBook className='text-2xl' />
+  <FaFolder className='text-2xl' />
   Categories
 </li>
              <li

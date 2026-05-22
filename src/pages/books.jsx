@@ -7,7 +7,7 @@ const Books = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-
+       
       <div className="flex justify-center pt-10 pb-20">
         <div className="w-[900px]">
           <div className="grid grid-cols-3 gap-6">
@@ -29,7 +29,7 @@ const Books = () => {
             </div>
 
             <div className="bg-gray-300 h-[350px] flex items-center justify-center overflow-hidden rounded-xl hover:scale-105 transition-all duration-500">
-              <img src="/book5.jfif" alt="" className="w-full h-full object-cover" />
+              <img src="https://bookley.in/software/admin/uploaded/book_img/DOC1685708642002.4.jpg" alt="" className="w-full h-full object-cover" />
             </div>
 
             <div className="bg-gray-300 h-[350px] flex items-center justify-center overflow-hidden rounded-xl hover:scale-105 transition-all duration-500">

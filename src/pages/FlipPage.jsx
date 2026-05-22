@@ -11,21 +11,21 @@ function FlipPage() {
 
   const bookRef = useRef();
 
+  // 🎧 SOUND
+  const flipSound = useRef(new Audio("/sounds/page-flip.mp3"));
+
   useEffect(() => {
     loadPDF();
   }, []);
 
   const loadPDF = async () => {
     const pdf = await pdfjsLib.getDocument("/Math Fun With Abby.pdf").promise;
-    console.log("Total Pages:", pdf.numPages);
 
     let loadedPages = [];
-
     const maxPages = Math.min(pdf.numPages, 20);
 
     for (let i = 1; i <= maxPages; i++) {
       const page = await pdf.getPage(i);
-
       const viewport = page.getViewport({ scale: 1.5 });
 
       const canvas = document.createElement("canvas");
@@ -36,13 +36,19 @@ function FlipPage() {
 
       await page.render({
         canvasContext: context,
-        viewport: viewport,
+        viewport,
       }).promise;
 
       loadedPages.push(canvas.toDataURL());
     }
 
     setPages(loadedPages);
+  };
+
+  // 🔊 SOUND FUNCTION (reusable)
+  const playSound = () => {
+    flipSound.current.currentTime = 0;
+    flipSound.current.play();
   };
 
   return (
@@ -64,7 +70,10 @@ function FlipPage() {
             maxWidth={400}
             minHeight={500}
             maxHeight={500}
-            onFlip={(e) => setCurrentPage(e.data + 1)}
+
+            onFlip={(e) => {
+              setCurrentPage(e.data + 1);
+            }}
           >
             {pages.map((page, index) => (
               <div
@@ -80,23 +89,31 @@ function FlipPage() {
             ))}
           </HTMLFlipBook>
 
-          {/* Controls */}
+          {/* CONTROLS */}
           <div className="flex items-center gap-6 mt-6">
 
+            {/* PREV */}
             <button
-              onClick={() => bookRef.current.pageFlip().flipPrev()}
+              onClick={() => {
+                playSound();
+                bookRef.current.pageFlip().flipPrev();
+              }}
               className="bg-[#572C10] text-white px-6 py-2 rounded-xl font-bold hover:scale-105 transition"
             >
               ← Previous
             </button>
 
+            {/* PAGE INFO */}
             <div className="bg-white px-6 py-2 rounded-full shadow-lg font-bold">
               Page {currentPage} / {pages.length}
             </div>
-            
 
+            {/* NEXT */}
             <button
-              onClick={() => bookRef.current.pageFlip().flipNext()}
+              onClick={() => {
+                playSound();
+                bookRef.current.pageFlip().flipNext();
+              }}
               className="bg-[#572C10] text-white px-6 py-2 rounded-xl font-bold hover:scale-105 transition"
             >
               Next →
