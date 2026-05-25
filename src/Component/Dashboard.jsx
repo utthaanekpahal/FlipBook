@@ -22,7 +22,6 @@ function Dashboard() {
 const arr = [agentData];
   const navigate = useNavigate();
   const handleLogout = () => {
-  localStorage.clear();
   navigate("/loginform");
 };
   return (
@@ -65,7 +64,7 @@ const arr = [agentData];
 
           <ul className="list-none flex flex-col gap-[10px] ">
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer text-[#572C10] hover:bg-[#572C10] hover:text-white rounded"
               onClick={() => navigate("/dashboard")}
             >
               <FaTachometerAlt />
@@ -73,7 +72,7 @@ const arr = [agentData];
             </li>
 
        <li
-  className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-gray-100 rounded"
+  className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer text-[#572C10] hover:bg-[#572C10] hover:text-white rounded"
               onClick={() =>
 navigate("/books", {
       state: { from: "admin" }
@@ -85,12 +84,12 @@ navigate("/books", {
             </li>
 
            <li
-  className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10] font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
-  onClick={() =>
-    navigate("/category", {
-      state: { from: "admin" }
-    })
-  }
+         className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10] font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
+          onClick={() =>
+          navigate("/category", {
+           state: { from: "admin" }
+           })
+           }
             >
               <FaList />
               Categories
@@ -176,7 +175,7 @@ navigate("/books", {
 
 
           {/* RECENT BOOK */}
-         <div className="bg-[#F5F5F5] rounded-[10px] p-[20px]">
+         <div className="bg-[#F5F5F5] rounded-[10px] p-[10px]">
 
   <div className='flex justify-between items-center mb-[20px]'>
 
@@ -186,13 +185,13 @@ navigate("/books", {
 
   </div>
 
-  <div className='flex justify-center gap-[30px]'>
+  <div className='flex justify-center gap-[30px] mt-[-25px]'>
 
     {/* BOOK 1 */}
     <div className='flex flex-col items-center gap-[5px]'>
 
       <div className='w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpvDOaZom26Em_V82vJa8tl-zovil5OlgmwA&s" alt="" className='w-full h-full object-cover rounded' />
+        <img onClick={()=>{navigate("/FlipPage")}} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpvDOaZom26Em_V82vJa8tl-zovil5OlgmwA&s" alt="" className='w-full h-full object-cover rounded' />
       </div>
 
       <span className="text-[14px] font-bold">Mathematics</span>
@@ -205,7 +204,7 @@ navigate("/books", {
     <div className='flex flex-col items-center gap-[5px]'>
 
       <div className='w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-        <img src="https://m.media-amazon.com/images/I/81zleB1itJL._AC_UF1000,1000_QL80_.jpg" alt="" className='w-full h-full object-cover rounded' />
+        <img onClick={()=>{navigate("/FlipPage")}} src="https://m.media-amazon.com/images/I/81zleB1itJL._AC_UF1000,1000_QL80_.jpg" alt="" className='w-full h-full object-cover rounded' />
       </div>
 
       <span className="text-[14px] font-bold">English</span>
@@ -218,7 +217,7 @@ navigate("/books", {
     <div className='flex flex-col items-center gap-[5px]'>
 
       <div className='w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-        <img src="https://sureshbookdepot.com/wp-content/uploads/2025/07/20250707_180109-scaled.jpg" alt="" className='w-full h-full object-cover rounded' />
+        <img onClick={()=>{navigate("/FlipPage")}} src="https://sureshbookdepot.com/wp-content/uploads/2025/07/20250707_180109-scaled.jpg" alt="" className='w-full h-full object-cover rounded' />
       </div>
 
       <span className="text-[14px] font-bold">Hindi</span>
@@ -231,7 +230,29 @@ navigate("/books", {
     <div className='flex flex-col items-center gap-[5px]'>
 
       <div className='w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-        <img src="https://www.kasimuddinandsons.com/eShop/image/cache/catalog/Navbodh%20digdarshika%20Biology%20Class%2012th%20KS000940%20%20Mrp100-500x500.jpg" alt="" className='w-full h-full object-cover rounded' />
+        <img onClick={()=>{navigate("/FlipPage")}} src="/book 4.jfif" alt="" className='w-full h-full object-cover rounded' />
+      </div>
+
+      <span className="text-[14px] font-bold">Science</span>
+      <span className="text-[12px] font-bold">Class 8</span>
+      <span className="text-[12px] font-bold">May 25 2026</span>
+
+    </div>
+     <div className='flex flex-col items-center gap-[5px]'>
+
+      <div className='w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
+        <img onClick={()=>{navigate("/FlipPage")}} src="/book12.jpg" alt="" className='w-full h-full object-cover rounded' />
+      </div>
+
+      <span className="text-[14px] font-bold">Science</span>
+      <span className="text-[12px] font-bold">Class 8</span>
+      <span className="text-[12px] font-bold">May 25 2026</span>
+
+    </div>
+     <div className='flex flex-col items-center gap-[5px]'>
+
+      <div className='w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
+        <img onClick={()=>{navigate("/FlipPage")}} src="/book8.jpg" alt="" className='w-full h-full object-cover rounded' />
       </div>
 
       <span className="text-[14px] font-bold">Science</span>
@@ -319,11 +340,6 @@ navigate("/books", {
                 <h4 className='font-bold text-[#572C10]'>
                   Top Viewed Books
                 </h4>
-
-                <button className='border px-[10px] py-[5px] text-[#572C10] border-[#EFE6DD] font-bold rounded'>
-                  View all
-                </button>
-
               </div>
 
               <table className='w-full'>

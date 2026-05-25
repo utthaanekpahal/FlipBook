@@ -11,19 +11,6 @@ import { FaSignOutAlt } from "react-icons/fa";
 
 const AgentDashboard = () => {
   const navigate = useNavigate();
-useEffect(() => {
-    window.history.pushState(null, "", window.location.href);
-
-    const handleBackButton = () => {
-      window.history.pushState(null, "", window.location.href);
-    };
-
-    window.addEventListener("popstate", handleBackButton);
-
-    return () => {
-      window.removeEventListener("popstate", handleBackButton);
-    };
-  }, []);
   return (
     <div className='flex h-screen overflow-hidden bg-[#EFE6DD]'>
 
@@ -69,16 +56,6 @@ useEffect(() => {
 >
   <FaBook className='text-2xl' />
   All Books
-</li>
-              <li
-  className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'
-  onClick={() => {
-    localStorage.removeItem("user");
-    navigate("/loginform");
-  }}
->
-  <FaSignOutAlt className='text-2xl' />
-  Logout
 </li>
               
             </ul>
@@ -145,9 +122,9 @@ useEffect(() => {
                                       <FaUserTie  className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
                             </div>
                             <div className='flex flex-col justify-center gap-[5px]'>
-                                         <span className='font-bold text-[14px] text-[#572C10] '>Active Agents</span>
-                                         <span className='font-bold text-[17px]'>10</span>
-                                         <span className='font-bold text-[12px] text-[#995F2F]'>+5 this month</span>
+                                         <span className='font-bold text-[14px] text-[#572C10] '> Agent</span>
+                                         <span className='font-bold text-[17px]'>1</span>
+                                         <span className='font-bold text-[12px] text-[#995F2F]'>this month</span>
                            </div>
                         </div>
                         <div
@@ -176,11 +153,11 @@ useEffect(() => {
 
             <div className='flex justify-center gap-[10%]'>
               <div className='bg-[#F5F5F5] mt-[-20px]  h-[120px] w-[150px] rounded-md flex items-center justify-center text-black bg-amber-700 font-bold text-2xl'>
-              <img src="/nav.png" alt="" className='w-[150px] h-[150px] rounded-[5px] object-cover ' />
+              <img onClick={()=>{navigate("/Category")}} src="/nav.png" alt="" className='w-[150px] h-[150px] rounded-[5px] object-cover ' />
       
               </div>
               <div className='bg-[#F5F5F5] mt-[-20px]  h-[120px] w-[150px] rounded-sm text-center flex items-center bg-amber-800 justify-center text-black font-bold text-2xl'>
-              <img src="/gyan.png" alt="" className='w-[150px] h-[150px] rounded-[5px] object-cover' />
+              <img onClick={()=>{navigate("/Category")}}  src="/gyan.png" alt="" className='w-[150px] h-[150px] rounded-[5px] object-cover' />
               
               </div>
             </div>
@@ -196,19 +173,19 @@ useEffect(() => {
 
             <div className='flex justify-center gap-[25px] ml-[15%]'>
               <div className='bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white mt-[-23px]'>
-              <img src="book4.png " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
+              <img onClick={()=>{navigate("/FlipPage")}} src="book4.png " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
               </div>
               <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white mt-[-23px]'>
-              <img src="book2.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
+              <img onClick={()=>{navigate("/FlipPage")}} src="book2.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
               </div>
               <div className=' bg-[#F5F5F5]    h-[150px] w-[150px] rounded-sm text-center text-white  mt-[-23px]'>
-              <img src="book 3.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
+              <img onClick={()=>{navigate("/FlipPage")}} src="book 3.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
               </div>
               <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white mt-[-23px]'>
-                <img src="book 4.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
+                <img onClick={()=>{navigate("/FlipPage")}} src="book 4.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
               </div>
                <div className=' bg-[#F5F5F5]  h-[150px] w-[150px] rounded-sm text-center text-white mt-[-23px]'>
-                <img src="book 4.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
+                <img onClick={()=>{navigate("/FlipPage")}} src="book 4.jfif " alt="" className='w-full h-[180px] object-cover rounded-[5px]' />
               </div>
             </div>
             

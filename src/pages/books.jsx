@@ -6,14 +6,9 @@ const Books = () => {
   const location = useLocation();
 
   return (
-<<<<<<< Updated upstream
-    <div className="min-h-screen bg-gray-100">
-       
-=======
     <div className="min-h-screen">
 
       {/* Books Grid */}
->>>>>>> Stashed changes
       <div className="flex justify-center pt-10 pb-20">
         <div className="w-[900px]">
            <h1 className="text-[#572C10] text-center mb-[20px] text-3xl font-bold">
@@ -38,13 +33,8 @@ const Books = () => {
               <img src="/book12.jpg" alt="" className="w-full h-full object-cover" />
             </div>
 
-<<<<<<< Updated upstream
-            <div className="bg-gray-300 h-[350px] flex items-center justify-center overflow-hidden rounded-xl hover:scale-105 transition-all duration-500">
-              <img src="https://bookley.in/software/admin/uploaded/book_img/DOC1685708642002.4.jpg" alt="" className="w-full h-full object-cover" />
-=======
             <div className="bg-gray-300 h-[350px] overflow-hidden rounded-xl hover:scale-105 transition-all duration-500">
               <img src="/book5.jfif" alt="" className="w-full h-full object-cover" />
->>>>>>> Stashed changes
             </div>
 
             <div className="bg-gray-300 h-[350px] overflow-hidden rounded-xl hover:scale-105 transition-all duration-500">

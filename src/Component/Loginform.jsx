@@ -57,7 +57,7 @@ export default function Login() {
     // 🔐 Get stored users
     const user = localStorage.getItem("username");
     const pass = localStorage.getItem("password");
-    const agent = localStorage.getItem("Aname");
+    const agent = localStorage.getItem("Aemail");
     const agentpass = localStorage.getItem("Acpass");
 
     // 🔐 Agent login
@@ -84,7 +84,7 @@ export default function Login() {
     >
       <div className="absolute inset-0 bg-black/50"></div>
 
-      <div className="relative w-full max-w-md mx-4 p-8 h-[85vh] bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl">
+      <div className="relative w-full max-w-md mx-4 p-8 h-[78vh] bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl">
 
         <h1 className="text-3xl font-bold text-center text-gray-800">
           Welcome Back
