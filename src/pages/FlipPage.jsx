@@ -11,9 +11,6 @@ function FlipPage() {
 
   const bookRef = useRef();
 
-  // 🎧 SOUND
-  const flipSound = useRef(new Audio("/sounds/page-flip.mp3"));
-
   useEffect(() => {
     loadPDF();
   }, []);
@@ -45,10 +42,13 @@ function FlipPage() {
     setPages(loadedPages);
   };
 
-  // 🔊 SOUND FUNCTION (reusable)
+  // 🔊 SOUND FUNCTION (FIXED)
   const playSound = () => {
-    flipSound.current.currentTime = 0;
-    flipSound.current.play();
+    const audio = new Audio("/oxidvideos-page-flip-1-178322.mp3");
+    audio.currentTime = 0;
+    audio.play().catch((err) => {
+      console.log("Audio error:", err);
+    });
   };
 
   return (
@@ -70,10 +70,7 @@ function FlipPage() {
             maxWidth={400}
             minHeight={500}
             maxHeight={500}
-
-            onFlip={(e) => {
-              setCurrentPage(e.data + 1);
-            }}
+            onFlip={(e) => setCurrentPage(e.data + 1)}
           >
             {pages.map((page, index) => (
               <div
@@ -92,29 +89,26 @@ function FlipPage() {
           {/* CONTROLS */}
           <div className="flex items-center gap-6 mt-6">
 
-            {/* PREV */}
             <button
               onClick={() => {
                 playSound();
                 bookRef.current.pageFlip().flipPrev();
               }}
-              className="bg-[#572C10] text-white px-6 py-2 rounded-xl font-bold hover:scale-105 transition"
+              className="bg-[#572C10] text-white px-6 py-2 rounded-xl font-bold"
             >
               ← Previous
             </button>
 
-            {/* PAGE INFO */}
             <div className="bg-white px-6 py-2 rounded-full shadow-lg font-bold">
               Page {currentPage} / {pages.length}
             </div>
 
-            {/* NEXT */}
             <button
               onClick={() => {
                 playSound();
                 bookRef.current.pageFlip().flipNext();
               }}
-              className="bg-[#572C10] text-white px-6 py-2 rounded-xl font-bold hover:scale-105 transition"
+              className="bg-[#572C10] text-white px-6 py-2 rounded-xl font-bold"
             >
               Next →
             </button>
@@ -122,7 +116,6 @@ function FlipPage() {
           </div>
         </>
       )}
-
     </div>
   );
 }
