@@ -8,8 +8,7 @@ import AgentDashboard from './Component/AgentDashboard';
 import Category from './pages/Category';
 import FlipPage from './pages/FlipPage';
 import Books from './pages/Books';
-import ClassPage from './pages/ClassPage';
-
+import Ticket from './pages/Ticket';
 
 
 const App = () => {
@@ -24,8 +23,7 @@ const App = () => {
         <Route path="/Category"  element={<Category/>}/>
         <Route path="/FlipPage"  element={<FlipPage/>}/>
         <Route path="/Books"  element={<Books/>}/>
-        <Route path="/ClassPage"  element={<ClassPage/>}/>
-       
+        <Route  path='/Ticket' element={<Ticket/>}/>
       </Routes>
     </div>
   )

@@ -8,9 +8,15 @@ import {  FaThList ,FaUserTie } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { FaSignOutAlt } from "react-icons/fa";
+import { MdConfirmationNumber } from "react-icons/md";
 
 const AgentDashboard = () => {
   const navigate = useNavigate();
+   const handleLogout = () => {
+  navigate("/loginform");
+};
+const username=localStorage.getItem("Aname")
+console.log(username)
   return (
     <div className='flex h-screen overflow-hidden bg-[#EFE6DD]'>
 
@@ -57,8 +63,16 @@ const AgentDashboard = () => {
   <FaBook className='text-2xl' />
   All Books
 </li>
-              
-            </ul>
+<li className='flex items-center gap-3 p-[8px] text-xl  text-[#572C10]  hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'
+     onClick={()=>{navigate("/Ticket")}}>
+  <MdConfirmationNumber className='text-2xl' />
+                Ticket 
+              </li>
+  <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-red-600 hover:text-white rounded text-red-600"
+   onClick={handleLogout}>
+  <FaUser/> Logout </li>
+
+  </ul>
           </div>
         </div>
       </header>
@@ -71,7 +85,7 @@ const AgentDashboard = () => {
         <div className='flex justify-between items-center bg-[#F5F5F5] p-3 rounded-[4px]'>
             
           <span className='ml-[10px] text-xl font-bold text-[#572C10]'>
-            Hii Agent
+            Hii {username}
           </span>
 
           {/* Search Input */}
@@ -97,7 +111,7 @@ const AgentDashboard = () => {
         {/* Main Content */}
         <div className='p-5 flex gap-[20px]'>
          <div
-                        className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                        className="h-[20vh] w-[19.1vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
                         <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
                        <FaBook className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
                        </div>
@@ -107,28 +121,28 @@ const AgentDashboard = () => {
                           <span className='font-bold text-[12px] text-[#995F2F]'>+12 this month</span>
                         </div>
                       </div>
-                        <div className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                        <div className="h-[20vh] w-[19.1vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
                           <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
                           <FaThList  className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
                           </div>
                         <div className='flex flex-col justify-center gap-[5px]'>
                           <span className='font-bold text-[14px] text-[#572C10] '>Total Categories</span>
-                          <span className='font-bold text-[17px]'>85</span>
+                          <span className='font-bold text-[17px]'>2</span>
                           <span className='font-bold text-[12px] text-[#995F2F]'>4 this month</span>
                           </div>
                           </div>
-                        <div className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                        <div className="h-[20vh] w-[19.1vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
                             <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
-                                      <FaUserTie  className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
+                                      <MdConfirmationNumber  className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
                             </div>
                             <div className='flex flex-col justify-center gap-[5px]'>
-                                         <span className='font-bold text-[14px] text-[#572C10] '> Agent</span>
+                                         <span className='font-bold text-[14px] text-[#572C10] '>Ticket Raise</span>
                                          <span className='font-bold text-[17px]'>1</span>
                                          <span className='font-bold text-[12px] text-[#995F2F]'>this month</span>
                            </div>
                         </div>
                         <div
-                                        className="h-[20vh] w-[20vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
+                                        className="h-[20vh] w-[19.5vw] bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
                                         <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
                                        <FaEye   className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
                                        </div>
