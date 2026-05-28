@@ -89,8 +89,9 @@ const arr = [agentData];
               Categories
             </li>
 
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded">
-             
+            <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
+             onClick={() => navigate("/uploadBooks")}
+             >
               <FaUpload />
               Upload Books
             </li>

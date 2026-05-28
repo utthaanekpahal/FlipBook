@@ -9,6 +9,8 @@ import Category from './pages/Category';
 import FlipPage from './pages/FlipPage';
 import Books from './pages/Books';
 import Ticket from './pages/Ticket';
+import ClassPage from './pages/ClassPage';
+import UploadBooks from './pages/UploadBooks';
 
 
 const App = () => {
@@ -24,6 +26,9 @@ const App = () => {
         <Route path="/FlipPage"  element={<FlipPage/>}/>
         <Route path="/Books"  element={<Books/>}/>
         <Route  path='/Ticket' element={<Ticket/>}/>
+        <Route  path='/ClassPage' element={<ClassPage/>}/>
+        <Route  path='/UploadBooks' element={<UploadBooks/>}/>
+       
       </Routes>
     </div>
   )
