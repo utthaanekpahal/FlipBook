@@ -4,6 +4,7 @@ import { IoNotificationsOutline } from 'react-icons/io5';
 import { FaBookOpen } from "react-icons/fa";
 import { FaSearch , FaUser, FaThList ,FaUserTie } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { MdConfirmationNumber } from "react-icons/md";
 import {
   FaTachometerAlt,
   FaBook,
@@ -18,7 +19,7 @@ function Dashboard() {
   password: localStorage.getItem("Apass"),
   email: localStorage.getItem("Aemail"),
   confirmPassword: localStorage.getItem("Acpass"),
-};
+};// admin / agen
 const arr = [agentData];
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -70,15 +71,8 @@ const arr = [agentData];
               <FaTachometerAlt />
               Dashboard
             </li>
-
-       <li
-  className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer text-[#572C10] hover:bg-[#572C10] hover:text-white rounded"
-              onClick={() =>
-navigate("/books", {
-      state: { from: "admin" }
-    })
-}
-            >
+       <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer text-[#572C10] hover:bg-[#572C10] hover:text-white rounded"
+              onClick={() => navigate("/books", {    state: { from: "admin" }  })}>
               <FaBook />
               Books
             </li>
@@ -108,15 +102,16 @@ navigate("/books", {
               <FaUsers />
               Agents
             </li>
-<li
-  className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-red-600 hover:text-white rounded text-red-600"
-  onClick={handleLogout}
+            <li
+  className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold text-[#572C10] cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
+  onClick={() => navigate("/ticket",{state:{role:"user"}})}
 >
-  <FaUser />
-  Logout
+  <MdConfirmationNumber />
+  Ticket
 </li>
-            
-
+           <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer  hover:bg-red-600 hover:text-white rounded text-red-600"
+            onClick={handleLogout}> <FaUser /> Logout </li>
+        
           </ul>
 
         </aside>
@@ -334,38 +329,20 @@ navigate("/books", {
 
             {/* CARD */}
             <div className="w-[300px] bg-[#F5F5F5] rounded-[10px] p-[20px]">
-
-              <div className='flex justify-between mb-[20px]'>
-
-                <h4 className='font-bold text-[#572C10]'>
-                  Top Viewed Books
-                </h4>
+              <div className='text-[#572C10] font-bold '>Recent Ticket</div>
+              <div className=''>   
+              <div className='flex justify-between items-center mt-[4%]'>
+                <h2 className='ml-[6px]'>Name</h2>
+                <h2>Date</h2>
+                <h2>Detail</h2>
               </div>
-
-              <table className='w-full'>
-
-                <tbody>
-
-                  {[...Array(5)].map((_,i)=>(
-
-                    <tr key={i}>
-
-                      <td className='p-[10px]'>
-                        value
-                      </td>
-
-                      <td>
-                        value
-                      </td>
-
-                    </tr>
-
-                  ))}
-
-                </tbody>
-
-              </table>
-
+              <div className='flex justify-between items-center mt-[4%] p-[5px] w-[104%] '>
+                 <span className=''>Piyush</span>
+                 <span className='ml-[20px]'>5.Aug.26</span>
+                 <button className='bg-[#A77F60] text-white font-bold px-[10px] rounded-[4px] '
+                 onClick={() => navigate("/ticket",{state:{role:"user"}})}>click</button>
+              </div>
+              </div>
             </div>
 
           </div>

@@ -16,7 +16,6 @@ const AgentDashboard = () => {
   navigate("/loginform");
 };
 const username=localStorage.getItem("Aname")
-console.log(username)
   return (
     <div className='flex h-screen overflow-hidden bg-[#EFE6DD]'>
 
@@ -64,10 +63,8 @@ console.log(username)
   All Books
 </li>
 <li className='flex items-center gap-3 p-[8px] text-xl  text-[#572C10]  hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'
-     onClick={()=>{navigate("/Ticket")}}>
-  <MdConfirmationNumber className='text-2xl' />
-                Ticket 
-              </li>
+     onClick={()=>{navigate("/Ticket",{state:{role:"agent"}})}}>
+  <MdConfirmationNumber className='text-2xl' /> Ticket </li>
   <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer hover:bg-red-600 hover:text-white rounded text-red-600"
    onClick={handleLogout}>
   <FaUser/> Logout </li>

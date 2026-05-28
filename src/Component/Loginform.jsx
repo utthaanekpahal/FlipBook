@@ -68,7 +68,6 @@ export default function Login() {
     // 🔐 Normal user login
     else if (data.username === user && data.password === pass) {
       navigate("/Dashboard", { replace: true });
-      
     }
 
     // ❌ Invalid credentials
