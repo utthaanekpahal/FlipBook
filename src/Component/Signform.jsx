@@ -40,7 +40,7 @@ function SignupForm() {
 
     // ✅ ADDED: Strong password regex
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8}$/;
+     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
 
     // ✅ Username Validation
     if (!gmailRegex.test(first.username)) {

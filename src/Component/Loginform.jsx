@@ -32,7 +32,7 @@ export default function Login() {
 
     // ✅ Password validation (strong password rule)
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
 
     // ✅ Username validation
     if (!gmailRegex.test(data.username)) {

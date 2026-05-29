@@ -39,8 +39,7 @@ const Agentlogin = () => {
 
     // ✅ ADDED: Strong password regex
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8}$/;
-
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
     // ✅ Agent Name Validation
     if (infodata.agentname.trim() === "") {
       newErrors.agentname = "Agent name is required";
