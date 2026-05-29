@@ -1,0 +1,241 @@
+{
+  "Navbodh": {
+    "Book N1": {
+      "Class 1": [
+        { "title": "Maths", "img": "/book21.jpg","description": "Mathematics book for Class 1" ,  "pdf": "/Maths.pdf"},
+        { "title": "English", "img": "/book22.jpg","description": "English book for Class 1" ,"pdf": "/English.pdf"},
+        { "title": "Hindi", "img": "/book23.jpeg","description": "Hindi book for Class 1" ,"pdf": "/Hindi.pdf"},
+        { "title": "EVS", "img": "/book24.jpeg","description": "Environmental Science book for Class 1","pdf": "/evs.pdf" },
+        { "title": "Computer", "img": "/book25.jpeg","description": "Computer book for Class 1" ,"pdf": "/computer.pdf"}
+      ],
+      "Class 2": [
+        { "title": "Maths", "img": "/book26.jpeg","description": "Mathematics book for Class 2" },
+        { "title": "English", "img": "/book23.jpeg","description": "English book for Class 2" },
+        { "title": "Hindi", "img": "/book28.jpeg","description": "Hindi book for Class 2" },
+        { "title": "EVS", "img": "/book29.jpeg","description": "Environmental Science book for Class 2" },
+        { "title": "Computer", "img": "/book30.jpeg","description": "Computer book for Class 2" }
+      ],
+      "Class 3": [
+        { "title": "Maths", "img": "/book21.jpg","description": "Mathematics book for Class 3" },
+        { "title": "English", "img": "/book22.jpg","description": "English book for Class 3" },
+        { "title": "Hindi", "img": "/book23.jpeg","description": "Hindi book for Class 3" },
+        { "title": "Science", "img": "/book24.jpeg","description": "Science book for Class 3" },
+        { "title": "Computer", "img": "/book25.jpeg","description": "Computer book for Class 3" }
+      ],
+      "Class 4": [
+        { "title": "Maths", "img": "/book21.jpg","description": "Mathematics book for Class 4" },
+        { "title": "English", "img": "/book22.jpg","description": "English book for Class 4" },
+        { "title": "Hindi", "img": "/book23.jpeg","description": "Hindi book for Class 4" },
+        { "title": "Science", "img": "/book24.jpeg","description": "Science book for Class 4" },
+        { "title": "Social Science", "img": "/book25.jpeg","description": "Social Science book for Class 4" }
+      ],
+      "Class 5": [
+        { "title": "Maths", "img": "/book21.jpg","description": "Mathematics book for Class 5" },
+        { "title": "English", "img": "/book22.jpg","description": "English book for Class 5" },
+        { "title": "Hindi", "img": "/book23.jpeg","description": "Hindi book for Class 5" },
+        { "title": "Science", "img": "/book24.jpeg","description": "Science book for Class 5" },
+        { "title": "Social Science", "img": "/book25.jpeg","description": "Social Science book for Class 5" }
+      ],
+      "Class 6": [
+        { "title": "Maths", "img": "/book21.jpg","description": "Mathematics book for Class 6" },
+        { "title": "English", "img": "/book22.jpg","description": "English book for Class 6" },
+        { "title": "Hindi", "img": "/book23.jpeg","description": "Hindi book for Class 6" },
+        { "title": "Science", "img": "/book24.jpeg","description": "Science book for Class 6" },
+        { "title": "Social Science", "img": "/book25.jpeg","description": "Social Science book for Class 6" }
+      ],
+      "Class 7": [
+        { "title": "Maths", "img": "/book21.jpg","description": "Mathematics book for Class 7" },
+        { "title": "English", "img": "/book22.jpg","description": "English book for Class 7" },
+        { "title": "Hindi", "img": "/book23.jpeg","description": "Hindi book for Class 7" },
+        { "title": "Science", "img": "/book24.jpeg","description": "Science book for Class 7" },
+        { "title": "Social Science", "img": "/book25.jpeg","description": "Social Science book for Class 7" }
+      ],
+      "Class 8": [
+        { "title": "Maths", "img": "/book21.jpg","description": "Mathematics book for Class 8" },
+        { "title": "English", "img": "/book22.jpg","description": "English book for Class 8" },
+        { "title": "Hindi", "img": "/book23.jpeg","description": "Hindi book for Class 8" },
+        { "title": "Science", "img": "/book24.jpeg","description": "Science book for Class 8" },
+        { "title": "Social Science", "img": "/book25.jpeg","description": "Social Science book for Class 8" }
+      ]
+    },
+
+    "Book N2": {
+      "Class 1": [
+        { "title": "Maths N2", "img": "/book21.jpg","description": "Mathematics book for Class 1" },
+        { "title": "English N2", "img": "/book28.jpeg","description": "English book for Class 1" },
+        { "title": "Hindi N2", "img": "/book30.jpeg","description": "Hindi book for Class 1" },
+        { "title": "EVS N2", "img": "/book24.jpeg","description": "EVS book for Class 1" },
+        { "title": "Computer N2", "img": "/book25.jpeg","description": "Computer book for Class 1" }
+      ],
+      "Class 2": [
+        { "title": "Maths N2", "img": "/book21.jpg","description": "Mathematics book for Class 2" },
+        { "title": "English N2", "img": "/book22.jpg","description": "English book for Class 2" },
+        { "title": "Hindi N2", "img": "/book23.jpeg","description": "Hindi book for Class 2" },
+        { "title": "EVS N2", "img": "/book24.jpeg","description": "EVS book for Class 2" },
+        { "title": "Computer N2", "img": "/book25.jpeg","description": "Computer book for Class 2" }
+      ],
+      "Class 3": [
+        { "title": "Maths N2", "img": "/book21.jpg","description": "Mathematics book for Class 3" },
+        { "title": "English N2", "img": "/book22.jpg","description": "English book for Class 3" },
+        { "title": "Hindi N2", "img": "/book23.jpeg","description": "Hindi book for Class 3" },
+        { "title": "Science N2", "img": "/book24.jpeg","description": "Science book for Class 3" },
+        { "title": "Computer N2", "img": "/book25.jpeg","description": "Computer book for Class 3" }
+      ],
+      "Class 4": [
+        { "title": "Maths N2", "img": "/book21.jpg","description": "Mathematics book for Class 4" },
+        { "title": "English N2", "img": "/book22.jpg","description": "English book for Class 4" },
+        { "title": "Hindi N2", "img": "/book23.jpeg","description": "Hindi book for Class 4" },
+        { "title": "Science N2", "img": "/book24.jpeg","description": "Science book for Class 4" },
+        { "title": "SST N2", "img": "/book25.jpeg","description": "Social Science book for Class 4" }
+      ],
+      "Class 5": [
+        { "title": "Maths N2", "img": "/book21.jpg","description": "Mathematics book for Class 5" },
+        { "title": "English N2", "img": "/book22.jpg","description": "English book for Class 5" },
+        { "title": "Hindi N2", "img": "/book23.jpeg","description": "Hindi book for Class 5" },
+        { "title": "Science N2", "img": "/book24.jpeg","description": "Science book for Class 5" },
+        { "title": "SST N2", "img": "/book25.jpeg","description": "Social Science book for Class 5" }
+      ],
+      "Class 6": [
+        { "title": "Maths N2", "img": "/book21.jpg","description": "Mathematics book for Class 6" },
+        { "title": "English N2", "img": "/book22.jpg","description": "English book for Class 6" },
+        { "title": "Hindi N2", "img": "/book23.jpeg","description": "Hindi book for Class 6" },
+        { "title": "Science N2", "img": "/book24.jpeg","description": "Science book for Class 6" },
+        { "title": "SST N2", "img": "/book25.jpeg","description": "Social Science book for Class 6" }
+      ],
+      "Class 7": [
+        { "title": "Maths N2", "img": "/book21.jpg","description": "Mathematics book for Class 7" },
+        { "title": "English N2", "img": "/book22.jpg","description": "English book for Class 7" },
+        { "title": "Hindi N2", "img": "/book23.jpeg","description": "Hindi book for Class 7" },
+        { "title": "Science N2", "img": "/book24.jpeg","description": "Science book for Class 7" },
+        { "title": "SST N2", "img": "/book25.jpeg","description": "Social Science book for Class 7" }
+      ],
+      "Class 8": [
+        { "title": "Maths N2", "img": "/book21.jpg" },
+        { "title": "English N2", "img": "/book22.jpg" },
+        { "title": "Hindi N2", "img": "/book23.jpeg" },
+        { "title": "Science N2", "img": "/book24.jpeg" },
+        { "title": "SST N2", "img": "/book25.jpeg" }
+      ]
+    }
+  },
+
+  "Gyanbodh": {
+    "Book G1": {
+      "Class 1": [
+        { "title": "Maths G1", "img": "/book30.jpeg" },
+        { "title": "English G1", "img": "/book21.jpeg" },
+        { "title": "Hindi G1", "img": "/book23.jpeg" },
+        { "title": "EVS G1", "img": "/book24.jpeg" },
+        { "title": "Computer G1", "img": "/book25.jpeg" }
+      ],
+      "Class 2": [
+        { "title": "Maths G1", "img": "/book30.jpeg" },
+        { "title": "English G1", "img": "/book21.jpeg" },
+        { "title": "Hindi G1", "img": "/book23.jpeg" },
+        { "title": "EVS G1", "img": "/book24.jpeg" },
+        { "title": "Computer G1", "img": "/book25.jpeg" }
+      ],
+      "Class 3": [
+        { "title": "Maths G1", "img": "/book30.jpeg" },
+        { "title": "English G1", "img": "/book21.jpeg" },
+        { "title": "Hindi G1", "img": "/book23.jpeg" },
+        { "title": "Science G1", "img": "/book24.jpeg" },
+        { "title": "Computer G1", "img": "/book25.jpeg" }
+      ],
+      "Class 4": [
+        { "title": "Maths G1", "img": "/book30.jpeg" },
+        { "title": "English G1", "img": "/book21.jpeg" },
+        { "title": "Hindi G1", "img": "/book23.jpeg" },
+        { "title": "Science G1", "img": "/book24.jpeg" },
+        { "title": "Social Science G1", "img": "/book25.jpeg" }
+      ],
+      "Class 5": [
+        { "title": "Maths G1", "img": "/book30.jpeg" },
+        { "title": "English G1", "img": "/book21.jpeg" },
+        { "title": "Hindi G1", "img": "/book23.jpeg" },
+        { "title": "Science G1", "img": "/book24.jpeg" },
+        { "title": "Social Science G1", "img": "/book25.jpeg" }
+      ],
+      "Class 6": [
+        { "title": "Maths G1", "img": "/book30.jpeg" },
+        { "title": "English G1", "img": "/book21.jpeg" },
+        { "title": "Hindi G1", "img": "/book23.jpeg" },
+        { "title": "Science G1", "img": "/book24.jpeg" },
+        { "title": "Social Science G1", "img": "/book25.jpeg" }
+      ],
+      "Class 7": [
+        { "title": "Maths G1", "img": "/book30.jpeg" },
+        { "title": "English G1", "img": "/book21.jpeg" },
+        { "title": "Hindi G1", "img": "/book23.jpeg" },
+        { "title": "Science G1", "img": "/book24.jpeg" },
+        { "title": "Social Science G1", "img": "/book25.jpeg" }
+      ],
+      "Class 8": [
+        { "title": "Maths G1", "img": "/book30.jpeg" },
+        { "title": "English G1", "img": "/book21.jpeg" },
+        { "title": "Hindi G1", "img": "/book23.jpeg" },
+        { "title": "Science G1", "img": "/book24.jpeg" },
+        { "title": "Social Science G1", "img": "/book25.jpeg" }
+      ]
+    },
+
+    "Book G2": {
+      "Class 1": [
+        { "title": "Maths G2", "img": "/book30.jpeg" },
+        { "title": "English G2", "img": "/book21.jpeg" },
+        { "title": "Hindi G2", "img": "/book23.jpeg" },
+        { "title": "EVS G2", "img": "/book24.jpeg" },
+        { "title": "Computer G2", "img": "/book25.jpeg" }
+      ],
+      "Class 2": [
+        { "title": "Maths G2", "img": "/book30.jpeg" },
+        { "title": "English G2", "img": "/book21.jpeg" },
+        { "title": "Hindi G2", "img": "/book23.jpeg" },
+        { "title": "EVS G2", "img": "/book24.jpeg" },
+        { "title": "Computer G2", "img": "/book25.jpeg" }
+      ],
+      "Class 3": [
+        { "title": "Maths G2", "img": "/book30.jpeg" },
+        { "title": "English G2", "img": "/book21.jpeg" },
+        { "title": "Hindi G2", "img": "/book23.jpeg" },
+        { "title": "Science G2", "img": "/book24.jpeg" },
+        { "title": "Computer G2", "img": "/book25.jpeg" }
+      ],
+      "Class 4": [
+        { "title": "Maths G2", "img": "/book30.jpeg" },
+        { "title": "English G2", "img": "/book21.jpeg" },
+        { "title": "Hindi G2", "img": "/book23.jpeg" },
+        { "title": "Science G2", "img": "/book24.jpeg" },
+        { "title": "SST G2", "img": "/book25.jpeg" }
+      ],
+      "Class 5": [
+        { "title": "Maths G2", "img": "/book30.jpeg" },
+        { "title": "English G2", "img": "/book21.jpeg" },
+        { "title": "Hindi G2", "img": "/book23.jpeg" },
+        { "title": "Science G2", "img": "/book24.jpeg" },
+        { "title": "SST G2", "img": "/book25.jpeg" }
+      ],
+      "Class 6": [
+        { "title": "Maths G2", "img": "/book30.jpeg" },
+        { "title": "English G2", "img": "/book21.jpeg" },
+        { "title": "Hindi G2", "img": "/book23.jpeg" },
+        { "title": "Science G2", "img": "/book24.jpeg" },
+        { "title": "SST G2", "img": "/book25.jpeg" }
+      ],
+      "Class 7": [
+        { "title": "Maths G2", "img": "/book30.jpeg" },
+        { "title": "English G2", "img": "/book21.jpeg" },
+        { "title": "Hindi G2", "img": "/book23.jpeg" },
+        { "title": "Science G2", "img": "/book24.jpeg" },
+        { "title": "SST G2", "img": "/book25.jpeg" }
+      ],
+      "Class 8": [
+        { "title": "Maths G2", "img": "/book30.jpeg" },
+        { "title": "English G2", "img": "/book21.jpeg" },
+        { "title": "Hindi G2", "img": "/book23.jpeg" },
+        { "title": "Science G2", "img": "/book24.jpeg" },
+        { "title": "SST G2", "img": "/book25.jpeg" }
+      ]
+    }
+  }
+}

@@ -8,7 +8,7 @@ const bookSchema = new mongoose.Schema(
 
     img: { type: String },
 
-    category: { type: String, required: true }, // 👈 Navbodh / Gyanbodh yaha hoga
+    category: { type: String, required: true },
 
     subject: { type: String },
     className: { type: String },
