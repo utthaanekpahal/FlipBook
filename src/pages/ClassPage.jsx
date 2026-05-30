@@ -14,29 +14,27 @@ const ClassPage = () => {
     booksData?.[category]?.[book]?.[className] || [];
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-10">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
 
       {/* TOP SECTION */}
-      <div className="text-center mb-10">
+      <div className="text-center mb-12">
 
-        <h1 className="text-4xl font-bold text-[#99582A]">
-          {className}
+        <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-[#99582A] to-[#572C10] bg-clip-text text-transparent">
+          📚 {className}
         </h1>
 
-        <p className="text-lg font-bold mt-2 text-[#572C10]">
+        <p className="text-lg md:text-xl font-bold mt-3 text-[#572C10]">
           {category} → {book}
         </p>
 
       </div>
 
-      {/* BOOKS */}
-      <div className="flex flex-wrap justify-center gap-10">
+      {/* BOOKS GRID */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
         {books.map((item, index) => (
           <div
             key={index}
-
-            // CLICK CARD
             onClick={() =>
               navigate("/flipPage", {
                 state: {
@@ -45,29 +43,37 @@ const ClassPage = () => {
                 },
               })
             }
-
-            className="bg-white w-[250px] rounded-2xl shadow-lg overflow-hidden hover:scale-105 transition duration-300 cursor-pointer"
+            className="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-3 transition-all duration-300 cursor-pointer"
           >
 
             {/* IMAGE */}
-            <img
-              src={item.img}
-              alt={item.title}
-              className="w-full h-[300px] object-cover"
-            />
+            <div className="overflow-hidden">
+              <img
+                src={item.img}
+                alt={item.title}
+                className="w-full h-[320px] object-cover group-hover:scale-110 transition duration-500"
+              />
+            </div>
 
             {/* CONTENT */}
-            <div className="p-4">
+            <div className="p-5">
 
-              <h2 className="text-2xl font-bold text-[#3B2F2F]">
+              <h2 className="text-xl font-bold text-[#3B2F2F] line-clamp-2">
                 {item.title}
               </h2>
 
-              <p className="text-sm text-[#572C10] font-bold mt-3">
+              <p className="text-sm text-gray-600 mt-3 line-clamp-3">
                 {item.description}
               </p>
 
+              <button
+                className="mt-5 w-full bg-gradient-to-r from-[#99582A] to-[#572C10] text-white py-3 rounded-xl font-bold shadow-lg"
+              >
+                📖 Read Book
+              </button>
+
             </div>
+
           </div>
         ))}
 
@@ -89,9 +95,9 @@ const ClassPage = () => {
 
         <button
           onClick={() => navigate(-1)}
-          className="bg-[#99582A] text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-[#7a451f] transition"
+          className="bg-gradient-to-r from-[#99582A] to-[#572C10] text-white px-8 py-3 rounded-xl text-xl font-bold shadow-lg hover:scale-105 transition"
         >
-          Back
+          ← Back
         </button>
 
       </div>
