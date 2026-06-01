@@ -2,18 +2,19 @@
   "Navbodh": {
     "Book N1": {
       "Class 1": [
-        { "title": "Maths", "img": "/book21.jpg","description": "Mathematics book for Class 1" ,  "pdf": "/Maths.pdf"},
-        { "title": "English", "img": "/book22.jpg","description": "English book for Class 1" ,"pdf": "/English.pdf"},
-        { "title": "Hindi", "img": "/book23.jpeg","description": "Hindi book for Class 1" ,"pdf": "/Hindi.pdf"},
-        { "title": "EVS", "img": "/book24.jpeg","description": "Environmental Science book for Class 1","pdf": "/evs.pdf" },
-        { "title": "Computer", "img": "/book25.jpeg","description": "Computer book for Class 1" ,"pdf": "/computer.pdf"}
+        { "title": "Maths", "img": "/book21.jpg","description": "A comprehensive Mathematics textbook designed for Class 1 students. It covers fundamental concepts through engaging lessons, examples, and practice exercises to strengthen problem-solving skills.",
+    "pdf": "/Maths.pdf"},
+        { "title": "English", "img": "/book22.jpg","description": "An interactive English language book that helps students develop reading, writing, grammar, vocabulary, and communication skills through enjoyable activities and exercises." ,"pdf": "/English.pdf"},
+        { "title": "Hindi", "img": "/book23.jpeg","description": "A well-structured Hindi textbook that enhances language proficiency, reading comprehension, writing skills, and creative expression through stories, poems, and activities." ,"pdf": "/Hindi.pdf"},
+        { "title": "EVS", "img": "/book24.jpeg","description": " An Environmental Studies book that helps students understand nature, health, family, community, and environmental awareness through practical activities and examples.","pdf": "/evs.pdf" },
+        { "title": "Computer", "img": "/book25.jpeg","description": "A beginner-friendly Computer textbook that introduces students to digital technology, computer fundamentals, software applications, and responsible use of technology." ,"pdf": "/computer.pdf"}
       ],
       "Class 2": [
-        { "title": "Maths", "img": "/book26.jpeg","description": "Mathematics book for Class 2" },
-        { "title": "English", "img": "/book23.jpeg","description": "English book for Class 2" },
-        { "title": "Hindi", "img": "/book28.jpeg","description": "Hindi book for Class 2" },
-        { "title": "EVS", "img": "/book29.jpeg","description": "Environmental Science book for Class 2" },
-        { "title": "Computer", "img": "/book30.jpeg","description": "Computer book for Class 2" }
+        { "title": "Maths", "img": "/book26.jpeg","description": "An Environmental Studies book that helps students understand nature, health, family, community, and environmental awareness through practical activities and examples." },
+        { "title": "English", "img": "/book23.jpeg","description": "An interactive English language book that helps students develop reading, writing, grammar, vocabulary, and communication skills through enjoyable activities and exercises." },
+        { "title": "Hindi", "img": "/book28.jpeg","description": "A well-structured Hindi textbook that enhances language proficiency, reading comprehension, writing skills, and creative expression through stories, poems, and activities." },
+        { "title": "EVS", "img": "/book29.jpeg","description": " An Environmental Studies book that helps students understand nature, health, family, community, and environmental awareness through practical activities and examples." },
+        { "title": "Computer", "img": "/book30.jpeg","description": "A beginner-friendly Computer textbook that introduces students to digital technology, computer fundamentals, software applications, and responsible use of technology." }
       ],
       "Class 3": [
         { "title": "Maths", "img": "/book21.jpg","description": "Mathematics book for Class 3" },

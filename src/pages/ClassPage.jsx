@@ -58,11 +58,11 @@ const ClassPage = () => {
             {/* CONTENT */}
             <div className="p-5">
 
-              <h2 className="text-xl font-bold text-[#3B2F2F] line-clamp-2">
+              <h2 className="text-xl font-bold text-[#572C10] line-clamp-2">
                 {item.title}
               </h2>
 
-              <p className="text-sm text-gray-600 mt-3 line-clamp-3">
+              <p className="text-sm text-[#572C10] font-bold mt-3 line-clamp-5">
                 {item.description}
               </p>
 

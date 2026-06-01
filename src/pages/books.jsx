@@ -187,11 +187,11 @@ const Books = () => {
           </div>
         ) : (
           <div className="text-center mt-20">
-            <h2 className="text-xl sm:text-2xl font-semibold text-gray-600">
+            <h2 className="text-xl sm:text-2xl font-semibold text-[#572C10]">
               No Books Found
             </h2>
 
-            <p className="text-gray-400 mt-2">
+            <p className="text-[#572C10] mt-2 font-bold">
               Try changing filters or search text
             </p>
           </div>
@@ -201,9 +201,12 @@ const Books = () => {
       {/* BUTTONS */}
       <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12 pb-10">
         {/* VIEW MORE */}
-        <button className="w-full sm:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white px-6 sm:px-8 py-3 rounded-xl text-lg sm:text-2xl shadow-md transition">
-          View More
-        </button>
+       <button
+  onClick={() => navigate("/viewMoreBooks")}
+  className="w-full sm:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white px-6 sm:px-8 py-3 rounded-xl text-lg sm:text-2xl shadow-md transition"
+>
+  View More
+</button>
 
         {/* BACK BUTTON */}
         <button
