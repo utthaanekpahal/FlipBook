@@ -80,12 +80,13 @@ const Ticket = () => {
   const ticketHandler = (e) => {
 
     e.preventDefault()
-
+     console.log(upload.Agentname)
     const newTicket = {
       ...upload,
-      id: Date.now()
+      id: Date.now(),
+      date: new Date().toLocaleDateString()
     }
-
+     console.log("Date:", newTicket.date)
     // UPDATED ARRAY
     const updatedTickets = [...adminUpdates, newTicket]
 

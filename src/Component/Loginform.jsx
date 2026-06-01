@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate,Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { FaUser, FaLock, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import bgimg from "../assets/imges/bgimg.PNG";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const [data, setData] = useState({
     username: "",
@@ -13,64 +14,82 @@ export default function Login() {
   });
 
   const [error, setError] = useState("");
-
-  // ✅ ADDED: error object for field validation
   const [errors, setErrors] = useState({});
+
+  // ✅ Check if already logged in
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const role = localStorage.getItem("role");
+
+    if (isLoggedIn === "true") {
+      if (role === "agent") {
+        navigate("/AgentDashboard", { replace: true });
+      } else {
+        navigate("/Dashboard", { replace: true });
+      }
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
+
+    // Clear field error while typing
+    setErrors({
+      ...errors,
+      [e.target.name]: "",
+    });
+
+    setError("");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ ADDED: reset errors every submit
     let newErrors = {};
 
-    // ✅ Gmail validation
     const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
-    // ✅ Password validation (strong password rule)
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-    // ✅ Username validation
     if (!gmailRegex.test(data.username)) {
       newErrors.username = "Enter valid Gmail address";
     }
 
-    // ✅ Password validation
     if (!passwordRegex.test(data.password)) {
       newErrors.password =
-        "only 8 chars, upper, lower, number & symbol required";
+        "morethan 8 chars, upper, lower, number & symbol required";
     }
 
-    // ❌ STOP if validation fails
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // ✅ Clear validation errors if valid
     setErrors({});
 
-    // 🔐 Get stored users
     const user = localStorage.getItem("username");
     const pass = localStorage.getItem("password");
-    const agent = localStorage.getItem("Aemail");
-    const agentpass = localStorage.getItem("Acpass");
+    const agents =JSON.parse(localStorage.getItem("agents")) || [];
+    const agent = agents.find(
+    (item) => item.email === data.username);
+    // ✅ Agent Login
+    if (agent&& data.username === agent.email && data.password === agent.AgentconfirmPassword) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("role", "agent");
 
-    // 🔐 Agent login
-    if (data.username === agent && data.password === agentpass) {
       navigate("/AgentDashboard", { replace: true });
     }
 
-    // 🔐 Normal user login
+    // ✅ User Login
     else if (data.username === user && data.password === pass) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("role", "user");
+
       navigate("/Dashboard", { replace: true });
     }
 
-    // ❌ Invalid credentials
+    // ❌ Invalid Credentials
     else {
       setError("Invalid Username or Password");
     }
@@ -78,26 +97,26 @@ export default function Login() {
 
   return (
     <div
-      className="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative"
+  className="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative px-3 py-6"
       style={{ backgroundImage: `url(${bgimg})` }}
     >
-      <div className="absolute inset-0 bg-black/50"></div>
+      <div className="absolute inset-0 "></div>
 
-      <div className="relative w-full max-w-md mx-4 p-8 h-[78vh] bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl">
-
-        <h1 className="text-3xl font-bold text-center text-gray-800">
+      <div className="relative w-full max-w-md mx-4 p-5 sm:p-8 bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl">
+        <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800">
           Welcome Back
         </h1>
 
-        <p className="text-center text-sm text-gray-600 mt-2 mb-6">
+       
+       <p className="text-center text-xs sm:text-sm text-gray-600 mt-2 mb-6">
           Log in to continue your reading journey with Book Flip
         </p>
 
-        <form onSubmit={handleSubmit}>
-
+        <form onSubmit={handleSubmit} >
           {/* Username */}
-          <div className="relative mb-1">
+          <div className="relative mb-[5%] ">
             <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+
             <input
               type="text"
               name="username"
@@ -109,28 +128,36 @@ export default function Login() {
             />
           </div>
 
-          {/* ✅ Username Error */}
+          {/* Username Error */}
           {errors.username && (
-            <p className="text-red-500 text-sm mb-2">
+            <p className="text-red-500 text-sm mt-[-2%] mb-[3%] transition-all">
               {errors.username}
             </p>
           )}
 
           {/* Password */}
-          <div className="relative mb-1">
+          <div className="relative mb-4">
             <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
               value={data.password}
               onChange={handleChange}
-              className="w-full h-11 border rounded-lg pl-10 pr-3 outline-none focus:ring-2 focus:ring-[#99582A]"
+              className="w-full h-11 border rounded-lg pl-10 pr-10 outline-none focus:ring-2 focus:ring-[#99582A]"
               required
             />
+
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+            >
+              👁️
+            </span>
           </div>
 
-          {/* ✅ Password Error */}
+          {/* Password Error */}
           {errors.password && (
             <p className="text-red-500 text-sm mb-2">
               {errors.password}
@@ -147,14 +174,14 @@ export default function Login() {
           {/* Remember */}
           <div className="flex items-center mb-4 justify-start">
             <input type="checkbox" className="accent-[#99582A]" />
-            <label className="ml-2 text-sm text-gray-700 ">
+            <label className="ml-2 text-sm text-gray-700">
               Remember Me
             </label>
           </div>
 
           {/* Login Error */}
           {error && (
-            <p className="text-red-500 text-sm mb-3">{error}</p>
+            <p className="text-red-500 text-xs sm:text-sm mb-3">{error}</p>
           )}
 
           {/* Button */}
@@ -170,11 +197,11 @@ export default function Login() {
             or log in with
           </p>
 
-          <div className="flex justify-center gap-3 mt-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 mt-4">
             <button
               type="button"
               onClick={() => window.open("https://www.google.com", "_blank")}
-              className="flex items-center gap-2 border px-4 py-2 rounded-lg hover:bg-gray-100"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 border px-4 py-2 rounded-lg hover:bg-gray-100"
             >
               <FcGoogle size={20} />
               Google
@@ -189,11 +216,11 @@ export default function Login() {
               Facebook
             </button>
           </div>
-          <div className="flex justify-center gap-[5px] mt-[30px]">
-             <span>
-             If you don't have an account ?{" "}
-            </span>
-           <Link
+
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2 mt-6 text-center">
+            <span>If you don't have an account ? </span>
+
+            <Link
               to="/"
               className="no-underline font-bold text-[#99582A] cursor-pointer hover:text-black"
             >

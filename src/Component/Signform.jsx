@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
 import Google from "../assets/imges/svg.svg";
 import Facebook from "../assets/imges/fsvg.svg";
 import Insta from "../assets/imges/isvg.svg";
@@ -8,6 +7,20 @@ import Insta from "../assets/imges/isvg.svg";
 function SignupForm() {
 
   const navigate = useNavigate();
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const role = localStorage.getItem("role");
+
+    if (isLoggedIn === "true") {
+      if (role === "agent") {
+        navigate("/AgentDashboard", { replace: true });
+      } else {
+        navigate("/Dashboard", { replace: true });
+      }
+    }
+  }, [navigate]);
+  const [show, setShow] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const [first, setfirst] = useState({
     username: "",
@@ -40,7 +53,7 @@ function SignupForm() {
 
     // ✅ ADDED: Strong password regex
     const passwordRegex =
-     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
 
     // ✅ Username Validation
     if (!gmailRegex.test(first.username)) {
@@ -50,7 +63,7 @@ function SignupForm() {
     // ✅ Password Validation
     if (!passwordRegex.test(first.password)) {
       newErrors.password =
-        "Only 8 chars, upper, lower, number symbol req";
+        "Morethan 8 chars, upper, lower, number symbol req";
     }
 
     // ✅ Confirm Password Validation
@@ -85,67 +98,89 @@ function SignupForm() {
 
   return (
 
-    <div className="bg-[url('./assets/imges/bgimg.PNG')] bg-no-repeat bg-cover bg-center h-screen w-full flex justify-center items-center max-[770px]:bg-[length:100%_105%]">
+    <div className="bg-[url('./assets/imges/bgimg.PNG')] bg-no-repeat bg-cover bg-center min-h-screen w-full flex justify-center items-center p-4">
 
-      <form className="flex flex-col justify-center items-center gap-[11px] h-[90vh] w-[30vw] rounded-[10px] shadow-[0_0_10px_rgba(0,0,0,0.2)] bg-[#fffbff] max-[770px]:mt-[-10%] max-[770px]:w-[45%] max-[770px]:h-auto max-[770px]:p-[20px]">
-
+      <form className="flex flex-col justify-center items-center gap-[11px] bg-white/80 rounded-[10px] shadow-[0_0_10px_rgba(0,0,0,0.2)] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[50%] xl:w-[35%] p-[20px] py-[30px]">
         <h1 className="mt-[-5px] mb-[1px] font-bold text-2xl">
           Sign in
         </h1>
 
         {/* USERNAME */}
 
-        <label className="mr-[42%]">Username</label>
+        <label className="w-full max-w-[450px] text-left">
+          Username
+        </label>
 
         <input
           type="text"
           name="username"
           placeholder="Enter your Gmail"
           onChange={getvalue}
-          className="p-[6px] w-[18vw] rounded-[5px] outline-none border-2 border-[rgba(128,128,128,0.3)]"
+          className="p-[6px] w-full max-w-[450px] rounded-[5px] outline-none border-2 border-[rgba(128,128,128,0.3)]"
         />
 
         {/* ✅ ADDED: Username Error */}
         {errors.username && (
-          <p className="text-red-500 text-sm mr-[18%]">
+          <p className="text-red-500 text-sm w-full max-w-[450px]">
             {errors.username}
           </p>
         )}
 
         {/* PASSWORD */}
 
-        <label className="mr-[42%]">Password</label>
+        <label className="w-full max-w-[450px] text-left">
+          Password
+        </label>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter your Password"
-          onChange={getvalue}
-          className="p-[6px] w-[18vw] rounded-[5px] outline-none border-2 border-[rgba(128,128,128,0.3)]"
-        />
+        <div className="relative w-full max-w-[450px]">
+          <input
+            type={show ? "text" : "password"}
+            name="password"
+            placeholder="Enter your Password"
+            onChange={getvalue}
+            className="p-[6px] w-full max-w-[450px] rounded-[5px] outline-none border-2 border-[rgba(128,128,128,0.3)]"
+          />
 
-        {/* ✅ ADDED: Password Error */}
+          <span
+            onClick={() => setShow(!show)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer"
+          >
+            👁️
+          </span>
+        </div>
+
+        {/* Password Error */}
         {errors.password && (
-          <p className="text-red-500 text-sm ml-[50px]">
+          <p className="text-red-500 text-sm w-full max-w-[450px]">
             {errors.password}
           </p>
         )}
-
         {/* CONFIRM PASSWORD */}
 
-        <label className="mr-[28%]">Confirm Password</label>
+        <label className="w-full max-w-[450px] text-left">
+          Confirm Password
+        </label>
 
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          onChange={getvalue}
-          className="p-[6px] w-[18vw] rounded-[5px] outline-none border-2 border-[rgba(128,128,128,0.3)]"
-        />
+        <div className="relative w-full max-w-[450px]">
+          <input
+            type={showConfirm ? "text" : "password"}
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            onChange={getvalue}
+            className="p-[6px] w-full max-w-[450px] rounded-[5px] outline-none border-2 border-[rgba(128,128,128,0.3)]"
+          />
 
-        {/* ✅ ADDED: Confirm Password Error */}
+          <span
+            onClick={() => setShowConfirm(!showConfirm)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer"
+          >
+            👁️
+          </span>
+        </div>
+
+        {/* Confirm Password Error */}
         {errors.confirmPassword && (
-          <p className="text-red-500 text-sm mr-[90px]">
+          <p className="text-red-500 text-sm w-full max-w-[450px]">
             {errors.confirmPassword}
           </p>
         )}
@@ -158,13 +193,15 @@ function SignupForm() {
 
         <div className="mt-[10px]">
 
-          <button
-            type="button"
-            onClick={matchvalue}
-            className="w-[15vw] p-[10px] rounded-[10px] border-none bg-[#99582A] text-white font-bold cursor-pointer"
-          >
-            Sign in
-          </button>
+          <div className="mt-[10px] w-full max-w-[450px]">
+            <button
+              type="button"
+              onClick={matchvalue}
+              className="w-full p-[10px] rounded-[10px] border-none bg-[#99582A] text-white font-bold cursor-pointer"
+            >
+              Sign in
+            </button>
+          </div>
 
         </div>
 

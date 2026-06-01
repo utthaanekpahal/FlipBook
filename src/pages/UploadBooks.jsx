@@ -53,11 +53,11 @@ const UploadBooks = () => {
       <div className="absolute "></div>
 
       {/* Upload Card */}
-      <div className="relative z-10 w-full max-w-md bg-white/15 backdrop-blur-md border-4 border-blue-600 rounded-3xl p-8 shadow-2xl">
+      <div className="relative z-10 w-full max-w-md bg-white/15 backdrop-blur-md border-4 border-[#572C10] rounded-3xl p-8 shadow-2xl">
 
         {/* Header */}
         <div className="text-center mb-6">
-          <FaBookOpen className="text-6xl text-black mx-auto mb-3" />
+          <FaBookOpen className="text-6xl text-[#572C10] mx-auto mb-3" />
 
           <h1 className="text-3xl font-bold text-black">
             Upload Book
@@ -71,7 +71,7 @@ const UploadBooks = () => {
         {/* Dropzone */}
         <div
           {...getRootProps()}
-          className="border-2 border-dashed border-blue-500 rounded-2xl p-8 text-center hover:bg-white/10 transition duration-300"
+          className="border-2 border-dashed border-[#572C10] rounded-2xl p-8 text-center hover:bg-white/10 transition duration-300"
         >
           <input {...getInputProps()} />
 
@@ -88,7 +88,7 @@ const UploadBooks = () => {
           <button
             type="button"
             onClick={open}
-            className="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition duration-300"
+            className="mt-5 bg-[#572C10]  text-white px-6 py-3 rounded-xl font-bold shadow-lg transition duration-300"
           >
             Select PDF
           </button>

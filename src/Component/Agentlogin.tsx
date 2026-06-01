@@ -4,99 +4,125 @@ import { useNavigate } from "react-router-dom";
 
 const Agentlogin = () => {
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
+const [agentshowPassword, setagentShowPassword] = useState(false);
+const [showagentConfirmPassword, setagentShowConfirmPassword] = useState(false);
+const [infodata, setinfodata] = useState({
+  agentname: "",
+  email: "",
+  Password: "",
+  AgentconfirmPassword: ""
+});
 
-  const [infodata, setinfodata] = useState({
-    agentname: "",
-    email: "",
-    Password: "",
-    AgentconfirmPassword: ""
-  });
+const [errors, setErrors] = useState({});
 
-  // ✅ ADDED: Validation error state
-  const [errors, setErrors] = useState({});
+// Input Handler
+const userinfo = (e) => {
+  const { name, value } = e.target;
 
-  const userinfo = (e) => {
+  setinfodata((prev) => ({
+    ...prev,
+    [name]: value
+  }));
+};
 
-    const { name, value } = e.target;
+// Form Submit
+const clicked = (e) => {
+  e.preventDefault();
+    console.log("Button Clicked");
 
-    setinfodata(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
 
-  const clicked = (e) => {
+  let newErrors = {};
 
-    e.preventDefault();
+  const gmailRegex =
+    /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
-    // ✅ ADDED: Empty object for errors
-    let newErrors = {};
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-    // ✅ ADDED: Gmail validation regex
-    const gmailRegex =
-      /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  // Agent Name Validation
+  if (infodata.agentname.trim() === "") {
+    newErrors.agentname = "Agent name is required";
+  }
 
-    // ✅ ADDED: Strong password regex
-    const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
-    // ✅ Agent Name Validation
-    if (infodata.agentname.trim() === "") {
-      newErrors.agentname = "Agent name is required";
-    }
+  // Email Validation
+  if (!gmailRegex.test(infodata.email)) {
+    newErrors.email = "Only Gmail IDs are allowed";
+  }
 
-    // ✅ Email Validation
-    if (!gmailRegex.test(infodata.email)) {
-      newErrors.email = "Only Gmail IDs are allowed";
-    }
+  // Password Validation
+  if (!passwordRegex.test(infodata.Password)) {
+    newErrors.Password =
+      "Password must contain uppercase, lowercase, number, special character and minimum 8 characters";
+  }
 
-    // ✅ Password Validation
-    if (!passwordRegex.test(infodata.Password)) {
-      newErrors.Password =
-        "Password must contain uppercase, lowercase, number, symbol and minimum 8 characters";
-    }
+  // Confirm Password Validation
+  if (
+    infodata.Password !==
+    infodata.AgentconfirmPassword
+  ) {
+    newErrors.AgentconfirmPassword =
+      "Passwords do not match";
+  }
 
-    // ✅ Confirm Password Validation
-    if (infodata.Password !== infodata.AgentconfirmPassword) {
-      newErrors.AgentconfirmPassword =
-        "Passwords do not match";
-    }
+  // Stop if validation fails
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+  setErrors({});
 
-    // ✅ STOP form if errors exist
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+  // Get existing agents
+  const existingAgents =
+    JSON.parse(localStorage.getItem("agents")) || [];
+    console.log(existingAgents);
 
-    // ✅ Clear old errors
-    setErrors({});
+  // Check duplicate email
+  const userExists = existingAgents.some(
+    (agent) =>
+      agent.email.toLowerCase() ===
+      infodata.email.toLowerCase()
+  );
+ try {
+  if (userExists) {
+    console.log("Inside if block");
+    alert("User already registered!");
+    setinfodata({
+      agentname: "",
+      email: "",
+      Password: "",
+      AgentconfirmPassword: ""
+    });
+    return;
+  }
+} catch (err) {
+  console.error("Error:", err);
+}
+  // Create new agent object
+  const newAgent = {
+  agentname: infodata.agentname,
+  email: infodata.email,
+  Password: infodata.Password,
+  AgentconfirmPassword: infodata.AgentconfirmPassword
+};
+  // Add new agent
+  const updatedAgents = [
+    ...existingAgents,
+    newAgent
+  ];
 
-    const existingUser = localStorage.getItem("Aname");
+  // Save to localStorage
+  localStorage.setItem(
+    "agents",
+    JSON.stringify(updatedAgents)
+  );
 
-    // ✅ Check if already registered
-    if (existingUser === infodata.agentname) {
+  alert("Agent registered successfully!");
 
-      alert("User already registered!");
+  // Clear form
 
-      setinfodata({
-        agentname: "",
-        email: "",
-        Password: "",
-        AgentconfirmPassword: ""
-      });
-
-      return;
-    }
-
-    // ✅ Store data
-    localStorage.setItem("Aname", infodata.agentname);
-    localStorage.setItem("Acpass", infodata.AgentconfirmPassword);
-    localStorage.setItem("Apass", infodata.Password);
-    localStorage.setItem("Aemail", infodata.email);
-
-    navigate("/Dashboard");
-  };
-
+  navigate("/Dashboard");
+};
   return (
 
     <div
@@ -166,52 +192,69 @@ const Agentlogin = () => {
         {/* PASSWORD */}
         <div className="flex flex-col">
 
-          <label className="mb-1 font-bold">
-            Password
-          </label>
+  <label className="mb-1 font-bold">
+    Password
+  </label>
 
-          <input
-            type="password"
-            name="Password"
-            value={infodata.Password}
-            onChange={userinfo}
-            placeholder="Enter Password"
-            className="border p-3 rounded-lg outline-none"
-          />
+  <div className="relative">
+    <input
+      type={agentshowPassword ? "text" : "password"}
+      name="Password"
+      value={infodata.Password}
+      onChange={userinfo}
+      placeholder="Enter Password"
+      className="border p-3 rounded-lg outline-none w-full pr-10"
+    />
 
-          {/* ✅ Error Message */}
-          {errors.Password && (
-            <p className="text-red-500 text-sm">
-              {errors.Password}
-            </p>
-          )}
+    <span
+      onClick={() => setagentShowPassword(!agentshowPassword)}
+      className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+    >
+      👁️
+    </span>
+  </div>
 
-        </div>
+  {/* Error Message */}
+  {errors.Password && (
+    <p className="text-red-500 text-sm">
+      {errors.Password}
+    </p>
+  )}
+
+</div>
 
         {/* CONFIRM PASSWORD */}
-        <div className="flex flex-col">
+       <div className="flex flex-col">
 
-          <label className="mb-1 font-bold">
-            Confirm Password
-          </label>
+  <label className="mb-1 font-bold">
+    Confirm Password
+  </label>
 
-          <input
-            type="password"
-            name="AgentconfirmPassword"
-            value={infodata.AgentconfirmPassword}
-            onChange={userinfo}
-            placeholder="Confirm Password"
-            className="border p-3 rounded-lg outline-none"
-          />
+  <div className="relative">
+    <input
+      type={showagentConfirmPassword ? "text" : "password"}
+      name="AgentconfirmPassword"
+      value={infodata.AgentconfirmPassword}
+      onChange={userinfo}
+      placeholder="Confirm Password"
+      className="border p-3 rounded-lg outline-none w-full pr-10"
+    />
 
-          {/* ✅ Error Message */}
-          {errors.AgentconfirmPassword && (
-            <p className="text-red-500 text-sm">
-              {errors.AgentconfirmPassword}
-            </p>
-          )}
+    <span
+      onClick={() => setagentShowConfirmPassword(!showagentConfirmPassword)}
+      className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+    >
+      👁️
+    </span>
+  </div>
 
-        </div>
+  {errors.AgentconfirmPassword && (
+    <p className="text-red-500 text-sm">
+      {errors.AgentconfirmPassword}
+    </p>
+  )}
+
+</div>
 
         <button
           type="submit"
