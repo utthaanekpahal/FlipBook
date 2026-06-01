@@ -95,7 +95,6 @@ const AgentDashboard = () => {
         {/* Top Navbar */}
         <div className='flex flex-col md:flex-row justify-between items-center gap-4 bg-[#F5F5F5] p-3 rounded-[4px]'>
           <span className='text-lg font-bold text-[#572C10] truncate'>
-            Agent
           </span>
 
           {/* Search Input */}

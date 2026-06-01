@@ -40,6 +40,7 @@ function Dashboard() {
     );
 
   }, []);
+  const [agentpop, setagentpop] = useState(false)
   const totalViews =
     localStorage.getItem("views");
   const email = localStorage.getItem("username");
@@ -50,7 +51,6 @@ function Dashboard() {
     localStorage.removeItem("role");
 
     navigate("/loginform", { replace: true });
-    localStorage.removeItem("Acpass")
   };
   return (
     <div className=''>
@@ -298,7 +298,8 @@ function Dashboard() {
                   Active Agent
                 </h4>
 
-                <button className='border px-[10px] py-[5px] text-[#572C10] border-[#EFE6DD] font-bold  rounded'>
+                <button className='border px-[10px] py-[5px] text-[#572C10] border-[#EFE6DD] font-bold  rounded'
+                 onClick={()=>{setagentpop(!agentpop)}}>
                   View all
                 </button>
 
@@ -341,7 +342,7 @@ function Dashboard() {
                         </td>
 
                         <td className="text-center p-[12px] border-b border-amber-50">
-                          Active
+                          active
                         </td>
                       </tr>
                     ))}
@@ -352,10 +353,79 @@ function Dashboard() {
 
               </div>
             </div>
+              <div>
+  {agentpop && (
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 p-3">
 
+      {/* Popup Box */}
+      <div className="bg-white w-full sm:w-[90%] md:w-[80%] lg:w-[70%] h-[85vh] sm:h-[80vh] rounded-lg shadow-lg relative flex flex-col">
 
+        {/* Close Button */}
+        <button
+          className="absolute top-2 right-3 text-xl font-bold"
+          onClick={() => setagentpop(false)}
+        >
+          ×
+        </button>
+
+        {/* Header */}
+        <div className="p-3 sm:p-4 border-b font-semibold text-[#572C10] text-sm sm:text-base">
+          Agents Table
+        </div>
+
+        {/* Table Wrapper */}
+        <div className="p-2 sm:p-4 overflow-y-auto">
+
+          <table className="w-full min-w-[600px] text-xs sm:text-sm md:text-base border-collapse">
+
+            <thead>
+              <tr className="bg-[#EFE6DD]">
+                <th className="p-2 sm:p-3 text-[#A77F60]">Agent Name</th>
+                <th className="p-2 sm:p-3 text-[#A77F60]">Email</th>
+                <th className="p-2 sm:p-3 text-[#A77F60]">Password</th>
+                <th className="p-2 sm:p-3 text-[#A77F60]">Confirm Password</th>
+                <th className="p-2 sm:p-3 text-[#A77F60]">Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {agentData.map((value, index) => (
+                <tr key={index} className="border-b">
+
+                  <td className="text-center p-2 sm:p-3">
+                    {value.agentname}
+                  </td>
+
+                  <td className="text-center p-2 sm:p-3 break-all">
+                    {value.email}
+                  </td>
+
+                  <td className="text-center p-2 sm:p-3">
+                    {value.Password}
+                  </td>
+
+                  <td className="text-center p-2 sm:p-3">
+                    {value.AgentconfirmPassword}
+                  </td>
+
+                  <td className="text-center p-2 sm:p-3 text-green-600">
+                    active
+                  </td>
+
+                </tr>
+              ))}
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+    </div>
+  )}
+</div>
             {/* CARD */}
-            <div className="w-full xl:w-[300px] bg-[#F5F5F5] rounded-[10px] p-[20px]">
+            <div className="w-full   h-[250px] xl:w-[300px] bg-[#F5F5F5] overflow-y-auto rounded-[10px] p-[20px]">
               <div className='text-[#572C10] font-bold '>Recent Ticket</div>
               <div className=''>
                 <div className='flex justify-between items-center mt-[4%]'>

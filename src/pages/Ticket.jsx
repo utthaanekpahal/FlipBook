@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useLocation } from "react-router-dom";
 import { mycontext } from '../Context/Contextfile';
+import { useNavigate } from 'react-router-dom';
 import "@fortawesome/fontawesome-free/css/all.min.css"
 
 const Ticket = () => {
-
+  const navigate = useNavigate();
   const { globaldata, setglobaldata } = useContext(mycontext)
 
   const location = useLocation();
@@ -277,20 +278,21 @@ const Ticket = () => {
   return (
 
     <div className='min-h-screen w-full bg-cover bg-[#EFE6DD] bg-center p-[20px]'>
-
       {/* =========================
           TOP HEADER
       ========================== */}
 
       <div className='flex justify-around items-center p-[15px] rounded-md'>
-
         {
           role !== "user" ?
 
-            <h1 className='text-2xl font-bold text-[#572C10]'>
+             <div className='flex justify-center gap-[50px] '>
+                <button className='bg-[#572C10] text-white font-bold px-5 py-2 rounded-md'
+                onClick={()=>{navigate("/AgentDashboard")}}>back</button>
+              <h1 className='text-2xl font-bold text-[#572C10]'>
               Ticket Update
             </h1>
-
+            </div>
             :
 
             <h1 className='text-2xl font-bold text-[#572C10]'>
