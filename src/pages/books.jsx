@@ -16,22 +16,13 @@ const books = () => {
   const [search, setSearch] = useState("");
 
   // fetch books
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/books");
-        const data = await res.json();
+  const API_URL = import.meta.env.VITE_API_URL;
 
-        setBooks(data.data);
-        setFilteredBooks(data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchBooks();
-  }, []);
-
+useEffect(() => {
+  fetch(`${API_URL}/api/books`)
+    .then((res) => res.json())
+    .then((data) => setBooks(data.data));
+}, []);
   // search logic
   const handleSearch = () => {
     const result = books.filter((book) => {
