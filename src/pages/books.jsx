@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const Books = () => {
+const books = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -226,4 +226,4 @@ const Books = () => {
   );
 };
 
-export default Books;
+export default books;

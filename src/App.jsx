@@ -7,7 +7,7 @@ import Agentlogin from './Component/Agentlogin';
 import AgentDashboard from './Component/AgentDashboard';
 import Category from './pages/Category';
 import FlipPage from './pages/FlipPage';
-import Books from './pages/Books';
+import Books from './pages/books';
 import Ticket from './pages/Ticket';
 import ClassPage from './pages/ClassPage';
 import UploadBooks from './pages/UploadBooks';
