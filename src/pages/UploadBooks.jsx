@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
-import { FaBookOpen, FaCloudUploadAlt } from "react-icons/fa";
+import {
+  FaBookOpen,
+  FaCloudUploadAlt,
+  FaSave,
+} from "react-icons/fa";
 
 const UploadBooks = () => {
+  const navigate = useNavigate();
+
   const [pdfFile, setPdfFile] = useState(null);
 
-  const navigate = useNavigate();
+  const [category, setCategory] = useState("");
+  const [book, setBook] = useState("");
+  const [className, setClassName] = useState("");
+  const [subject, setSubject] = useState("");
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -29,91 +38,206 @@ const UploadBooks = () => {
     noClick: true,
   });
 
-  const openFlipBook = () => {
-    if (!pdfFile) return;
+  const saveBook = () => {
+    if (
+      !category ||
+      !book ||
+      !className ||
+      !subject ||
+      !pdfFile
+    ) {
+      alert("Please fill all fields and upload PDF");
+      return;
+    }
 
-    const pdfUrl = URL.createObjectURL(pdfFile);
-
-    navigate("/flipPage", {
-      state: {
-        title: pdfFile.name,
-        pdf: pdfUrl,
-      },
+    console.log({
+      category,
+      book,
+      className,
+      subject,
+      pdfFile,
     });
+
+    alert("Book Saved Successfully ✅");
+
+    setCategory("");
+    setBook("");
+    setClassName("");
+    setSubject("");
+    setPdfFile(null);
   };
 
   return (
     <div
-  className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center px-4"
-  style={{
-    backgroundImage: "url('background img.png')",
-  }}
->
-  {/* Back Button */}
-  <div className="w-full max-w-md mb-4">
-    <button className="text-white font-bold bg-[#572C10] px-4 py-2 rounded-lg backdrop-blur-md border  transition"
-    onClick={()=>{navigate("/Dashboard")}}>
-      ← Back
-    </button>
-  </div>
-
-  {/* Upload Card */}
-  <div className="relative z-10 w-full max-w-md bg-white/15 backdrop-blur-md border-4 border-[#572C10] rounded-3xl p-8 shadow-2xl">
-    
-    {/* Header */}
-    <div className="text-center mb-6">
-      <FaBookOpen className="text-6xl text-[#572C10] mx-auto mb-3" />
-
-      <h1 className="text-3xl font-bold text-black">Upload Book</h1>
-
-      <p className="text-black text-2xl font-bold mt-2">
-        Upload your PDF and read it as a FlipBook
-      </p>
-    </div>
-
-    {/* Dropzone */}
-    <div
-      {...getRootProps()}
-      className="border-2 border-dashed border-[#572C10] rounded-2xl p-8 text-center hover:bg-white/10 transition duration-300"
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-4 py-10"
+      style={{
+        backgroundImage: "url('/background img.png')",
+      }}
     >
-      <input {...getInputProps()} />
+      <div className="w-full max-w-2xl">
 
-      <FaCloudUploadAlt className="text-5xl text-blue-400 mx-auto mb-4" />
-
-      <p className="text-black font-semibold text-lg">
-        Drag & Drop PDF Here
-      </p>
-
-      <p className="text-black text-2xl font-bold mt-2">
-        Only PDF files allowed
-      </p>
-
-      <button
-        type="button"
-        onClick={open}
-        className="mt-5 bg-[#572C10] text-white px-6 py-3 rounded-xl font-bold shadow-lg transition duration-300"
-      >
-        Select PDF
-      </button>
-    </div>
-
-    {pdfFile && (
-      <div className="mt-5 bg-green-500/20 border border-green-400 rounded-xl p-4">
-        <p className="text-black font-semibold break-words">
-          📄 {pdfFile.name}
-        </p>
-
+        {/* Back Button */}
         <button
-          onClick={openFlipBook}
-          className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold shadow-lg transition duration-300"
+          onClick={() => navigate("/Dashboard")}
+          className="mb-4 bg-[#572C10] text-white px-5 py-2 rounded-xl font-bold"
         >
-          📖 Open FlipBook
+          ← Back
         </button>
+
+        {/* Main Card */}
+        <div className="bg-white/20 backdrop-blur-md border-4 border-[#572C10] rounded-3xl shadow-2xl p-8">
+
+          {/* Header */}
+          <div className="text-center mb-8">
+            <FaBookOpen className="text-6xl text-[#572C10] mx-auto mb-4" />
+
+            <h1 className="text-4xl font-bold text-black">
+              Upload Book
+            </h1>
+
+            <p className="text-black font-semibold mt-2">
+              Upload PDF according to Category, Book, Class and Subject
+            </p>
+          </div>
+
+          {/* Category */}
+          <select
+            value={category}
+            onChange={(e) => {
+              setCategory(e.target.value);
+              setBook("");
+            }}
+            className="w-full p-3 rounded-xl border mb-4"
+          >
+            <option value="">Select Category</option>
+            <option value="Navbodh">Navbodh</option>
+            <option value="Gyanbodh">Gyanbodh</option>
+          </select>
+
+          {/* Book */}
+          <select
+            value={book}
+            onChange={(e) => setBook(e.target.value)}
+            className="w-full p-3 rounded-xl border mb-4"
+          >
+            <option value="">Select Book</option>
+
+            {category === "Navbodh" && (
+              <>
+                <option value="Book N1">Book N1</option>
+                <option value="Book N2">Book N2</option>
+              </>
+            )}
+
+            {category === "Gyanbodh" && (
+              <>
+                <option value="Book G1">Book G1</option>
+                <option value="Book G2">Book G2</option>
+              </>
+            )}
+          </select>
+
+          {/* Class */}
+          <select
+            value={className}
+            onChange={(e) => setClassName(e.target.value)}
+            className="w-full p-3 rounded-xl border mb-4"
+          >
+            <option value="">Select Class</option>
+
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+              <option
+                key={num}
+                value={`Class ${num}`}
+              >
+                Class {num}
+              </option>
+            ))}
+          </select>
+
+          {/* Subject */}
+          <select
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className="w-full p-3 rounded-xl border mb-6"
+          >
+            <option value="">Select Subject</option>
+
+            <option value="Maths">Maths</option>
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+            <option value="EVS">EVS</option>
+            <option value="Computer">Computer</option>
+            <option value="Science">Science</option>
+            <option value="Social Science">
+              Social Science
+            </option>
+          </select>
+
+          {/* Upload PDF */}
+          <div
+            {...getRootProps()}
+            className="border-2 border-dashed border-[#572C10] rounded-2xl p-8 text-center"
+          >
+            <input {...getInputProps()} />
+
+            <FaCloudUploadAlt className="text-5xl text-blue-500 mx-auto mb-4" />
+
+            <h2 className="font-bold text-2xl text-[#572C10]">
+              Drag & Drop PDF Here
+            </h2>
+
+            <p className="text-gray-700 mt-2">
+              Only PDF files allowed
+            </p>
+
+            <button
+              type="button"
+              onClick={open}
+              className="mt-4 bg-[#572C10] text-white px-6 py-3 rounded-xl font-bold"
+            >
+              Select PDF
+            </button>
+          </div>
+
+          {/* Selected PDF */}
+          {pdfFile && (
+            <div className="mt-6 bg-green-100 border border-green-500 rounded-xl p-4">
+              <p className="font-bold text-green-700">
+                📄 {pdfFile.name}
+              </p>
+            </div>
+          )}
+
+          {/* Flow Preview */}
+          <div className="mt-6 bg-white/40 rounded-xl p-4">
+            <h3 className="font-bold text-[#572C10] mb-2">
+              Book Location
+            </h3>
+
+            <p className="font-semibold">
+              Dashboard → {category || "Category"} →
+              {" "}
+              {book || "Book"} →
+              {" "}
+              {className || "Class"} →
+              {" "}
+              {subject || "Subject"}
+            </p>
+          </div>
+
+          {/* Save Button */}
+          <button
+            onClick={saveBook}
+            className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2"
+          >
+            <FaSave />
+            Save Book
+          </button>
+
+        </div>
       </div>
-    )}
-  </div>
-</div>
-    
+    </div>
   );
 };
 

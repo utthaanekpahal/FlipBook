@@ -8,7 +8,7 @@ const Books = () => {
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
 
-  // filters
+  
   const [category, setCategory] = useState("");
   const [className, setClassName] = useState("");
   const [type, setType] = useState("");

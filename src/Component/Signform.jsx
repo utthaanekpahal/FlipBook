@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Google from "../assets/imges/svg.svg";
 import Facebook from "../assets/imges/fsvg.svg";
 import Insta from "../assets/imges/isvg.svg";
+import axios from "axios";
 
 function SignupForm() {
 
@@ -73,7 +74,7 @@ function SignupForm() {
 
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/auth/signup",
+      "http://localhost:3000/api/books/signup",
       {
         username: first.username,
         password: first.password,

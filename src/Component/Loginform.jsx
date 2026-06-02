@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { FaUser, FaLock, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import bgimg from "../assets/imges/bgimg.PNG";
-
+import axios from "axios";
 export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -67,12 +67,14 @@ export default function Login() {
 
   try {
     const response = await axios.post(
-      "http://localhost:3000/api/auth/login",
+      "http://localhost:3000/api/books/login",
       {
         username: data.username,
         password: data.password,
       }
+ 
     );
+         console.log("Login Response:", data)
 
     if (response.data.success) {
       localStorage.setItem("isLoggedIn", "true");
@@ -86,6 +88,8 @@ export default function Login() {
     }
 
   } catch (error) {
+     console.log("ERROR:", error);
+  console.log("RESPONSE:", error.response?.data);
     setError(
       error.response?.data?.message ||
       "Login Failed"
