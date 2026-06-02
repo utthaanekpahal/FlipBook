@@ -1,6 +1,8 @@
 import User from '../models/Sign'
 import bcrypt from 'bcryptjs'
+
 export const signup = async (req, res) => {
+ //sign-------------------------------------------------------------------------------------------   
   try {
     const { username, password, confirmPassword } = req.body;
 
@@ -72,6 +74,9 @@ export const signup = async (req, res) => {
     });
   }
 };
+
+//login---------------------------------------------------------------------------------
+
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;

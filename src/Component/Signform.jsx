@@ -43,58 +43,57 @@ function SignupForm() {
     }));
   };
 
-  const matchvalue = () => {
+ const matchvalue = async () => {
+  let newErrors = {};
 
-    // ✅ ADDED: Empty object for storing errors
-    let newErrors = {};
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
-    // ✅ ADDED: Gmail validation regex
-    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-    // ✅ ADDED: Strong password regex
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
+  if (!gmailRegex.test(first.username)) {
+    newErrors.username = "Only Gmail IDs are allowed";
+  }
 
-    // ✅ Username Validation
-    if (!gmailRegex.test(first.username)) {
-      newErrors.username = "Only Gmail IDs are allowed";
+  if (!passwordRegex.test(first.password)) {
+    newErrors.password =
+      "More than 8 chars, upper, lower, number symbol req";
+  }
+
+  if (first.password !== first.confirmPassword) {
+    newErrors.confirmPassword = "Passwords do not match";
+  }
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  setErrors({});
+
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/signup",
+      {
+        username: first.username,
+        password: first.password,
+        confirmPassword: first.confirmPassword,
+      }
+    );
+
+    if (response.data.success) {
+      navigate("/Loginform", {
+        replace: true,
+      });
     }
 
-    // ✅ Password Validation
-    if (!passwordRegex.test(first.password)) {
-      newErrors.password =
-        "Morethan 8 chars, upper, lower, number symbol req";
-    }
-
-    // ✅ Confirm Password Validation
-    if (first.password !== first.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    // ✅ ADDED: If errors exist stop form submission
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    // ✅ ADDED: Clear errors if validation passes
-    setErrors({});
-
-    // Get already stored username
-    const existingUser = localStorage.getItem("username");
-
-    // Check if already registered
-    if (existingUser === first.username) {
-      setMessage("User already registered!");
-      return;
-    }
-
-    // Store data
-    localStorage.setItem("username", first.username);
-    localStorage.setItem("password", first.confirmPassword);
-
-    navigate("/Loginform", { replace: true });
-  };
+  } catch (error) {
+    setMessage(
+      error.response?.data?.message ||
+      "Signup Failed"
+    );
+  }
+};
 
   return (
 

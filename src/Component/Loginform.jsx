@@ -42,58 +42,56 @@ export default function Login() {
     setError("");
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    let newErrors = {};
+  let newErrors = {};
 
-    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+  if (!gmailRegex.test(data.username)) {
+    newErrors.username = "Enter valid Gmail address";
+  }
 
-    if (!gmailRegex.test(data.username)) {
-      newErrors.username = "Enter valid Gmail address";
-    }
+  if (!data.password) {
+    newErrors.password = "Password required";
+  }
 
-    if (!passwordRegex.test(data.password)) {
-      newErrors.password =
-        "morethan 8 chars, upper, lower, number & symbol required";
-    }
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+  setErrors({});
+  setError("");
 
-    setErrors({});
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/auth/login",
+      {
+        username: data.username,
+        password: data.password,
+      }
+    );
 
-    const user = localStorage.getItem("username");
-    const pass = localStorage.getItem("password");
-    const agents =JSON.parse(localStorage.getItem("agents")) || [];
-    const agent = agents.find(
-    (item) => item.email === data.username);
-    // ✅ Agent Login
-    if (agent&& data.username === agent.email && data.password === agent.AgentconfirmPassword) {
+    if (response.data.success) {
       localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("role", "agent");
 
-      navigate("/AgentDashboard", { replace: true });
+      // future JWT ke liye
+      // localStorage.setItem("token", response.data.token);
+
+      navigate("/Dashboard", {
+        replace: true,
+      });
     }
 
-    // ✅ User Login
-    else if (data.username === user && data.password === pass) {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("role", "user");
-
-      navigate("/Dashboard", { replace: true });
-    }
-
-    // ❌ Invalid Credentials
-    else {
-      setError("Invalid Username or Password");
-    }
-  };
+  } catch (error) {
+    setError(
+      error.response?.data?.message ||
+      "Login Failed"
+    );
+  }
+};
 
   return (
     <div
