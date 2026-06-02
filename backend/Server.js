@@ -8,17 +8,11 @@ import bookRoutes from "./routes/bookRoutes.js";
 dotenv.config();
 
 const app = express();
+app.use(cors());
 
 // Connect MongoDB
 connectDB();
 
-// CORS
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
 
 // Middleware
 app.use(express.json());

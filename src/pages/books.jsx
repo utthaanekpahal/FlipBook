@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const books = () => {
+const Books = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -16,13 +16,29 @@ const books = () => {
   const [search, setSearch] = useState("");
 
   // fetch books
-  const API_URL = import.meta.env.VITE_API_URL;
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const res = await fetch(
+          "https://flipbook-lw1b.onrender.com/api/books"
+        );
 
-useEffect(() => {
-  fetch(`${API_URL}/api/books`)
-    .then((res) => res.json())
-    .then((data) => setBooks(data.data));
-}, []);
+        const data = await res.json();
+
+        console.log("Books API Response:", data);
+
+        if (data.success) {
+          setBooks(data.data);
+          setFilteredBooks(data.data);
+        }
+      } catch (error) {
+        console.log("Fetch Error:", error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
   // search logic
   const handleSearch = () => {
     const result = books.filter((book) => {
@@ -142,6 +158,9 @@ useEffect(() => {
                     src={book.img}
                     alt={book.title}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = "/book1.jpg";
+                    }}
                   />
                 </div>
 
@@ -191,15 +210,13 @@ useEffect(() => {
 
       {/* BUTTONS */}
       <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12 pb-10">
-        {/* VIEW MORE */}
-       <button
-  onClick={() => navigate("/viewMoreBooks")}
-  className="w-full sm:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white px-6 sm:px-8 py-3 rounded-xl text-lg sm:text-2xl shadow-md transition"
->
-  View More
-</button>
+        <button
+          onClick={() => navigate("/viewMoreBooks")}
+          className="w-full sm:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white px-6 sm:px-8 py-3 rounded-xl text-lg sm:text-2xl shadow-md transition"
+        >
+          View More
+        </button>
 
-        {/* BACK BUTTON */}
         <button
           onClick={() => {
             if (location.state?.from === "agent") {
@@ -217,4 +234,4 @@ useEffect(() => {
   );
 };
 
-export default books;
+export default Books;
