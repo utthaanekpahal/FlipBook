@@ -1,15 +1,19 @@
 import Book from "../models/Book.js";
 
+
 // =========================
 // Upload Book
 // =========================
 const uploadBook = async (req, res) => {
   try {
-    console.log("========== UPLOAD REQUEST ==========");
-    console.log("Headers:", req.headers["content-type"]);
-    console.log("Body:", req.body);
-    console.log("File:", req.file);
-    console.log("===================================");
+    console.log("FILE:", req.file);
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Please upload a PDF file",
+      });
+    }
 
     const {
       title,
@@ -18,19 +22,8 @@ const uploadBook = async (req, res) => {
       img,
       category,
       className,
-      type,
       subject,
     } = req.body;
-
-    // Check PDF
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "Please upload a PDF file",
-        body: req.body,
-        file: req.file || null,
-      });
-    }
 
     const newBook = await Book.create({
       title,
@@ -39,9 +32,11 @@ const uploadBook = async (req, res) => {
       img,
       category,
       className,
-      type,
+      type: "pdf",
       subject,
-      fileUrl: req.file.path,
+
+      // ✅ FIXED
+  fileUrl: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
     });
 
     res.status(201).json({
@@ -73,12 +68,10 @@ const getBooks = async (req, res) => {
     });
 
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 

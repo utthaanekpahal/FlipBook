@@ -1,34 +1,59 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
 
 import connectDB from "./config/db.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import ticketRoutes from "./routes/ticketRoutes.js";
-import path from "path";
+
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// =========================
+// CORS FIX (IMPORTANT)
+// =========================
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
+// =========================
+// BODY PARSER
+// =========================
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// =========================
+// STATIC FILES (PDF UPLOADS)
+// =========================
 app.use("/uploads", express.static("uploads"));
 
-// Connect MongoDB
+// =========================
+// DATABASE CONNECT
+// =========================
 connectDB();
 
-
-// Middleware
-app.use(express.json());
-
-// Routes
+// =========================
+// ROUTES
+// =========================
 app.use("/api/books", bookRoutes);
 app.use("/api/tickets", ticketRoutes);
 
-
+// =========================
+// TEST ROUTE
+// =========================
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// Port
+// =========================
+// SERVER START
+// =========================
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

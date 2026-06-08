@@ -64,18 +64,22 @@ const UploadBooks = () => {
         }
       );
 
-      console.log("UPLOAD SUCCESS:", res.data);
-
-      alert("Book Uploaded Successfully ✅");
+    
 
       // =========================
       // NAVIGATE TO FLIPBOOK
       // =========================
-      navigate(
-        `/flipbook?pdf=${encodeURIComponent(
-          res.data.fileUrl
-        )}&title=${encodeURIComponent(book)}`
-      );
+    console.log("UPLOAD SUCCESS:", res.data);
+console.log("Uploaded Book:", res.data.data);
+console.log("PDF URL:", res.data.data.fileUrl);
+
+alert("Book Uploaded Successfully ✅");
+
+navigate(
+  `/flipbook?pdf=${encodeURIComponent(
+    res.data.data.fileUrl
+  )}&title=${encodeURIComponent(book)}`
+);
 
       // RESET
       setCategory("");
