@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   FaBookOpen,
   FaCloudUploadAlt,
@@ -17,66 +18,86 @@ const UploadBooks = () => {
   const [className, setClassName] = useState("");
   const [subject, setSubject] = useState("");
 
+  // =========================
+  // DROP HANDLER
+  // =========================
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-
     if (!file) return;
-
     setPdfFile(file);
   };
 
-  const {
-    getRootProps,
-    getInputProps,
-    open,
-  } = useDropzone({
+  const { getRootProps, getInputProps, open } = useDropzone({
     onDrop,
-    accept: {
-      "application/pdf": [],
-    },
+    accept: { "application/pdf": [] },
     multiple: false,
     noClick: true,
   });
 
-  const saveBook = () => {
-    if (
-      !category ||
-      !book ||
-      !className ||
-      !subject ||
-      !pdfFile
-    ) {
-      alert("Please fill all fields and upload PDF");
-      return;
+  // =========================
+  // SAVE + UPLOAD
+  // =========================
+  const saveBook = async () => {
+    try {
+      if (!category || !book || !className || !subject || !pdfFile) {
+        alert("Please fill all fields and upload PDF");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", pdfFile);
+      formData.append("title", book);
+      formData.append("author", "Admin");
+      formData.append("description", "Book uploaded via system");
+      formData.append("category", category);
+      formData.append("className", className);
+      formData.append("subject", subject);
+      formData.append("type", "pdf");
+
+      const res = await axios.post(
+        "http://localhost:3000/api/books/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("UPLOAD SUCCESS:", res.data);
+
+      alert("Book Uploaded Successfully ✅");
+
+      // =========================
+      // NAVIGATE TO FLIPBOOK
+      // =========================
+      navigate(
+        `/flipbook?pdf=${encodeURIComponent(
+          res.data.fileUrl
+        )}&title=${encodeURIComponent(book)}`
+      );
+
+      // RESET
+      setCategory("");
+      setBook("");
+      setClassName("");
+      setSubject("");
+      setPdfFile(null);
+
+    } catch (error) {
+      console.log("UPLOAD ERROR:", error.response?.data || error.message);
+      alert("Upload Failed ❌");
     }
-
-    console.log({
-      category,
-      book,
-      className,
-      subject,
-      pdfFile,
-    });
-
-    alert("Book Saved Successfully ✅");
-
-    setCategory("");
-    setBook("");
-    setClassName("");
-    setSubject("");
-    setPdfFile(null);
   };
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center px-4 py-10"
-      style={{
-        backgroundImage: "url('/background img.png')",
-      }}
+      className="min-h-screen bg-cover bg-center flex items-center justify-center px-4 py-10"
+      style={{ backgroundImage: "url('/background img.png')" }}
     >
       <div className="w-full max-w-2xl">
 
-        {/* Back Button */}
+        {/* BACK */}
         <button
           onClick={() => navigate("/Dashboard")}
           className="mb-4 bg-[#572C10] text-white px-5 py-2 rounded-xl font-bold"
@@ -84,23 +105,18 @@ const UploadBooks = () => {
           ← Back
         </button>
 
-        {/* Main Card */}
         <div className="bg-white/20 backdrop-blur-md border-4 border-[#572C10] rounded-3xl shadow-2xl p-8">
 
-          {/* Header */}
+          {/* HEADER */}
           <div className="text-center mb-8">
             <FaBookOpen className="text-6xl text-[#572C10] mx-auto mb-4" />
-
-            <h1 className="text-4xl font-bold text-black">
-              Upload Book
-            </h1>
-
+            <h1 className="text-4xl font-bold text-black">Upload Book</h1>
             <p className="text-black font-semibold mt-2">
-              Upload PDF according to Category, Book, Class and Subject
+              Upload PDF with proper category mapping
             </p>
           </div>
 
-          {/* Category */}
+          {/* CATEGORY */}
           <select
             value={category}
             onChange={(e) => {
@@ -114,7 +130,7 @@ const UploadBooks = () => {
             <option value="Gyanbodh">Gyanbodh</option>
           </select>
 
-          {/* Book */}
+          {/* BOOK */}
           <select
             value={book}
             onChange={(e) => setBook(e.target.value)}
@@ -137,44 +153,36 @@ const UploadBooks = () => {
             )}
           </select>
 
-          {/* Class */}
+          {/* CLASS */}
           <select
             value={className}
             onChange={(e) => setClassName(e.target.value)}
             className="w-full p-3 rounded-xl border mb-4"
           >
             <option value="">Select Class</option>
-
             {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-              <option
-                key={num}
-                value={`Class ${num}`}
-              >
+              <option key={num} value={`Class ${num}`}>
                 Class {num}
               </option>
             ))}
           </select>
 
-          {/* Subject */}
+          {/* SUBJECT */}
           <select
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             className="w-full p-3 rounded-xl border mb-6"
           >
             <option value="">Select Subject</option>
-
             <option value="Maths">Maths</option>
             <option value="English">English</option>
             <option value="Hindi">Hindi</option>
             <option value="EVS">EVS</option>
-            <option value="Computer">Computer</option>
             <option value="Science">Science</option>
-            <option value="Social Science">
-              Social Science
-            </option>
+            <option value="Social Science">Social Science</option>
           </select>
 
-          {/* Upload PDF */}
+          {/* DROPZONE */}
           <div
             {...getRootProps()}
             className="border-2 border-dashed border-[#572C10] rounded-2xl p-8 text-center"
@@ -187,9 +195,7 @@ const UploadBooks = () => {
               Drag & Drop PDF Here
             </h2>
 
-            <p className="text-gray-700 mt-2">
-              Only PDF files allowed
-            </p>
+            <p className="text-gray-700 mt-2">Only PDF files allowed</p>
 
             <button
               type="button"
@@ -200,39 +206,20 @@ const UploadBooks = () => {
             </button>
           </div>
 
-          {/* Selected PDF */}
+          {/* FILE NAME */}
           {pdfFile && (
             <div className="mt-6 bg-green-100 border border-green-500 rounded-xl p-4">
-              <p className="font-bold text-green-700">
-                📄 {pdfFile.name}
-              </p>
+              📄 {pdfFile.name}
             </div>
           )}
 
-          {/* Flow Preview */}
-          <div className="mt-6 bg-white/40 rounded-xl p-4">
-            <h3 className="font-bold text-[#572C10] mb-2">
-              Book Location
-            </h3>
-
-            <p className="font-semibold">
-              Dashboard → {category || "Category"} →
-              {" "}
-              {book || "Book"} →
-              {" "}
-              {className || "Class"} →
-              {" "}
-              {subject || "Subject"}
-            </p>
-          </div>
-
-          {/* Save Button */}
+          {/* SAVE */}
           <button
             onClick={saveBook}
-            className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2"
+            className="w-full mt-6 bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2"
           >
             <FaSave />
-            Save Book
+            Save & Open FlipBook
           </button>
 
         </div>
