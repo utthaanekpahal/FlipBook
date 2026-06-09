@@ -129,12 +129,20 @@ function Dashboard() {
               <FaUsers />
               Agents
             </li>
+            
             <li
               className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold text-[#572C10] cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
               onClick={() => navigate("/ticket", { state: { role: "user" } })}
             >
               <MdConfirmationNumber />
               Ticket
+            </li>
+             <li
+              className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold text-[#572C10]  cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
+              onClick={() => navigate("/FollowUp")}
+            >
+              <FaUsers />
+              Follow Up
             </li>
             <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer  hover:bg-red-600 hover:text-white rounded text-red-600"
               onClick={handleLogout}> <FaUser /> Logout </li>

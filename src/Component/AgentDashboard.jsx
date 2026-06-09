@@ -76,6 +76,17 @@ const AgentDashboard = () => {
                 <FaBook className='text-2xl' />
                 All Books
               </li>
+                <li
+                className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'
+                onClick={() =>
+                  navigate("/VisitForm", {
+                    state: { from: "agent" }
+                  })
+                }
+              >
+                <FaFolder className='text-2xl' />
+               School Visit Form
+              </li>
               <li className='flex items-center gap-3 p-[8px] text-xl  text-[#572C10]  hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'
                 onClick={() => { navigate("/Ticket", { state: { role: "agent" } }) }}>
                 <MdConfirmationNumber className='text-2xl' /> Ticket </li>

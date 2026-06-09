@@ -1,23 +1,29 @@
 import express from "express";
-import { getBooks, uploadBook } from "../controllers/bookController.js";
+import {
+  getBooks,
+  uploadBook,
+  getCategories
+} from "../controllers/bookController.js";
+
 import { signup, login } from "../controllers/signupController.js";
 import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
 // =========================
-// UPLOAD BOOK (FIXED)
+// UPLOAD BOOK
 // =========================
-router.post(
-  "/upload",
-  upload.single("file"),
-  uploadBook
-);
+router.post("/upload", upload.single("file"), uploadBook);
 
 // =========================
 // GET BOOKS
 // =========================
 router.get("/", getBooks);
+
+// =========================
+// CATEGORY GROUPED API
+// =========================
+router.get("/categories", getCategories);
 
 // =========================
 // AUTH ROUTES

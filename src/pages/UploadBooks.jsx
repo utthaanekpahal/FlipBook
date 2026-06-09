@@ -53,6 +53,7 @@ const UploadBooks = () => {
       formData.append("className", className);
       formData.append("subject", subject);
       formData.append("type", "pdf");
+      formData.append("book", book);
 
       const res = await axios.post(
         "http://localhost:3000/api/books/upload",

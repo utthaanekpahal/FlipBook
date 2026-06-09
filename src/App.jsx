@@ -12,6 +12,8 @@ import Ticket from './pages/Ticket';
 import ClassPage from './pages/ClassPage';
 import UploadBooks from './pages/UploadBooks';
 import ViewMoreBooks from './pages/ViewMoreBooks';
+import VisitForm from './pages/VisitForm';
+import FollowUp from './pages/FollowUp';
 
 // Public Routes (Login / Signup)
 function PublicRoute() {
@@ -62,6 +64,8 @@ const App = () => {
           <Route path="/ClassPage" element={<ClassPage />} />
           <Route path="/UploadBooks" element={<UploadBooks />} />
           <Route path="/ViewMoreBooks" element={<ViewMoreBooks />} />
+          <Route path="/VisitForm" element={<VisitForm />} />
+          <Route path="/FollowUp" element={<FollowUp />} />
         </Route>
 
       </Routes>
