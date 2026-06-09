@@ -3,23 +3,10 @@ import { useNavigate, Link } from "react-router-dom";
 import Google from "../assets/imges/svg.svg";
 import Facebook from "../assets/imges/fsvg.svg";
 import Insta from "../assets/imges/isvg.svg";
-import axios from "axios";
-
+import axios from "axios"
 function SignupForm() {
 
   const navigate = useNavigate();
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const role = localStorage.getItem("role");
-
-    if (isLoggedIn === "true") {
-      if (role === "agent") {
-        navigate("/AgentDashboard", { replace: true });
-      } else {
-        navigate("/Dashboard", { replace: true });
-      }
-    }
-  }, [navigate]);
   const [show, setShow] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -43,8 +30,9 @@ function SignupForm() {
       [name]: value
     }));
   };
-
  const matchvalue = async () => {
+    console.log("SIGNUP CLICKED");
+
   let newErrors = {};
 
   const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -73,6 +61,7 @@ function SignupForm() {
   setErrors({});
 
   try {
+     console.log("Sending Request");
     const response = await axios.post(
       "http://localhost:3000/api/books/signup",
       {
@@ -87,7 +76,7 @@ function SignupForm() {
         replace: true,
       });
     }
-
+   console.log("SUCCESS:", response.data);
   } catch (error) {
     setMessage(
       error.response?.data?.message ||

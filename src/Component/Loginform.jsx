@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { FaUser, FaLock, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import bgimg from "../assets/imges/bgimg.PNG";
-import axios from "axios";
+import axios from "axios"
 export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -16,20 +16,6 @@ export default function Login() {
   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
 
-  // ✅ Check if already logged in
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const role = localStorage.getItem("role");
-
-    if (isLoggedIn === "true") {
-      if (role === "agent") {
-        navigate("/AgentDashboard", { replace: true });
-      } else {
-        navigate("/Dashboard", { replace: true });
-      }
-    }
-  }, [navigate]);
-
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
 
@@ -41,7 +27,6 @@ export default function Login() {
 
     setError("");
   };
-
   const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -72,31 +57,34 @@ export default function Login() {
         username: data.username,
         password: data.password,
       }
- 
     );
-         console.log("Login Response:", data)
+
+    console.log("Login Response:", response.data);
 
     if (response.data.success) {
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("role", response.data.role);
 
-      // future JWT ke liye
-      // localStorage.setItem("token", response.data.token);
-
-      navigate("/Dashboard", {
-        replace: true,
-      });
+      if (response.data.role === "agent") {
+        navigate("/AgentDashboard", {
+          replace: true,
+        });
+      } else {
+        navigate("/Dashboard", {
+          replace: true,
+        });
+      }
     }
-
   } catch (error) {
-     console.log("ERROR:", error);
-  console.log("RESPONSE:", error.response?.data);
+    console.log("ERROR:", error);
+    console.log("RESPONSE:", error.response?.data);
+
     setError(
       error.response?.data?.message ||
       "Login Failed"
     );
   }
 };
-
   return (
     <div
   className="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative px-3 py-6"

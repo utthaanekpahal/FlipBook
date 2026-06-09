@@ -1,4 +1,5 @@
 import User from '../models/Signup.js'
+import Agent from '../models/Agent.js'
 import bcrypt from 'bcryptjs'
 
 export const signup = async (req, res) => {
@@ -88,7 +89,30 @@ export const login = async (req, res) => {
         message: "All fields required",
       });
     }
+   /*Agent----*/
+     const agent = await Agent.findOne({
+      email: username,
+    });
 
+    if (agent) {
+      const isAgentMatch = await bcrypt.compare(
+        password,
+        agent.password
+      );
+
+      if (!isAgentMatch) {
+        return res.status(401).json({
+          message: "Invalid Password",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        role: "agent",
+        message: "Agent Login Successful",
+      });
+    }
+    /*user----*/
     const user = await User.findOne({ username });
 
     if (!user) {
@@ -110,6 +134,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      role: "user",
       message: "Login Successful",
       user: {
         id: user._id,
@@ -117,6 +142,71 @@ export const login = async (req, res) => {
       },
     });
 
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+/*agentlogin------------------------------------------------------------------*/
+export const agentsignup = async (req, res) => {
+  try {
+    const {
+      agentname,
+      email,
+      password,
+      confirmPassword,
+    } = req.body;
+
+    if (
+      !agentname ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      return res.status(400).json({
+        message: "All fields required",
+      });
+    }
+
+    const existingAgent =
+      await Agent.findOne({ email });
+
+    if (existingAgent) {
+      return res.status(400).json({
+        message: "Agent already exists",
+      });
+    }
+    
+    const hashedPassword =
+      await bcrypt.hash(password, 10);
+
+    await Agent.create({
+      name: agentname,
+      email,
+      password: hashedPassword,
+      confirmpassword: hashedPassword,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Agent Registered Successfully",
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+export const getAgents = async (req, res) => {
+  try {
+    const agents = await Agent.find();
+
+    res.status(200).json({
+      success: true,
+      agents,
+    });
   } catch (error) {
     res.status(500).json({
       message: error.message,

@@ -99,36 +99,37 @@ export const hideTicket = async (req, res) => {
 export const replyTicket = async (req, res) => {
   try {
     const { id } = req.params;
-    const { ticketId, status, message } = req.body;
+
+    const {
+      status,
+      message,
+      repliedBy,
+    } = req.body;
 
     const ticket = await Ticket.findById(id);
 
     if (!ticket) {
-      return res.status(404).json({ message: "Ticket not found" });
+      return res.status(404).json({
+        message: "Ticket not found",
+      });
     }
-
-    // SAME LOGIC AS FRONTEND:
-    // remove old reply then add new reply
-    ticket.replies = ticket.replies.filter(
-      (r) => r.ticketId !== ticketId
-    );
-
+    ticket.replies = [];
     ticket.replies.push({
-      ticketId,
-      reply: {
-        status,
-        message,
-      },
+      message,
+      status,
+      repliedBy,
     });
 
     await ticket.save();
 
     res.status(200).json({
       success: true,
-      message: "Reply submitted successfully",
       ticket,
     });
+
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };

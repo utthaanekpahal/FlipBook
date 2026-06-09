@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useLocation } from "react-router-dom";
-import { mycontext } from '../Context/Contextfile';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios"
 import "@fortawesome/fontawesome-free/css/all.min.css"
 
 const Ticket = () => {
   const navigate = useNavigate();
-  const { globaldata, setglobaldata } = useContext(mycontext)
 
   const location = useLocation();
 
@@ -26,6 +25,7 @@ const Ticket = () => {
 
   // SUCCESS MESSAGE
   const [successMessage, setSuccessMessage] = useState("")
+  const [TicketMessage, setTicketMessage] = useState("")
 
   // =========================
   // Ticket Form Data
@@ -78,65 +78,57 @@ const Ticket = () => {
   // =========================
   // Submit Ticket
   // =========================
-  const ticketHandler = (e) => {
+  const ticketHandler = async (e) => {
+  e.preventDefault();
 
-    e.preventDefault()
-     console.log(upload.Agentname)
-    const newTicket = {
-      ...upload,
-      id: Date.now(),
-      date: new Date().toLocaleDateString()
-    }
-     console.log("Date:", newTicket.date)
-    // UPDATED ARRAY
-    const updatedTickets = [...adminUpdates, newTicket]
+  try {
+    const response = await axios.post(
+      "http://localhost:3000/api/tickets/create",
+      upload
+    );
 
-    // UPDATE STATE
-    setAdminUpdates(updatedTickets)
+    setAdminUpdates((prev) => [
+      ...prev,
+      response.data.ticket,
+    ]);
 
-    // SAVE LOCALSTORAGE
-    localStorage.setItem(
-      "tickets",
-      JSON.stringify(updatedTickets)
-    )
+    setSuccessMessage("Ticket Submitted Successfully ✅");
 
-    // FORCE STORAGE EVENT
-    window.dispatchEvent(new Event("storage"))
-
-    // SUCCESS MESSAGE
-    setSuccessMessage("Ticket Submitted Successfully ✅")
-
-    // AUTO REMOVE MESSAGE
     setTimeout(() => {
-      setSuccessMessage("")
-    }, 3000)
+      setSuccessMessage("");
+    }, 3000);
 
-    // RESET FORM
     setUpload({
       Agentname: "",
       category: "",
       subject: "",
-      message: ""
-    })
+      message: "",
+    });
 
-    // CLOSE MODAL
-    setShowModal(false)
+    setShowModal(false);
+
+  } catch (error) {
+    console.log(error);
   }
+};
 
   // =========================
   // Delete Only For Current Role UI
   // =========================
-  const deleteUpdate = (id) => {
+  const deleteUpdate = async (id) => {
+  try {
+    await axios.delete(
+      `http://localhost:3000/api/tickets/delete/${id}`
+    );
 
-    const updatedHidden = [...hiddenTickets, id]
+    setAdminUpdates((prev) =>
+      prev.filter((item) => item._id !== id)
+    );
 
-    setHiddenTickets(updatedHidden)
-
-    localStorage.setItem(
-      `hiddenTickets_${role}`,
-      JSON.stringify(updatedHidden)
-    )
+  } catch (error) {
+    console.log(error);
   }
+};
 
   // =========================
   // Reply State
@@ -164,36 +156,35 @@ const Ticket = () => {
   // =========================
   // Submit Reply
   // =========================
-  const submitReply = (e) => {
+  const submitReply = async (e) => {
+  e.preventDefault();
+  try {
+    await axios.put(
+      `http://localhost:3000/api/tickets/reply/${selectedTicket._id}`,
+      {
+        status: replyData.status,
+        message: replyData.message,
+        repliedBy: role,
+      }
+    );
+    
+    fetchTickets();
+    setTicketMessage("Replied Successfully ✅");
+    setTimeout(() => {
+      setTicketMessage("");
+    }, 3000);
 
-    e.preventDefault()
-
-    const Adminreplymessage = {
-      ticketId: selectedTicket.id,
-      ticket: selectedTicket,
-      reply: replyData
-    }
-
-    setglobaldata((prev) => {
-
-      // Remove old reply
-      const filtered = prev.filter(
-        (item) => item.ticketId !== selectedTicket.id
-      )
-
-      return [...filtered, Adminreplymessage]
-    })
-
-    // RESET
     setReplyData({
       status: "",
-      message: ""
-    })
+      message: "",
+    });
 
-    // CLOSE MODAL
-    setShowReplyModal(false)
+    setShowReplyModal(false);
+
+  } catch (error) {
+    console.log(error);
   }
-
+};
   // =========================
   // Open Reply Modal
   // =========================
@@ -202,6 +193,7 @@ const Ticket = () => {
     setSelectedTicket(item)
 
     setShowReplyModal(true)
+
   }
 
   // =========================
@@ -232,86 +224,74 @@ const Ticket = () => {
   // Load Tickets Initially
   // =========================
   useEffect(() => {
+  fetchTickets();
+}, []);
 
-    const storedTickets =
-      localStorage.getItem("tickets")
+const fetchTickets = async () => {
+  try {
+    const res = await axios.get(
+      "http://localhost:3000/api/tickets/all"
+    );
 
-    if (storedTickets) {
+    setAdminUpdates(res.data.tickets);
 
-      setAdminUpdates(JSON.parse(storedTickets))
-    }
-
-  }, [])
-
+  } catch (error) {
+    console.log(error);
+  }
+};
   // =========================
   // Sync Tickets Between Tabs
   // =========================
-  useEffect(() => {
-
-    const handleTicketChange = () => {
-
-      const updatedTickets =
-        localStorage.getItem("tickets")
-
-      setAdminUpdates(
-        updatedTickets
-          ? JSON.parse(updatedTickets)
-          : []
-      )
-    }
-
-    window.addEventListener(
-      "storage",
-      handleTicketChange
-    )
-
-    return () => {
-
-      window.removeEventListener(
-        "storage",
-        handleTicketChange
-      )
-    }
-
-  }, [])
-
   return (
 
-    <div className='min-h-screen w-full bg-cover bg-[#EFE6DD] bg-center p-[20px]'>
+    <div className='min-h-screen w-full bg-cover bg-[#EFE6DD] bg-center p-4 sm:p-5'>
       {/* =========================
           TOP HEADER
       ========================== */}
 
-      <div className='flex justify-around items-center p-[15px] rounded-md'>
-        {
-          role !== "user" ?
+    <div className='flex justify-between items-center p-[15px] rounded-md'>
+  {
+    role !== "user" ? (
+      <div className='flex items-center gap-4'>
+        <button
+          className='bg-[#572C10] text-white font-bold px-5 py-2 rounded-md'
+          onClick={() => { navigate("/AgentDashboard") }}
+        >
+          back
+        </button>
 
-             <div className='flex justify-center gap-[50px] '>
-                <button className='bg-[#572C10] text-white font-bold px-5 py-2 rounded-md'
-                onClick={()=>{navigate("/AgentDashboard")}}>back</button>
-              <h1 className='text-2xl font-bold text-[#572C10]'>
-              Ticket Update
-            </h1>
-            </div>
-            :
-
-            <h1 className='text-2xl font-bold text-[#572C10]'>
-              Tickets By Agents
-            </h1>
-        }
-
-        {
-          role !== "user" &&
-
-          <button
-            onClick={() => setShowModal(true)}
-            className='bg-[#572C10] text-white font-bold px-5 py-2 rounded-md'
-          >
-            New Ticket
-          </button>
-        }
-
+        <h1 className='text-2xl font-bold text-[#572C10]'>
+          Ticket Update
+        </h1>
       </div>
+    ) : (
+      <div className='flex items-center gap-4'>
+        <button
+          className='bg-[#572C10] text-white font-bold px-5 py-2 rounded-md'
+          onClick={() => { navigate("/Dashboard") }}
+        >
+          back
+        </button>
+
+        <h1 className='text-2xl font-bold text-[#572C10]'>
+          Tickets By Agents
+        </h1>
+      </div>
+    )
+  }
+
+  {
+    role !== "user" && (
+      <button
+        onClick={() => setShowModal(true)}
+        className='bg-[#572C10] ml-[20px] text-white font-bold px-5 py-2 rounded-md whitespace-nowrap'
+      >
+        New Ticket
+      </button>
+    )
+  }
+
+</div>
 
       {/* SUCCESS MESSAGE */}
 
@@ -326,140 +306,171 @@ const Ticket = () => {
       >
 
         <div
-          className='bg-green-100 text-green-700 border border-green-400 px-6 py-3 rounded-md font-semibold shadow-lg'
+          className='bg-green-100 text-green-700 border border-green-400 px-4 sm:px-6 py-3 rounded-md max-w-[90vw]'
         >
           {successMessage}
         </div>
 
       </div>
+      <div
+        className={`fixed top-5 left-1/2 -translate-x-1/2 z-[999]
+        transition-all duration-500 ease-in-out
+        ${
+          TicketMessage
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-5 pointer-events-none"
+        }`}
+      >
+
+        <div
+          className='bg-green-100 text-green-700 border border-green-400 px-4 sm:px-6 py-3 rounded-md max-w-[90vw]'
+        >
+          {TicketMessage}
+        </div>
+
+      </div>
+      
 
       {/* =========================
           POPUP MODAL
       ========================== */}
 
-      {
-        showModal && (
+     {
+  showModal && (
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
 
-          <div className='fixed inset-0 bg-black/50 flex justify-center items-center z-50'>
+      <form
+        onSubmit={ticketHandler}
+        className="
+          relative
+          bg-[#F5F5F5]
+          rounded-md
+          flex flex-col
+          gap-3
+          w-full
+          max-w-md
+          sm:max-w-lg
+          md:max-w-xl
+          lg:max-w-2xl
+          p-4
+          sm:p-6
+        "
+      >
 
-            <form
-              onSubmit={ticketHandler}
-              className='flex justify-center items-center rounded-md bg-[#F5F5F5] gap-[10px] flex-col w-[35%] p-[20px] relative'
-            >
+        {/* CLOSE BUTTON */}
+        <button
+          type="button"
+          onClick={() => setShowModal(false)}
+          className="absolute right-3 top-2 text-2xl font-bold"
+        >
+          ×
+        </button>
 
-              {/* CLOSE BUTTON */}
+        <h1 className="font-bold text-xl sm:text-2xl text-[#572C10] text-center">
+          Ticket Raise
+        </h1>
 
-              <button
-                type='button'
-                onClick={() => setShowModal(false)}
-                className='absolute right-3 top-2 text-2xl'
-              >
-                ×
-              </button>
+        <div className="flex flex-col gap-4 w-full">
 
-              <h1 className='font-bold text-2xl text-[#572C10]'>
-                Ticket Raise
-              </h1>
+          {/* Agent Name */}
+          <div className="w-full">
+            <label className="font-bold text-[#572C10] block mb-1">
+              Agent Name
+            </label>
 
-              <div className='flex justify-center items-center gap-[15px] flex-col p-[15px] w-full'>
-
-                {/* Agent Name */}
-
-                <div className='w-full'>
-
-                  <label className='font-bold text-[#572C10]'>
-                    Agent Name
-                  </label>
-
-                  <input
-                    onChange={getTicketData}
-                    value={upload.Agentname}
-                    name="Agentname"
-                    className='border-2 rounded-md border-[#ac8d6f] outline-none p-[5px] w-full'
-                    type="text"
-                    placeholder='enter your name'
-                  />
-
-                </div>
-
-                {/* Category */}
-
-                <div className='w-full'>
-
-                  <label className='font-bold text-[#572C10]'>
-                    Category
-                  </label>
-
-                  <select
-                    onChange={getTicketData}
-                    value={upload.category}
-                    name="category"
-                    className='border-2 p-2 w-full border-[#ac8d6f] rounded-md outline-none'
-                  >
-
-                    <option value="">Select Category</option>
-                    <option value="technical">Technical</option>
-                    <option value="billing">Billing</option>
-                    <option value="support">Support</option>
-
-                  </select>
-
-                </div>
-
-                {/* Subject */}
-
-                <div className='w-full'>
-
-                  <label className='font-bold text-[#572C10]'>
-                    Subject
-                  </label>
-
-                  <input
-                    onChange={getTicketData}
-                    value={upload.subject}
-                    name="subject"
-                    className='border-2 border-[#ac8d6f] rounded-md outline-none w-full p-[5px]'
-                    type="text"
-                    placeholder='enter your Subject'
-                  />
-
-                </div>
-
-                {/* Description */}
-
-                <div className='w-full'>
-
-                  <label className='font-bold text-[#572C10]'>
-                    Description
-                  </label>
-
-                  <textarea
-                    onChange={getTicketData}
-                    value={upload.message}
-                    name="message"
-                    className='border-2 rounded-md border-[#ac8d6f] outline-none h-[20vh] p-[5px] w-full'
-                    placeholder='enter your message'
-                  />
-
-                </div>
-
-                {/* Submit Button */}
-
-                <button
-                  type="submit"
-                  className='bg-[#572C10] p-[10px] w-[50%] rounded-sm text-white'
-                >
-                  Submit
-                </button>
-
-              </div>
-
-            </form>
-
+            <input
+              onChange={getTicketData}
+              value={upload.Agentname}
+              name="Agentname"
+              type="text"
+              placeholder="Enter your name"
+              className="w-full border-2 border-[#ac8d6f] rounded-md p-2 outline-none"
+            />
           </div>
-        )
-      }
 
+          {/* Category */}
+          <div className="w-full">
+            <label className="font-bold text-[#572C10] block mb-1 text-sm sm:text-base">
+              Category
+            </label>
+
+            <select
+              onChange={getTicketData}
+              value={upload.category}
+              name="category"
+              className="w-full border-2 border-[#ac8d6f] rounded-md p-2 sm:p-3 text-sm sm:text-base outline-none ">
+              <option value="">Select Category</option>
+              <option value="technical">Technical</option>
+              <option value="billing">Billing</option>
+              <option value="support">Support</option>
+            </select>
+          </div>
+
+          {/* Subject */}
+          <div className="w-full">
+            <label className="font-bold text-[#572C10] block mb-1">
+              Subject
+            </label>
+
+            <input
+              onChange={getTicketData}
+              value={upload.subject}
+              name="subject"
+              type="text"
+              placeholder="Enter your subject"
+              className="w-full border-2 border-[#ac8d6f] rounded-md p-2 outline-none"
+            />
+          </div>
+
+          {/* Description */}
+          <div className="w-full">
+            <label className="font-bold text-[#572C10] block mb-1">
+              Description
+            </label>
+
+            <textarea
+              onChange={getTicketData}
+              value={upload.message}
+              name="message"
+              placeholder="Enter your message"
+              className="
+                w-full
+                border-2
+                border-[#ac8d6f]
+                rounded-md
+                p-2
+                outline-none
+                min-h-[120px]
+                sm:min-h-[150px]
+              "
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="
+              bg-[#572C10]
+              text-white
+              rounded-md
+              py-2
+              w-full
+              sm:w-1/2
+              mx-auto
+              hover:bg-[#6b3915]
+              transition
+            "
+          >
+            Submit
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+  )
+}
       {/* =========================
           REPLY MODAL
       ========================== */}
@@ -471,8 +482,7 @@ const Ticket = () => {
 
             <form
               onSubmit={submitReply}
-              className='bg-white w-[35%] rounded-md p-[20px] flex flex-col gap-[15px] relative'
-            >
+             className='bg-white w-full max-w-md sm:max-w-lg md:max-w-xl rounded-md p-[20px] flex flex-col gap-[15px] relative mx-4'>
 
               {/* Close Button */}
 
@@ -525,7 +535,7 @@ const Ticket = () => {
                   value={replyData.message}
                   onChange={handleReplyChange}
                   placeholder='Enter your message'
-                  className='border-2 rounded-md border-[#ac8d6f] outline-none h-[20vh] p-[5px] w-full'
+                  className='border-2 rounded-md border-[#ac8d6f] outline-none min-h-[120px] sm:min-h-[150px] p-[5px] w-full'
                 />
 
               </div>
@@ -557,23 +567,19 @@ const Ticket = () => {
             adminUpdates.length > 0 ? (
 
               adminUpdates
-                .filter((item) => !hiddenTickets.includes(item.id))
+                .filter((item) => !hiddenTickets.includes(item._id))
                 .map((item) => (
 
-                  <div
-                    key={item.id}
-                    className='bg-white p-[20px] rounded-md shadow-md flex justify-between items-center'
-                  >
-
+                  <div key={item._id}
+                   className="bg-white p-5 rounded-md shadow-md  flex flex-col  sm:flex-row  justify-between gap-4  ">
                     {/* LEFT SIDE */}
+                    <div className="flex-1 min-w-0">
 
-                    <div>
-
-                      <h2 className='text-xl font-bold text-[#572C10]'>
+                 <h2 className='text-base sm:text-lg font-bold text-[#572C10] break-words'>
                         {item.subject}
                       </h2>
 
-                      <p className='text-gray-600'>
+                     <p className="text-gray-600 break-words">
                         {item.message}
                       </p>
 
@@ -581,24 +587,41 @@ const Ticket = () => {
                         Agent: {item.Agentname}
                       </p>
 
-                      <p className='text-sm text-gray-500'>
+                      <p className='text-sm text-gray-500 '>
                         Category: {item.category}
                       </p>
+                     {item.replies?.map((reply, index) => (
+  <div
+    key={index}
+    className="flex justify-center flex-col"
+  >
+    <div
+      className={`mt-2 p-1 rounded-[10px] mb-[10px] font-bold w-fit ${
+        statusUI[reply.status]?.className ||
+        "bg-gray-100 text-gray-600"
+      }`}
+    >
+      <p>{reply.message}</p>
+    </div>
 
+    <small>
+      {reply.repliedBy}{" "}
+      {new Date(reply.date).toLocaleString()}
+    </small>
+  </div>
+))}
                     </div>
 
                     {/* RIGHT SIDE */}
 
-                    <div className='flex gap-[10px] items-center'>
-
+                    <div className="flex gap-2 items-center shrink-0 min-w-[110px]">
                       {/* USER REPLY BUTTON */}
-
                       {
                         role === "user" &&
 
                         <button
                           onClick={() => replyHandler(item)}
-                          className='bg-green-600 text-white font-bold px-4 py-2 rounded-md'
+                          className='bg-green-600 text-white font-bold px-4 py-1.5 rounded-md'
                         >
                           Reply
                         </button>
@@ -607,36 +630,38 @@ const Ticket = () => {
                       {/* STATUS BADGE */}
 
                       {
-                        role === "agent" && (() => {
+  role === "agent" &&
+  item.replies?.length > 0 && (
+    <span
+      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border shadow-sm
+      ${
+        statusUI[
+          item.replies[item.replies.length - 1].status
+        ]?.className ||
+        "bg-gray-100 text-gray-600 border-gray-300"
+      }`}
+    >
+      <i
+        className={
+          statusUI[
+            item.replies[item.replies.length - 1].status
+          ]?.icon
+        }
+      ></i>
 
-                          const matchedReply = globaldata.find(
-                            (gd) => gd.ticketId === item.id
-                          )
-
-                          return matchedReply ? (
-
-                            <span
-                              className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border shadow-sm
-                              ${statusUI[matchedReply.reply.status]?.className ||
-                                "bg-gray-100 text-gray-600 border-gray-300"}`}
-                            >
-
-                              <i className={`${statusUI[matchedReply.reply.status]?.icon}`}></i>
-
-                              {statusUI[matchedReply.reply.status]?.label || "Unknown"}
-
-                            </span>
-
-                          ) : null
-
-                        })()
-                      }
-
+      {
+        statusUI[
+          item.replies[item.replies.length - 1].status
+        ]?.label
+      }
+    </span>
+  )
+}
                       {/* DELETE BUTTON */}
 
                       <button
-                        onClick={() => deleteUpdate(item.id)}
-                        className='bg-red-500 text-white font-bold px-4 py-2 rounded-md'
+                        onClick={() => deleteUpdate(item._id)}
+                       className='bg-red-500 text-white font-bold px-2 sm:px-4 py-1 sm:py-2 rounded-md text-xs sm:text-sm'
                       >
                         Delete
                       </button>
@@ -648,13 +673,14 @@ const Ticket = () => {
                 ))
             ) : (
 
-              <div className='text-center text-gray-500 text-xl mt-[50px]'>
+              <div className='text-center text-gray-500 text-lg sm:text-xl mt-[50px]'>
                 No Tickets Available
               </div>
             )
           }
 
         </div>
+        
 
       </div>
 

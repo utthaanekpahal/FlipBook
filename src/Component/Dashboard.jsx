@@ -5,30 +5,10 @@ import { FaBookOpen } from "react-icons/fa";
 import { FaSearch, FaUser, FaThList, FaUserTie } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { MdConfirmationNumber } from "react-icons/md";
-import {
-  FaTachometerAlt,
-  FaBook,
-  FaList,
-  FaUpload,
-  FaUsers,
-  FaCog,
-} from 'react-icons/fa';
+import {FaTachometerAlt,FaBook,FaList, FaUpload,FaUsers,FaCog,} from 'react-icons/fa';
+import axios from 'axios';
 function Dashboard() {
-  const AgentTicketname = JSON.parse(localStorage.getItem("tickets")) || [];
   const navigate = useNavigate();
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-
-    if (isLoggedIn !== "true") {
-      navigate("/loginform", { replace: true });
-    }
-  }, [navigate]);
-
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-
-  if (isLoggedIn !== "true") {
-    return null;
-  }
   useEffect(() => {
 
     const views =
@@ -40,12 +20,41 @@ function Dashboard() {
     );
 
   }, []);
+  const [agents, setAgents] = useState([]);
+
+useEffect(() => {
+  fetchAgents();
+}, []);
+
+const fetchAgents = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/api/books/agents"
+    );
+
+    setAgents(response.data.agents);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+const [Ticketdata, setTicketdata] = useState([])
+useEffect(()=>{
+  fetchTicket()
+},[])
+const fetchTicket=async ()=>{
+  try{
+    const res= await axios.get("http://localhost:3000/api/tickets/all")
+    setTicketdata(res.data.tickets)
+  }
+  catch(error){
+    console.log(error)
+  }
+}
   const [agentpop, setagentpop] = useState(false)
-  const totalViews =
-    localStorage.getItem("views");
+  const totalViews =localStorage.getItem("views");
   const email = localStorage.getItem("username");
   const username = email?.split("@")[0];
-  const agentData = JSON.parse(localStorage.getItem("agents")) || [];
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("role");
@@ -129,12 +138,20 @@ function Dashboard() {
               <FaUsers />
               Agents
             </li>
+            
             <li
               className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold text-[#572C10] cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
               onClick={() => navigate("/ticket", { state: { role: "user" } })}
             >
               <MdConfirmationNumber />
               Ticket
+            </li>
+             <li
+              className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold text-[#572C10]  cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
+              onClick={() => navigate("/FollowUp")}
+            >
+              <FaUsers />
+              Follow Up
             </li>
             <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer  hover:bg-red-600 hover:text-white rounded text-red-600"
               onClick={handleLogout}> <FaUser /> Logout </li>
@@ -177,7 +194,7 @@ function Dashboard() {
               </div>
               <div className='flex flex-col justify-center gap-[5px]'>
                 <span className='font-bold text-[14px] text-[#572C10] '>Active Agents</span>
-                <span className='font-bold text-[17px]'>{agentData.length}</span>
+                <span className='font-bold text-[17px]'>{agents.length}</span>
                 <span className='font-bold text-[12px] text-[#995F2F]'>+5 this month</span>
               </div>
             </div>
@@ -313,20 +330,18 @@ function Dashboard() {
 
                       <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Agent Name</th>
                       <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Email</th>
-                      <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Password</th>
-                      <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>ConfirmPassword</th>
                       <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Status</th>
-
+                      <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Edit</th>
                     </tr>
 
                   </thead>
 
                   <tbody>
 
-                    {agentData.map((value, index) => (
+                    {agents.map((value, index) => (
                       <tr key={index}>
                         <td className="text-center p-[12px] border-b border-amber-50">
-                          {value.agentname}
+                          {value.name}
                         </td>
 
                         <td className="text-center p-[12px] border-b border-amber-50 break-all">
@@ -334,15 +349,11 @@ function Dashboard() {
                         </td>
 
                         <td className="text-center p-[12px] border-b border-amber-50">
-                          {value.Password}
+                          Active
                         </td>
 
                         <td className="text-center p-[12px] border-b border-amber-50">
-                          {value.AgentconfirmPassword}
-                        </td>
-
-                        <td className="text-center p-[12px] border-b border-amber-50">
-                          active
+                        <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'>Action</button>
                         </td>
                       </tr>
                     ))}
@@ -382,18 +393,17 @@ function Dashboard() {
               <tr className="bg-[#EFE6DD]">
                 <th className="p-2 sm:p-3 text-[#A77F60]">Agent Name</th>
                 <th className="p-2 sm:p-3 text-[#A77F60]">Email</th>
-                <th className="p-2 sm:p-3 text-[#A77F60]">Password</th>
-                <th className="p-2 sm:p-3 text-[#A77F60]">Confirm Password</th>
                 <th className="p-2 sm:p-3 text-[#A77F60]">Status</th>
+                <th className="p-2 sm:p-3 text-[#A77F60]">Edit</th>
               </tr>
             </thead>
 
             <tbody>
-              {agentData.map((value, index) => (
+              {agents.map((value, index) => (
                 <tr key={index} className="border-b">
 
                   <td className="text-center p-2 sm:p-3">
-                    {value.agentname}
+                    {value.name}
                   </td>
 
                   <td className="text-center p-2 sm:p-3 break-all">
@@ -401,15 +411,11 @@ function Dashboard() {
                   </td>
 
                   <td className="text-center p-2 sm:p-3">
-                    {value.Password}
+                    Active
                   </td>
 
                   <td className="text-center p-2 sm:p-3">
-                    {value.AgentconfirmPassword}
-                  </td>
-
-                  <td className="text-center p-2 sm:p-3 text-green-600">
-                    active
+                  <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'>Action</button>
                   </td>
 
                 </tr>
@@ -425,38 +431,74 @@ function Dashboard() {
   )}
 </div>
             {/* CARD */}
-            <div className="w-full   h-[250px] xl:w-[300px] bg-[#F5F5F5] overflow-y-auto rounded-[10px] p-[20px]">
+            <div className="w-full   h-[250px] xl:w-[300px]  bg-[#F5F5F5] overflow-y-auto rounded-[10px] p-[20px]">
               <div className='text-[#572C10] font-bold '>Recent Ticket</div>
-              <div className=''>
-                <div className='flex justify-between items-center mt-[4%]'>
-                  <h2 className='ml-[6px]'>Agents</h2>
-                  <h2>Date</h2>
-                  <h2>Detail</h2>
-                </div>
-                {
-                  AgentTicketname.map((data, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className='flex justify-between items-center mt-[4%] p-[5px]  w-full'
-                      >
-                        <span className='truncate max-w-[90px]'>{data.Agentname}</span>
-                        <span className='ml-[20px]'>{data.date}</span>
+              <div>
+                    <div className="hidden md:grid grid-cols-3 gap-4 pb-3 font-medium">
+    <span>Agents</span>
+    <span className="text-center">Date</span>
+    <span className="text-right">Detail</span>
+  </div>
 
-                        <button
-                          className='bg-[#A77F60] text-white font-bold px-[10px] rounded-[4px]'
-                          onClick={() =>
-                            navigate("/ticket", {
-                              state: { role: "user" }
-                            })
-                          }
-                        >
-                          click
-                        </button>
-                      </div>
-                    )
-                  })
-                }
+  {/* Rows */}
+  {Ticketdata?.map((data, index) => {
+    return (
+      <div
+        key={index}
+        className="
+          py-3
+          flex flex-col gap-3
+          md:grid md:grid-cols-3 md:items-center
+        "
+      >
+        {/* Mobile Agent */}
+        <div className="flex justify-between md:hidden">
+          <span className="text-gray-500 text-sm">Agent</span>
+          <span className="font-medium">{data?.Agentname}</span>
+        </div>
+
+        {/* Desktop Agent */}
+        <span className="hidden md:block font-medium truncate">
+          {data?.Agentname}
+        </span>
+
+        {/* Mobile Date */}
+        <div className="flex justify-between md:hidden">
+          <span className="text-gray-500 text-sm">Date</span>
+          <span className="text-sm">
+            {new Date(data?.createdAt).toLocaleDateString("en-GB")}
+          </span>
+        </div>
+
+        {/* Desktop Date */}
+        <span className="hidden md:block text-center text-sm whitespace-nowrap">
+          {new Date(data?.createdAt).toLocaleDateString("en-GB")}
+        </span>
+
+        {/* Button */}
+        <div className="flex justify-end md:justify-end">
+          <button
+            className="
+              bg-[#A77F60]
+              text-white
+              font-bold
+              px-4
+              py-2
+              rounded-md
+              w-full md:w-auto
+            "
+            onClick={() =>
+              navigate("/ticket", {
+                state: { role: "user" },
+              })
+            }
+          >
+            Click
+          </button>
+        </div>
+      </div>
+    );
+  })}
               </div>
             </div>
 

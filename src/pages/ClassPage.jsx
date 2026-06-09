@@ -1,32 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import booksData from "../data/booksData.json";
 
 const ClassPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // DATA FROM PREVIOUS PAGE
   const { className, category, book } = location.state || {};
 
-  // GET BOOKS FROM JSON
-  const books =
+  const [mongoBooks, setMongoBooks] = useState([]);
+
+ 
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/api/books");
+
+        const filtered = res.data.data.filter(
+          (item) =>
+            item.category === category &&
+            item.book === book &&
+            item.className === className
+        );
+
+        setMongoBooks(filtered);
+      } catch (error) {
+        console.log("API ERROR:", error.message);
+      }
+    };
+
+    fetchBooks();
+  }, [category, book, className]);
+
+  // =========================
+  // JSON DATA
+  // =========================
+  const jsonBooks =
     booksData?.[category]?.[book]?.[className] || [];
+
+  // =========================
+  // MERGE BOTH
+  // =========================
+  const books = [...jsonBooks, ...mongoBooks];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
 
       {/* TOP SECTION */}
       <div className="text-center mb-12">
-
-        <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-[#99582A] to-[#572C10] bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold text-[#572C10]">
           📚 {className}
         </h1>
 
-        <p className="text-lg md:text-xl font-bold mt-3 text-[#572C10]">
+        <p className="text-lg font-bold mt-2 text-[#572C10]">
           {category} → {book}
         </p>
-
       </div>
 
       {/* BOOKS GRID */}
@@ -39,41 +68,30 @@ const ClassPage = () => {
               navigate("/flipPage", {
                 state: {
                   title: item.title,
-                  pdf: item.pdf,
+                  pdf: item.fileUrl || item.pdf,
                 },
               })
             }
-            className="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-3 transition-all duration-300 cursor-pointer"
+            className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer hover:scale-105 transition"
           >
 
-            {/* IMAGE */}
-            <div className="overflow-hidden">
-              <img
-                src={item.img}
-                alt={item.title}
-                className="w-full h-[320px] object-cover group-hover:scale-110 transition duration-500"
-              />
-            </div>
+            <img
+              src={item.img || "/default.jpg"}
+              alt={item.title}
+              className="w-full h-[300px] object-cover"
+            />
 
-            {/* CONTENT */}
-            <div className="p-5">
+            <div className="p-4">
 
-              <h2 className="text-xl font-bold text-[#572C10] line-clamp-2">
+              <h2 className="text-xl font-bold">
                 {item.title}
               </h2>
 
-              <p className="text-sm text-[#572C10] font-bold mt-3 line-clamp-5">
+              <p className="text-sm mt-2">
                 {item.description}
               </p>
 
-              <button
-                className="mt-5 w-full bg-gradient-to-r from-[#99582A] to-[#572C10] text-white py-3 rounded-xl font-bold shadow-lg"
-              >
-                📖 Read Book
-              </button>
-
             </div>
-
           </div>
         ))}
 
@@ -82,24 +100,20 @@ const ClassPage = () => {
       {/* NO BOOKS */}
       {books.length === 0 && (
         <div className="text-center mt-20">
-
-          <p className="text-2xl font-bold text-red-500">
+          <p className="text-2xl text-red-500 font-bold">
             No Books Found
           </p>
-
         </div>
       )}
 
-      {/* BACK BUTTON */}
-      <div className="flex justify-center mt-14">
-
+      {/* BACK */}
+      <div className="flex justify-center mt-10">
         <button
           onClick={() => navigate(-1)}
-          className="bg-gradient-to-r from-[#99582A] to-[#572C10] text-white px-8 py-3 rounded-xl text-xl font-bold shadow-lg hover:scale-105 transition"
+          className="bg-[#572C10] text-white px-6 py-3 rounded-xl"
         >
-          ← Back
+          Back
         </button>
-
       </div>
 
     </div>

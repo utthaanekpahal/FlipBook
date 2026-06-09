@@ -23,8 +23,6 @@ const replySchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
-
 // =========================
 // Ticket Schema
 // =========================
@@ -68,6 +66,11 @@ const ticketSchema = new mongoose.Schema(
     },
 
     replies: [replySchema],
+    hiddenForRoles: [
+    {
+    role: String,
+    },
+    ],
   },
   { timestamps: true }
 );

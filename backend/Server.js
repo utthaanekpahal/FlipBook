@@ -1,22 +1,23 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import path from "path";
 
 import connectDB from "./config/db.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import ticketRoutes from "./routes/ticketRoutes.js";
+import visitRoutes from "./routes/visitRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
 // =========================
-// CORS FIX (IMPORTANT)
+// CORS
 // =========================
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin:[ "http://localhost:5173",
+          "http://localhost:4173",],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -29,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // =========================
-// STATIC FILES (PDF UPLOADS)
+// STATIC FILES (UPLOADS)
 // =========================
 app.use("/uploads", express.static("uploads"));
 
@@ -43,16 +44,17 @@ connectDB();
 // =========================
 app.use("/api/books", bookRoutes);
 app.use("/api/tickets", ticketRoutes);
+app.use("/api/visits", visitRoutes);
 
 // =========================
 // TEST ROUTE
 // =========================
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Server is running ");
 });
 
 // =========================
-// SERVER START
+// START SERVER
 // =========================
 const PORT = process.env.PORT || 3000;
 

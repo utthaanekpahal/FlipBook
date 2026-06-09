@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import bgimg from "../assets/imges/bgimg.PNG";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Agentlogin = () => {
 
@@ -25,12 +26,8 @@ const userinfo = (e) => {
     [name]: value
   }));
 };
-
-// Form Submit
-const clicked = (e) => {
+const clicked = async (e) => {
   e.preventDefault();
-    console.log("Button Clicked");
-
 
   let newErrors = {};
 
@@ -40,23 +37,19 @@ const clicked = (e) => {
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-  // Agent Name Validation
   if (infodata.agentname.trim() === "") {
     newErrors.agentname = "Agent name is required";
   }
 
-  // Email Validation
   if (!gmailRegex.test(infodata.email)) {
     newErrors.email = "Only Gmail IDs are allowed";
   }
 
-  // Password Validation
   if (!passwordRegex.test(infodata.Password)) {
     newErrors.Password =
       "Password must contain uppercase, lowercase, number, special character and minimum 8 characters";
   }
 
-  // Confirm Password Validation
   if (
     infodata.Password !==
     infodata.AgentconfirmPassword
@@ -65,65 +58,45 @@ const clicked = (e) => {
       "Passwords do not match";
   }
 
-  // Stop if validation fails
   if (Object.keys(newErrors).length > 0) {
     setErrors(newErrors);
     return;
   }
+
   setErrors({});
 
-  // Get existing agents
-  const existingAgents =
-    JSON.parse(localStorage.getItem("agents")) || [];
-    console.log(existingAgents);
+  try {
+    const response = await axios.post(
+     "http://localhost:3000/api/books/agentsignup",
+      {
+        agentname: infodata.agentname,
+        email: infodata.email,
+        password: infodata.Password,
+        confirmPassword:
+          infodata.AgentconfirmPassword,
+      }
+    );
+    console.log("Response:", response.data);
+    if (response.data.success) {
+      alert("Agent Registered Successfully");
 
-  // Check duplicate email
-  const userExists = existingAgents.some(
-    (agent) =>
-      agent.email.toLowerCase() ===
-      infodata.email.toLowerCase()
-  );
- try {
-  if (userExists) {
-    console.log("Inside if block");
-    alert("User already registered!");
-    setinfodata({
-      agentname: "",
-      email: "",
-      Password: "",
-      AgentconfirmPassword: ""
-    });
-    return;
+      navigate("/Loginform", {
+        replace: true,
+      });
+    }
+
+  } catch (error) {
+    console.log("ERROR:", error);
+    console.log("RESPONSE:", error.response?.data);
+
+    alert(
+      error.response?.data?.message ||
+      "Registration Failed"
+    );
   }
-} catch (err) {
-  console.error("Error:", err);
-}
-  // Create new agent object
-  const newAgent = {
-  agentname: infodata.agentname,
-  email: infodata.email,
-  Password: infodata.Password,
-  AgentconfirmPassword: infodata.AgentconfirmPassword
 };
-  // Add new agent
-  const updatedAgents = [
-    ...existingAgents,
-    newAgent
-  ];
-
-  // Save to localStorage
-  localStorage.setItem(
-    "agents",
-    JSON.stringify(updatedAgents)
-  );
-
-  alert("Agent registered successfully!");
-
-  // Clear form
-
-  navigate("/Dashboard");
-};
-  return (
+// Form Submit
+ return (
 
     <div
       className="min-h-screen w-full flex items-center justify-center bg-cover bg-center"
