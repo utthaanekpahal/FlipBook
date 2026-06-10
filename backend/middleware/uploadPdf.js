@@ -3,7 +3,6 @@ import fs from "fs";
 
 console.log("UPLOAD PDF MIDDLEWARE LOADED");
 
-// ensure uploads folder exists
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
 }

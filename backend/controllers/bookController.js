@@ -1,8 +1,6 @@
 import Book from "../models/Book.js";
 
-// =========================
-// Upload Book
-// =========================
+
 const uploadBook = async (req, res) => {
   try {
     console.log("FILE:", req.file);
@@ -20,7 +18,7 @@ const uploadBook = async (req, res) => {
       description,
       img,
       category,
-      book,       // ✅ Added
+      book,       
       className,
       subject,
     } = req.body;
