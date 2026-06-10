@@ -5,10 +5,8 @@ import {
   getCategories
 } from "../controllers/bookController.js";
 
-import { signup, login } from "../controllers/signupController.js";
-
-// ✅ PDF middleware
-import uploadPdf from "../middleware/uploadPdf.js";
+import { signup, login , agentsignup, getAgents} from "../controllers/signupController.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 

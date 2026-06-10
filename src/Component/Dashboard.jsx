@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useActionState, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { FaBookOpen } from "react-icons/fa";
@@ -51,6 +51,21 @@ const fetchTicket=async ()=>{
     console.log(error)
   }
 }
+  const [agentupdate, setagentupdate] = useState({
+    updateagentname : "",
+    updateagentemail :"",
+    updateagentpass:"",
+    updatedstatus:""
+})
+  const updateagentdata=(e)=>{
+    const {name , value}=e.target
+    setagentupdate((prev)=>({...prev,[name]:value}))
+  }
+  const updateagentchanges=()=>{
+    console.log(agentupdate)
+  }
+  const [agenteditpop, setagenteditpop] = useState(false)
+  const [isActive, setIsActive] = useState(true);
   const [agentpop, setagentpop] = useState(false)
   const totalViews =localStorage.getItem("views");
   const email = localStorage.getItem("username");
@@ -304,7 +319,7 @@ const fetchTicket=async ()=>{
           </div>
 
           {/* TABLE + CARD */}
-          <div className='flex flex-col xl:flex-row gap-5'>
+          <div className='flex flex-col xl:flex-row gap-2'>
 
             {/* TABLE */}
             <div className="flex-1 bg-[#F5F5F5] rounded-[10px] p-[20px]">
@@ -331,6 +346,7 @@ const fetchTicket=async ()=>{
                       <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Agent Name</th>
                       <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Email</th>
                       <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Status</th>
+                      <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Last login</th>
                       <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Edit</th>
                     </tr>
 
@@ -351,9 +367,14 @@ const fetchTicket=async ()=>{
                         <td className="text-center p-[12px] border-b border-amber-50">
                           Active
                         </td>
+                         <td className="text-center p-[12px] border-b border-amber-50">
+                          Active
+                        </td>
 
                         <td className="text-center p-[12px] border-b border-amber-50">
-                        <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'>Action</button>
+                        <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'
+                          onClick={()=>{setagenteditpop(!agenteditpop)
+                          }}>Action</button>
                         </td>
                       </tr>
                     ))}
@@ -364,6 +385,120 @@ const fetchTicket=async ()=>{
 
               </div>
             </div>
+                <div>
+                 {
+  agenteditpop && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="relative w-full max-w-md bg-white rounded-xl shadow-xl p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
+
+        {/* Close Button */}
+        <button
+          onClick={() => setagenteditpop(false)}
+          className="absolute top-3 right-4 text-2xl font-bold text-gray-500 hover:text-black"
+        >
+          ×
+        </button>
+
+        {/* Heading */}
+        <h2 className="text-lg sm:text-xl font-semibold mb-5">
+          Edit Agent
+        </h2>
+
+        {/* Name */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">
+            Name
+          </label>
+          <input
+            type="text"
+            name='updateagentname'
+            onChange={updateagentdata}
+            placeholder="Enter Name"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Email */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">
+            Email
+          </label>
+          <input
+            type="email"
+            name='updateagentemail'
+            onChange={updateagentdata}
+            placeholder="Enter Email"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Password */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">
+            New Password
+          </label>
+          <input
+            type="password"
+            name='updateagentpass'
+            onChange={updateagentdata}
+            placeholder="Enter New Password"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Status Toggle */}
+        <div className="flex items-center justify-between mb-6">
+          <span className="font-medium text-sm sm:text-base">
+            Status
+          </span>
+
+          <button
+            onClick={() => setIsActive(!isActive)}
+            className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
+              isActive ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            <span
+              className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
+                isActive ? "translate-x-8" : "translate-x-1"
+              }`}
+            />
+          </button>
+        </div>
+
+        <div className="mb-4 text-center">
+          <span
+           name='updatedstatus'
+           onChange={updateagentdata}
+            className={`font-medium  ${
+              isActive ? "text-green-600 font-bold" : "text-red-600 font-bold"
+            }` }
+          >
+            {isActive ? "Active" : "Deactivated"}
+          </span>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={() => setagenteditpop(false)}
+            className="w-full border border-gray-300 py-2 rounded-lg hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+
+          <button
+            className="w-full bg-[#572C10] text-white py-2 rounded-lg"
+            onClick={updateagentchanges}
+          >
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+                </div>
               <div>
   {agentpop && (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 p-3">
@@ -394,6 +529,7 @@ const fetchTicket=async ()=>{
                 <th className="p-2 sm:p-3 text-[#A77F60]">Agent Name</th>
                 <th className="p-2 sm:p-3 text-[#A77F60]">Email</th>
                 <th className="p-2 sm:p-3 text-[#A77F60]">Status</th>
+                <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Last login</th>
                 <th className="p-2 sm:p-3 text-[#A77F60]">Edit</th>
               </tr>
             </thead>
@@ -413,9 +549,14 @@ const fetchTicket=async ()=>{
                   <td className="text-center p-2 sm:p-3">
                     Active
                   </td>
+                   <td className="text-center p-2 sm:p-3">
+                    Active
+                  </td>
 
                   <td className="text-center p-2 sm:p-3">
-                  <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'>Action</button>
+                      <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'
+                          onClick={()=>{setagenteditpop(!agenteditpop)
+                          }}>Action</button>
                   </td>
 
                 </tr>
@@ -434,7 +575,7 @@ const fetchTicket=async ()=>{
             <div className="w-full   h-[250px] xl:w-[300px]  bg-[#F5F5F5] overflow-y-auto rounded-[10px] p-[20px]">
               <div className='text-[#572C10] font-bold '>Recent Ticket</div>
               <div>
-                    <div className="hidden md:grid grid-cols-3 gap-4 pb-3 font-medium">
+                    <div className="hidden md:grid grid-cols-3 gap-4 pb-3 font-medium mt-[10px]">
     <span>Agents</span>
     <span className="text-center">Date</span>
     <span className="text-right">Detail</span>

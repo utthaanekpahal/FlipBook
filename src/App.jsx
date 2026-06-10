@@ -1,9 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import Dashboard from './Component/Dashboard';
-import Agentlogin from './Component/Agentlogin';
 import AgentDashboard from './Component/AgentDashboard';
-import Category from './pages/Category';
 import FlipPage from './pages/FlipPage';
 import Books from './pages/books';
 import Ticket from './pages/Ticket';
@@ -15,17 +13,9 @@ import FollowUp from './pages/FollowUp';
 
 import Signupform from "./Component/Signform";
 import Loginform from "./Component/Loginform";
-import Dashboard from "./Component/Dashboard";
 import Agentlogin from "./Component/Agentlogin";
-import AgentDashboard from "./Component/AgentDashboard";
 
 import Category from "./pages/Category";
-import FlipPage from "./pages/FlipPage";
-import Books from "./pages/books";
-import Ticket from "./pages/Ticket";
-import ClassPage from "./pages/ClassPage";
-import UploadBooks from "./pages/UploadBooks";
-import ViewMoreBooks from "./pages/ViewMoreBooks";
 
 // ==========================
 // PUBLIC ROUTE
