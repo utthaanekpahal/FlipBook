@@ -6,7 +6,7 @@ import {
 } from "../controllers/bookController.js";
 
 import { signup, login , agentsignup, getAgents} from "../controllers/signupController.js";
-import upload from "../middleware/upload.js";
+import uploadPdf from "../middleware/uploadPdf.js";
 
 const router = express.Router();
 
