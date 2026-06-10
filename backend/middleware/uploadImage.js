@@ -1,7 +1,6 @@
 import multer from "multer";
 import fs from "fs";
 
-// ensure uploads folder exists
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
 }
@@ -10,14 +9,11 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
   },
-
   filename: (req, file, cb) => {
-    const uniqueName = Date.now() + "-" + file.originalname;
-    cb(null, uniqueName);
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
-// ONLY IMAGES for visit form
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
@@ -26,9 +22,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({
+export default multer({
   storage,
   fileFilter,
 });
-
-export default upload;

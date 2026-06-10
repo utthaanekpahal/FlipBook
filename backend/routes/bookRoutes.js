@@ -6,14 +6,24 @@ import {
 } from "../controllers/bookController.js";
 
 import { signup, login } from "../controllers/signupController.js";
-import upload from "../middleware/upload.js";
+
+// ✅ PDF middleware
+import uploadPdf from "../middleware/uploadPdf.js";
 
 const router = express.Router();
 
 // =========================
 // UPLOAD BOOK
 // =========================
-router.post("/upload", upload.single("file"), uploadBook);
+router.post(
+  "/upload",
+  (req, res, next) => {
+    console.log("BOOK UPLOAD ROUTE HIT");
+    next();
+  },
+  uploadPdf.single("file"),
+  uploadBook
+);
 
 // =========================
 // GET BOOKS

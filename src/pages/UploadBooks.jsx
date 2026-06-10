@@ -55,15 +55,10 @@ const UploadBooks = () => {
       formData.append("type", "pdf");
       formData.append("book", book);
 
-      const res = await axios.post(
-        "http://localhost:3000/api/books/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+     const res = await axios.post(
+  "http://localhost:3000/api/books/upload",
+  formData
+);
 
     
 

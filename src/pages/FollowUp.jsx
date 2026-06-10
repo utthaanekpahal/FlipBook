@@ -5,42 +5,64 @@ const FollowUp = () => {
   const [visits, setVisits] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/visits")
+    axios
+      .get("http://localhost:3000/api/visits")
       .then((res) => setVisits(res.data.data))
       .catch((err) => console.log(err));
   }, []);
 
-  const getColor = (status) => {
-    switch (status) {
-      case "Interested": return "bg-green-500";
-      case "Call Back": return "bg-yellow-500";
-      case "Not Interested": return "bg-red-500";
-      case "Order Placed": return "bg-purple-500";
-      default: return "bg-blue-500";
-    }
-  };
-
   return (
-    <div className="p-6">
+    <div className="min-h-screen bg-gray-100 p-6">
 
-      <h1 className="text-3xl font-bold mb-6">
+      <h1 className="text-3xl font-bold mb-6 flex items-center justify-center gap-2 p-4">
         Follow-Up Dashboard
       </h1>
 
       <div className="grid md:grid-cols-3 gap-6">
 
         {visits.map((v) => (
-          <div key={v._id} className="bg-white p-4 rounded-xl shadow">
+          <div
+            key={v._id}
+            className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition"
+          >
 
-            <h2 className="font-bold text-lg">{v.name}</h2>
-            <p>{v.school}</p>
-            <p>{v.phone}</p>
+            {/* NAME */}
+            <p className="text-black font-bold text-2xl">
+              Name — <span className="font-bold text-2xl ">{v.name}</span>
+            </p>
 
-            <span className={`text-white px-3 py-1 rounded mt-2 inline-block ${getColor(v.followUp)}`}>
-              {v.followUp}
-            </span>
+            {/* SCHOOL */}
+            <p className="text-gray-800 font-bold text-xl mt-2">
+              School — <span className="font-bold">{v.school}</span>
+            </p>
 
-            <img src={v.photo} className="w-16 h-16 rounded-full mt-3" />
+            {/* PHONE */}
+            <p className="text-gray-800 font-bold text-xl mt-2">
+              Phone — <span className="font-bold">{v.phone}</span>
+            </p>
+
+            {/* STATUS */}
+            <p className="mt-3 font-bold text-2xl text-black">
+              Status —{" "}
+              <span className="font-bold text-blue-600">
+                {v.followUp}
+              </span>
+            </p>
+
+            {/* PROOF IMAGE (LAST) */}
+            {v.photo && (
+              <div className="mt-4">
+                <p className="text-xl font-bold text-black mb-1">
+                  Proof
+                </p>
+
+                <img
+                  src={v.photo}
+                  alt="proof"
+                  className="w-full h-40 object-cover rounded-2xl border"
+                />
+              </div>
+            )}
 
           </div>
         ))}
