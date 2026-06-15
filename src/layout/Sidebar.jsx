@@ -46,11 +46,12 @@ const Sidebar = ({ open, setOpen }) => {
     fixed 
     lg:top-[14%]
     md:top-[10%]
+    sm:top-[1000%]
     top-[18%]
     left-0
-    h-[60%]       /* Mobile */
-    sm:h-[75%]    /* Small tablets */
-    md:h-[50%]    /* Tablets */
+    h-[65%]       /* Mobile */
+    sm:h-[70%]    /* Small tablets */
+    md:h-[45%]    /* Tablets */
     lg:h-[84%]    /* Desktop */
     
     rounded-xl
@@ -59,7 +60,7 @@ const Sidebar = ({ open, setOpen }) => {
     z-50
     transition-transform duration-300
 
-    ${open ? "translate-x-0" : "-translate-x-full"}
+    ${open ? "translate-x-0" : "-translate-x-[120%]"}
 
     lg:translate-x-0
   `}

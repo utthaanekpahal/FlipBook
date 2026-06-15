@@ -39,7 +39,7 @@ const ClassPage = () => {
   const books = [...jsonBooks, ...mongoBooks];
 
   return (
-    <div className="min-h-screen ml-[18%] bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
+    <div className="min-h-screen ml-[15px] rounded-xl bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
 
       {/* TOP SECTION */}
       <div className="text-center mb-12">

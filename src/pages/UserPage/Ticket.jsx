@@ -242,7 +242,7 @@ const fetchTickets = async () => {
   // =========================
   return (
 
-    <div className='min-h-screen w-[102%]  bg-cover bg-[#EFE6DD] bg-center p-4 sm:p-5'>
+    <div className='min-h-screen w-[102%] bg-cover bg-[#EFE6DD] bg-center p-4 sm:p-5'>
       {/* =========================
           TOP HEADER
       ========================== */}

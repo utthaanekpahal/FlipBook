@@ -88,7 +88,7 @@ navigate(
 
   return (
     <div
-      className="min-h-screen  ml-[15px] bg-cover bg-center flex items-center justify-center px-4 py-10"
+      className="min-h-screen  ml-[15px] rounded-xl  bg-cover bg-center flex items-center justify-center px-4 py-10"
       style={{ backgroundImage: "url('/background img.png')" }}
     >
       <div className="w-full max-w-2xl">

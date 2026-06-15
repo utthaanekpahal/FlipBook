@@ -100,7 +100,7 @@ function FlipPage() {
   // =========================
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gray-200">
+      <div className="flex flex-col rounded-xl ml-[18px] items-center justify-center h-screen bg-gray-200">
         <div className="animate-spin h-12 w-12 border-4 border-[#572C10] border-t-transparent rounded-full"></div>
         <p className="mt-4 font-bold text-[#572C10]">
           Loading Flipbook...
@@ -110,7 +110,7 @@ function FlipPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-300 overflow-hidden px-4 py-6">
+    <div className="min-h-screen flex flex-col ml-[18px] rounded-xl  items-center bg-gray-300 overflow-hidden px-4 py-6">
 
       {/* BACK BUTTON */}
       <div className="w-full max-w-4xl mt-4">

@@ -99,7 +99,7 @@ const clicked = async (e) => {
  return (
 
     <div
-      className="min-h-screen w-[99%] ml-[15px] flex items-center justify-center bg-cover bg-center"
+      className="min-h-screen w-[99%] ml-[15px] rounded-xl  flex items-center justify-center bg-cover bg-center"
       style={{ backgroundImage: `url(${bgimg})` }}
     >
 

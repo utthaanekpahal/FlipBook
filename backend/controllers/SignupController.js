@@ -237,7 +237,6 @@ export const agentupdate = async (req, res) => {
 
     // only update password + status
     const updateData = {};
-
     if (req.body.updateagentpass) {
       const hashedPassword = await bcrypt.hash(req.body.updateagentpass, 10);
       updateData.password = hashedPassword;
