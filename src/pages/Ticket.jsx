@@ -27,9 +27,7 @@ const Ticket = () => {
   const [successMessage, setSuccessMessage] = useState("")
   const [TicketMessage, setTicketMessage] = useState("")
 
-  // =========================
-  // Ticket Form Data
-  // =========================
+
   const [upload, setUpload] = useState({
     Agentname: "",
     category: "",

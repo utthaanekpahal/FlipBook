@@ -38,9 +38,7 @@ function PublicRoute() {
 }
 
 
-// ==========================
-// ROLE ROUTE
-// ==========================
+
 function RoleRoute({ allowedRole }) {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   const role = localStorage.getItem("role");

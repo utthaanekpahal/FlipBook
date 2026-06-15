@@ -112,7 +112,7 @@ export const login = async (req, res) => {
         message: "Agent Login Successful",
       });
     }
-    /*user----*/
+    
     const user = await User.findOne({ username });
 
     if (!user) {

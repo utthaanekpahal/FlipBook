@@ -30,7 +30,7 @@ const uploadBook = async (req, res) => {
       img,
 
       category,
-      book,       // ✅ Added
+      book,       
       className,
       subject,
 

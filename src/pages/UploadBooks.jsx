@@ -61,10 +61,6 @@ const UploadBooks = () => {
 );
 
     
-
-      // =========================
-      // NAVIGATE TO FLIPBOOK
-      // =========================
     console.log("UPLOAD SUCCESS:", res.data);
 console.log("Uploaded Book:", res.data.data);
 console.log("PDF URL:", res.data.data.fileUrl);

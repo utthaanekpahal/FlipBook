@@ -33,15 +33,9 @@ const ClassPage = () => {
     fetchBooks();
   }, [category, book, className]);
 
-  // =========================
-  // JSON DATA
-  // =========================
-  const jsonBooks =
     booksData?.[category]?.[book]?.[className] || [];
 
-  // =========================
-  // MERGE BOTH
-  // =========================
+ 
   const books = [...jsonBooks, ...mongoBooks];
 
   return (
