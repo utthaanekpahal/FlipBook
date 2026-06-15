@@ -55,6 +55,9 @@ const [selectedAgent, setSelectedAgent] = useState(null);
     updateagentpass:"",
     updatedstatus:""
 })
+const [passwordError, setPasswordError] = useState("");
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
   const updateagentdata=(e)=>{
     const {name , value}=e.target
     setagentupdate((prev)=>({...prev,[name]:value}))
@@ -66,6 +69,14 @@ const [selectedAgent, setSelectedAgent] = useState(null);
   }));
 }, [isActive]);
   const updateagentchanges = async (id) => {
+   if (!passwordRegex.test(agentupdate.updateagentpass)) {
+    setPasswordError(
+      "Password must be at least 8 characters and contain uppercase, lowercase, number and special character."
+    );
+    return;
+  }
+
+  setPasswordError("");
   try {
     const response = await axios.put(
       `http://localhost:3000/api/books/agents/${id}`,
@@ -305,7 +316,7 @@ const [selectedAgent, setSelectedAgent] = useState(null);
                 <div>
                  {
   agenteditpop && (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4">
       <div className="relative w-full max-w-md bg-white rounded-xl shadow-xl p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
 
         {/* Close Button */}
@@ -364,6 +375,11 @@ const [selectedAgent, setSelectedAgent] = useState(null);
             placeholder="Enter New Password"
             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          {passwordError && (
+          <p className="text-red-500 text-sm mt-1">
+          {passwordError}
+          </p>
+          )}
         </div>
 
         {/* Status Toggle */}
@@ -409,6 +425,7 @@ const [selectedAgent, setSelectedAgent] = useState(null);
 
           <button
             className="w-full bg-[#572C10] text-white py-2 rounded-lg"
+             disabled={passwordError !== ""}
             onClick={() => updateagentchanges(selectedAgent?._id)}
           >
             Save Changes
