@@ -92,7 +92,7 @@ navigate(
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center flex items-center justify-center px-4 py-10"
+      className="min-h-screen  ml-[15px] bg-cover bg-center flex items-center justify-center px-4 py-10"
       style={{ backgroundImage: "url('/background img.png')" }}
     >
       <div className="w-full max-w-2xl">
@@ -105,7 +105,7 @@ navigate(
           ← Back
         </button>
 
-        <div className="bg-white/20 backdrop-blur-md border-4 border-[#572C10] rounded-3xl shadow-2xl p-8">
+        <div className="bg-white/20  backdrop-blur-md border-4 border-[#572C10] rounded-3xl shadow-2xl p-8">
 
           {/* HEADER */}
           <div className="text-center mb-8">

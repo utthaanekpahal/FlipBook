@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import booksData from "../data/booksData.json";
-
+import booksData from "../../data/booksData.json";
 const ClassPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -45,7 +44,7 @@ const ClassPage = () => {
   const books = [...jsonBooks, ...mongoBooks];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
+    <div className="min-h-screen ml-[18%] bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
 
       {/* TOP SECTION */}
       <div className="text-center mb-12">

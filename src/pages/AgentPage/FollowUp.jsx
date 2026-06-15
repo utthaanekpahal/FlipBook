@@ -12,13 +12,13 @@ const FollowUp = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen ml-[18%] bg-[#EFE6DD] p-6">
 
       <h1 className="text-3xl font-bold mb-6 flex items-center justify-center gap-2 p-4">
         Follow-Up Dashboard
       </h1>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid  md:grid-cols-3 gap-6">
 
         {visits.map((v) => (
           <div

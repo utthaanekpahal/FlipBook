@@ -60,7 +60,7 @@ const Books = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] px-4 sm:px-6 py-10">
+    <div className="min-h-screen  bg-[#EFE6DD] px-4 sm:px-6 py-10">
       {/* HEADING */}
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-[#572C10]">
@@ -212,19 +212,12 @@ const Books = () => {
       <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12 pb-10">
         <button
           onClick={() => navigate("/viewMoreBooks")}
-          className="w-full sm:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white px-6 sm:px-8 py-3 rounded-xl text-lg sm:text-2xl shadow-md transition"
-        >
+          className="w-full sm:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white px-6 sm:px-8 py-3 rounded-xl text-lg sm:text-2xl shadow-md transition">
           View More
         </button>
 
         <button
-          onClick={() => {
-            if (location.state?.from === "agent") {
-              navigate("/agentdashboard");
-            } else {
-              navigate("/dashboard");
-            }
-          }}
+          onClick={() =>navigate("/dashboard")}
           className="w-full sm:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white px-6 sm:px-8 py-3 rounded-xl text-lg sm:text-2xl shadow-md transition"
         >
           Back
