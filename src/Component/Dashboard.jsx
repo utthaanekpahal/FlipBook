@@ -1,11 +1,8 @@
 import React, { useActionState, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { IoNotificationsOutline } from 'react-icons/io5';
-import { FaBookOpen } from "react-icons/fa";
-import { FaSearch, FaUser, FaThList, FaUserTie } from "react-icons/fa";
+import { FaThList, FaUserTie } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
-import { MdConfirmationNumber } from "react-icons/md";
-import {FaTachometerAlt,FaBook,FaList, FaUpload,FaUsers,FaCog,} from 'react-icons/fa';
+import {FaBook,} from 'react-icons/fa';
 import axios from 'axios';
 function Dashboard() {
   const navigate = useNavigate();
@@ -31,7 +28,6 @@ const fetchAgents = async () => {
     const response = await axios.get(
       "http://localhost:3000/api/books/agents"
     );
-
     setAgents(response.data.agents);
 
   } catch (error) {
@@ -51,6 +47,8 @@ const fetchTicket=async ()=>{
     console.log(error)
   }
 }
+const [selectedAgent, setSelectedAgent] = useState(null);
+ const [isActive, setIsActive] = useState(true);
   const [agentupdate, setagentupdate] = useState({
     updateagentname : "",
     updateagentemail :"",
@@ -61,122 +59,39 @@ const fetchTicket=async ()=>{
     const {name , value}=e.target
     setagentupdate((prev)=>({...prev,[name]:value}))
   }
-  const updateagentchanges=()=>{
-    console.log(agentupdate)
+  useEffect(() => {
+  setagentupdate((prev) => ({
+    ...prev,
+    updatedstatus: isActive ? "Active" : "Deactivated",
+  }));
+}, [isActive]);
+  const updateagentchanges = async (id) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:3000/api/books/agents/${id}`,
+      {
+        updateagentpass: agentupdate.updateagentpass,
+        updatedstatus: agentupdate.updatedstatus,
+      }
+    );
+     setagenteditpop(false);
+  } catch (error) {
+    console.log("Error updating agent:", error.response?.data || error.message);
   }
+};
   const [agenteditpop, setagenteditpop] = useState(false)
-  const [isActive, setIsActive] = useState(true);
   const [agentpop, setagentpop] = useState(false)
   const totalViews =localStorage.getItem("views");
-  const email = localStorage.getItem("username");
-  const username = email?.split("@")[0];
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("role");
-
-    navigate("/loginform", { replace: true });
-  };
   return (
     <div className=''>
-      {/* HEADER */}
-      <header className="flex flex-col md:flex-row items-center justify-between gap-4 px-[20px] py-[12px]  bg-[#F5F5F5] ">
-        <div className='flex items-center gap-[5px] font-bold text-[20px] text-[#572C10] '>
-          <FaBookOpen size={22} />
-          Digital Book Library
-        </div>
-        <div className="relative w-full md:w-[400px] lg:w-[600px]">
-          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A77F60] text-lg" />
-          <input
-            type="text"
-            placeholder="Search Book, Categories"
-            className="w-full pl-12 pr-4 py-2 rounded-full text-[#A77F60] font-bold border-2 border-[#A77F60] placeholder:text-[#A77F60] outline-none"
-          />
-        </div>
-        <div className='flex justify-center gap-[15px] '>
-          <div >
-            <IoNotificationsOutline size={24} color="572C10" />
-          </div>
-          <div className='flex justify-center gap-[10px]'>
-            <FaUser size={25} color="572C10" className='mt-[-2px] ' />
-            <div className='cursor-pointer text-[#572C10] font-bold truncate max-w-[120px]'>
-              {username}
-            </div>
-
-          </div>
-        </div>
-
-      </header>
 
       {/* BODY */}
-      <div className='flex flex-col lg:flex-row gap-5  p-[20px] bg-[#EFE6DD]'>
+      <div className='flex flex-col  lg:flex-row gap-5  p-[20px]'>
 
         {/* SIDEBAR */}
-        <aside className="w-full lg:w-[220px]  shrink-0 bg-[#F5F5F5] ml-0 rounded-[5px]">
-
-          <ul className="list-none flex flex-col gap-[10px] ">
-
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer text-[#572C10] hover:bg-[#572C10] hover:text-white rounded"
-              onClick={() => navigate("/dashboard")}
-            >
-              <FaTachometerAlt />
-              Dashboard
-            </li>
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer text-[#572C10] hover:bg-[#572C10] hover:text-white rounded"
-              onClick={() => navigate("/books", { state: { from: "admin" } })}>
-              <FaBook />
-              Books
-            </li>
-
-            <li
-              className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10] font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
-              onClick={() =>
-                navigate("/category", {
-                  state: { from: "admin" }
-                })
-              }
-            >
-              <FaList />
-              Categories
-            </li>
-
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] text-[#572C10]  font-bold cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
-              onClick={() => navigate("/uploadBooks")}
-            >
-              <FaUpload />
-              Upload Books
-            </li>
-
-            <li
-              className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold text-[#572C10]  cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
-              onClick={() => navigate("/agent")}
-            >
-              <FaUsers />
-              Agents
-            </li>
-            
-            <li
-              className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold text-[#572C10] cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
-              onClick={() => navigate("/ticket", { state: { role: "user" } })}
-            >
-              <MdConfirmationNumber />
-              Ticket
-            </li>
-             <li
-              className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold text-[#572C10]  cursor-pointer hover:bg-[#572C10] hover:text-white rounded"
-              onClick={() => navigate("/FollowUp")}
-            >
-              <FaUsers />
-              Follow Up
-            </li>
-            <li className="flex items-center gap-[10px] px-[20px] py-[10px] font-bold cursor-pointer  hover:bg-red-600 hover:text-white rounded text-red-600"
-              onClick={handleLogout}> <FaUser /> Logout </li>
-
-          </ul>
-
-        </aside>
 
         {/* MAIN CONTENT */}
-        <main className="flex-1 flex flex-col gap-[20px] ">
+        <main className="flex-1 flex mt-[-16px] flex-col gap-[20px] ">
 
           {/* TOP BOXES */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 ">
@@ -354,7 +269,7 @@ const fetchTicket=async ()=>{
 
                   <tbody>
 
-                    {agents.map((value, index) => (
+                    {agents.slice(0, 2).map((value, index) => (
                       <tr key={index}>
                         <td className="text-center p-[12px] border-b border-amber-50">
                           {value.name}
@@ -365,15 +280,17 @@ const fetchTicket=async ()=>{
                         </td>
 
                         <td className="text-center p-[12px] border-b border-amber-50">
-                          Active
+                          {value.status}
                         </td>
                          <td className="text-center p-[12px] border-b border-amber-50">
-                          Active
+                          {value.lastLogin
+                           ? new Date(value.lastLogin).toLocaleDateString("en-GB")
+                           : "Never"}
                         </td>
-
                         <td className="text-center p-[12px] border-b border-amber-50">
                         <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'
-                          onClick={()=>{setagenteditpop(!agenteditpop)
+                          onClick={()=>{setagenteditpop(true);
+                             setSelectedAgent(value);
                           }}>Action</button>
                         </td>
                       </tr>
@@ -412,6 +329,7 @@ const fetchTicket=async ()=>{
           <input
             type="text"
             name='updateagentname'
+            value={selectedAgent?.name || ""}
             onChange={updateagentdata}
             placeholder="Enter Name"
             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -426,6 +344,7 @@ const fetchTicket=async ()=>{
           <input
             type="email"
             name='updateagentemail'
+            value={selectedAgent?.email || ""}
             onChange={updateagentdata}
             placeholder="Enter Email"
             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -440,6 +359,7 @@ const fetchTicket=async ()=>{
           <input
             type="password"
             name='updateagentpass'
+            value={agentupdate.updateagentpass}
             onChange={updateagentdata}
             placeholder="Enter New Password"
             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -489,7 +409,7 @@ const fetchTicket=async ()=>{
 
           <button
             className="w-full bg-[#572C10] text-white py-2 rounded-lg"
-            onClick={updateagentchanges}
+            onClick={() => updateagentchanges(selectedAgent?._id)}
           >
             Save Changes
           </button>
@@ -536,31 +456,31 @@ const fetchTicket=async ()=>{
 
             <tbody>
               {agents.map((value, index) => (
-                <tr key={index} className="border-b">
+                      <tr key={index}>
+                        <td className="text-center p-[12px] border-b border-amber-50">
+                          {value.name}
+                        </td>
 
-                  <td className="text-center p-2 sm:p-3">
-                    {value.name}
-                  </td>
+                        <td className="text-center p-[12px] border-b border-amber-50 break-all">
+                          {value.email}
+                        </td>
 
-                  <td className="text-center p-2 sm:p-3 break-all">
-                    {value.email}
-                  </td>
-
-                  <td className="text-center p-2 sm:p-3">
-                    Active
-                  </td>
-                   <td className="text-center p-2 sm:p-3">
-                    Active
-                  </td>
-
-                  <td className="text-center p-2 sm:p-3">
-                      <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'
-                          onClick={()=>{setagenteditpop(!agenteditpop)
+                        <td className="text-center p-[12px] border-b border-amber-50">
+                          {value.status}
+                        </td>
+                         <td className="text-center p-[12px] border-b border-amber-50">
+                          {value.lastLogin
+                           ? new Date(value.lastLogin).toLocaleDateString("en-GB")
+                           : "Never"}
+                        </td>
+                        <td className="text-center p-[12px] border-b border-amber-50">
+                        <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'
+                          onClick={()=>{setagenteditpop(true);
+                             setSelectedAgent(value);
                           }}>Action</button>
-                  </td>
-
-                </tr>
-              ))}
+                        </td>
+                      </tr>
+                    ))}
             </tbody>
 
           </table>
@@ -572,7 +492,7 @@ const fetchTicket=async ()=>{
   )}
 </div>
             {/* CARD */}
-            <div className="w-full   h-[250px] xl:w-[300px]  bg-[#F5F5F5] overflow-y-auto rounded-[10px] p-[20px]">
+            <div className="w-full  h-[258px] xl:w-[300px]  bg-[#F5F5F5] overflow-y-auto rounded-[10px] p-[20px]">
               <div className='text-[#572C10] font-bold '>Recent Ticket</div>
               <div>
                     <div className="hidden md:grid grid-cols-3 gap-4 pb-3 font-medium mt-[10px]">
@@ -620,12 +540,12 @@ const fetchTicket=async ()=>{
         <div className="flex justify-end md:justify-end">
           <button
             className="
-              bg-[#A77F60]
+              bg-[#572C10]
               text-white
               font-bold
               px-4
               py-2
-              rounded-md
+              rounded-[10px]
               w-full md:w-auto
             "
             onClick={() =>

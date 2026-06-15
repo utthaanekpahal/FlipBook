@@ -1,22 +1,34 @@
 import React from "react";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 
+import Layout from "./layout/Layout";
+import AgentLayout from "./layout/AgentLayout";
+
 import Dashboard from "./Component/Dashboard";
 import AgentDashboard from "./Component/AgentDashboard";
 import Signupform from "./Component/Signform";
 import Loginform from "./Component/Loginform";
 import Agentlogin from "./Component/Agentlogin";
 
-import Category from "./pages/Category";
-import FlipPage from "./pages/FlipPage";
-import Books from "./pages/books";
-import Ticket from "./pages/Ticket";
-import ClassPage from "./pages/ClassPage";
-import UploadBooks from "./pages/UploadBooks";
-import ViewMoreBooks from "./pages/ViewMoreBooks";
-import VisitForm from "./pages/VisitForm";
-import FollowUp from "./pages/FollowUp";
+// USER PAGES
+import UserBooks from "./pages/UserPage/books";
+import UserCategory from "./pages/UserPage/Category";
+import UserTicket from "./pages/UserPage/Ticket";
+import UserClassPage from "./pages/UserPage/ClassPage";
+import UserFlipPage from "./pages/UserPage/FlipPage";
+import UserViewMoreBooks from "./pages/UserPage/ViewMoreBooks";
+import UserFollowUp from "./pages/UserPage/FollowUp";
+import UploadBooks from "./pages/UserPage/UploadBooks";
 
+// AGENT PAGES
+import AgentBooks from "./pages/AgentPage/books";
+import AgentCategory from "./pages/AgentPage/Category";
+import AgentTicket from "./pages/AgentPage/Ticket";
+import AgentClassPage from "./pages/AgentPage/ClassPage";
+import AgentFlipPage from "./pages/AgentPage/FlipPage";
+import AgentViewMoreBooks from "./pages/AgentPage/ViewMoreBooks";
+import AgentFollowUp from "./pages/AgentPage/FollowUp";
+import VisitForm from "./pages/AgentPage/VisitForm";
 
 // ==========================
 // PUBLIC ROUTE
@@ -37,8 +49,9 @@ function PublicRoute() {
   return <Outlet />;
 }
 
-
-
+// ==========================
+// ROLE ROUTE
+// ==========================
 function RoleRoute({ allowedRole }) {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   const role = localStorage.getItem("role");
@@ -50,9 +63,7 @@ function RoleRoute({ allowedRole }) {
   if (role !== allowedRole) {
     return (
       <Navigate
-        to={role === "agent"
-          ? "/AgentDashboard"
-          : "/Dashboard"}
+        to={role === "agent" ? "/AgentDashboard" : "/Dashboard"}
         replace
       />
     );
@@ -61,54 +72,67 @@ function RoleRoute({ allowedRole }) {
   return <Outlet />;
 }
 
-
 // ==========================
-// COMMON ROUTE
+// APP
 // ==========================
-function PrivateRoute() {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-
-  return isLoggedIn === "true"
-    ? <Outlet />
-    : <Navigate to="/Loginform" replace />;
-}
-
-
 export default function App() {
   return (
     <Routes>
 
-      {/* PUBLIC ROUTES */}
+      {/* PUBLIC */}
       <Route element={<PublicRoute />}>
         <Route path="/" element={<Signupform />} />
         <Route path="/Loginform" element={<Loginform />} />
       </Route>
 
-      {/* USER ONLY */}
+      {/* USER PANEL */}
       <Route element={<RoleRoute allowedRole="user" />}>
-        <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/agent" element={<Agentlogin />} />
-        <Route path="/UploadBooks" element={<UploadBooks />} />
+        <Route element={<Layout />}>
+
+          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/agent" element={<Agentlogin />} />
+          <Route path="/UploadBooks" element={<UploadBooks />} />
+
+          <Route path="/Category" element={<UserCategory />} />
+          <Route path="/Books" element={<UserBooks />} />
+          <Route path="/Ticket" element={<UserTicket />} />
+          <Route path="/ClassPage" element={<UserClassPage />} />
+          <Route path="/ViewMoreBooks" element={<UserViewMoreBooks />} />
+          <Route path="/FollowUp" element={<UserFollowUp />} />
+          <Route path="/FlipPage" element={<UserFlipPage />} />
+
+        </Route>
       </Route>
 
-      {/* AGENT ONLY */}
+      {/* AGENT PANEL */}
       <Route element={<RoleRoute allowedRole="agent" />}>
-        <Route
-          path="/AgentDashboard"
-          element={<AgentDashboard />}
-        />
-        <Route path="/VisitForm" element={<VisitForm />} />
-      </Route>
+        <Route element={<AgentLayout />}>
 
-      {/* COMMON PAGES */}
-      <Route element={<PrivateRoute />}>
-        <Route path="/Category" element={<Category />} />
-        <Route path="/FlipPage" element={<FlipPage />} />
-        <Route path="/Books" element={<Books />} />
-        <Route path="/Ticket" element={<Ticket />} />
-        <Route path="/ClassPage" element={<ClassPage />} />
-        <Route path="/ViewMoreBooks" element={<ViewMoreBooks />} />
-        <Route path="/FollowUp" element={<FollowUp />} />
+          <Route
+            path="/AgentDashboard"
+            element={<AgentDashboard />}
+          />
+
+          <Route path="/VisitForm" element={<VisitForm />} />
+
+          <Route path="/agent/category" element={<AgentCategory />} />
+          <Route path="/agent/books" element={<AgentBooks />} />
+          <Route path="/agent/ticket" element={<AgentTicket />} />
+          <Route path="/agent/classpage" element={<AgentClassPage />} />
+          <Route
+            path="/agent/viewmorebooks"
+            element={<AgentViewMoreBooks />}
+          />
+          <Route
+            path="/agent/followup"
+            element={<AgentFollowUp />}
+          />
+          <Route
+            path="/agent/flippage"
+            element={<AgentFlipPage />}
+          />
+
+        </Route>
       </Route>
 
       {/* INVALID URL */}

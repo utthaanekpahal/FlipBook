@@ -18,7 +18,16 @@ const AgentSchema = new mongoose.Schema(
     confirmpassword:{
      type:String,
      required:true
-    }
+    },
+    status: {
+    type: String,
+    enum: ["Active", "Deactivated"],
+    default: "Active"
+  },
+  lastLogin: {
+  type: Date,
+  default: null
+}
   },
   { timestamps: true }
 );

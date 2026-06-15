@@ -27,7 +27,9 @@ const Ticket = () => {
   const [successMessage, setSuccessMessage] = useState("")
   const [TicketMessage, setTicketMessage] = useState("")
 
-
+  // =========================
+  // Ticket Form Data
+  // =========================
   const [upload, setUpload] = useState({
     Agentname: "",
     category: "",
@@ -242,7 +244,7 @@ const fetchTickets = async () => {
   // =========================
   return (
 
-    <div className='min-h-screen w-full bg-cover bg-[#EFE6DD] bg-center p-4 sm:p-5'>
+    <div className='min-h-screen bg-cover bg-[#EFE6DD] bg-center p-4 sm:p-5'>
       {/* =========================
           TOP HEADER
       ========================== */}
@@ -250,32 +252,14 @@ const fetchTickets = async () => {
     <div className='flex justify-between items-center p-[15px] rounded-md'>
   {
     role !== "user" ? (
-      <div className='flex items-center gap-4'>
-        <button
-          className='bg-[#572C10] text-white font-bold px-5 py-2 rounded-md'
-          onClick={() => { navigate("/AgentDashboard") }}
-        >
-          back
-        </button>
-
         <h1 className='text-2xl font-bold text-[#572C10]'>
           Ticket Update
         </h1>
-      </div>
     ) : (
-      <div className='flex items-center gap-4'>
-        <button
-          className='bg-[#572C10] text-white font-bold px-5 py-2 rounded-md'
-          onClick={() => { navigate("/Dashboard") }}
-        >
-          back
-        </button>
-
         <h1 className='text-2xl font-bold text-[#572C10]'>
           Tickets By Agents
-        </h1>
-      </div>
-    )
+        </h1>    
+        )
   }
 
   {

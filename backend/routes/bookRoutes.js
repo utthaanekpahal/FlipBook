@@ -5,7 +5,7 @@ import {
   getCategories
 } from "../controllers/bookController.js";
 
-import { signup, login , agentsignup, getAgents} from "../controllers/signupController.js";
+import { signup, login , agentsignup, getAgents , agentupdate} from "../controllers/signupController.js";
 import uploadPdf from "../middleware/uploadPdf.js";
 
 const router = express.Router();
@@ -40,5 +40,6 @@ router.post("/signup", signup);
 router.post("/agentsignup", agentsignup);
 router.post("/login", login);
 router.get("/agents", getAgents);
+router.put("/agents/:id", agentupdate);
 
 export default router;

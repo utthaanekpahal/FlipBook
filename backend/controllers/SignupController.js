@@ -105,7 +105,14 @@ export const login = async (req, res) => {
           message: "Invalid Password",
         });
       }
-
+      agent.lastLogin = new Date();
+      await agent.save();
+       if (agent.status === "Deactivated") {
+       return res.status(403).json({
+       success: false,
+       message: "Account is deactivated",
+      });
+}
       return res.status(200).json({
         success: true,
         role: "agent",
@@ -199,6 +206,7 @@ export const agentsignup = async (req, res) => {
     });
   }
 };
+/*get agent data----------------------*/
 export const getAgents = async (req, res) => {
   try {
     const agents = await Agent.find();
@@ -209,6 +217,51 @@ export const getAgents = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+/*agent update-------------------------------*/
+export const agentupdate = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existingAgent = await Agent.findById(id);
+
+    if (!existingAgent) {
+      return res.status(404).json({
+        success: false,
+        message: "Agent not found",
+      });
+    }
+
+    // only update password + status
+    const updateData = {};
+
+    if (req.body.updateagentpass) {
+      const hashedPassword = await bcrypt.hash(req.body.updateagentpass, 10);
+      updateData.password = hashedPassword;
+    }
+
+    if (req.body.updatedstatus) {
+      updateData.status = req.body.updatedstatus;
+    }
+
+    const updatedAgent = await Agent.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Agent updated successfully",
+      data: updatedAgent,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
       message: error.message,
     });
   }

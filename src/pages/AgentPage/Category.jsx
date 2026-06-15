@@ -40,7 +40,7 @@ const Category = () => {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center px-4 sm:px-6 md:px-10"
+      className="min-h-screen ml-[15px] bg-cover bg-center px-4 sm:px-6 md:px-10"
       style={{ backgroundImage: "url('/background img.png')" }}
     >
       {/* TITLE */}
@@ -86,19 +86,6 @@ const Category = () => {
           </div>
         ))}
       </div>
-
-      {/* BACK BUTTON */}
-      <div className="flex justify-center mt-10">
-        <button
-          onClick={() =>
-            navigate(location.state?.from === "agent" ? "/agentdashboard" : "/dashboard")
-          }
-          className="bg-[#99582A] text-white text-2xl px-8 py-3 rounded-xl font-bold"
-        >
-          Back
-        </button>
-      </div>
-
       {/* POPUP */}
       {selectedBook && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center px-4">
@@ -113,7 +100,7 @@ const Category = () => {
                 <div
                   key={cls}
                   onClick={() =>
-                    navigate("/classpage", {
+                   navigate("/agent/classpage",{
                       state: {
                         className: cls,
                         book: selectedBook.title,
