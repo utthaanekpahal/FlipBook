@@ -1,27 +1,56 @@
 import Visit from "../models/Visit.js";
 
+// CREATE NEW VISIT
 export const createVisit = async (req, res) => {
   try {
+    // Check photo uploaded or not
     if (!req.file) {
-      return res.status(400).json({ message: "Photo required" });
+      return res.status(400).json({
+        success: false,
+        message: "Selfie photo is required",
+      });
     }
 
-    const { name, email, phone, school, followUp } = req.body;
-
-    const newVisit = await Visit.create({
-      name,
-      email,
+    // Get data from form
+    const {
+      schoolName,
+      teacher,
+      principal,
+      designation,
       phone,
-      school,
-      followUp,
-      photo: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
+      visitDate,
+      outcome,
+      notes,
+      visitedBy,
+    } = req.body;
+
+    // Create visit record
+    const newVisit = await Visit.create({
+      schoolName,
+      teacher,
+      principal,
+      designation,
+      phone,
+      visitDate,
+      outcome,
+      notes,
+      visitedBy,
+
+      // Store uploaded photo URL
+      photo: `${req.protocol}://${req.get(
+        "host"
+      )}/uploads/${req.file.filename}`,
     });
 
+    // Send response
     res.status(201).json({
       success: true,
+      message: "Visit added successfully",
       data: newVisit,
     });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -29,15 +58,131 @@ export const createVisit = async (req, res) => {
   }
 };
 
+// GET ALL VISITS
 export const getVisits = async (req, res) => {
   try {
-    const visits = await Visit.find().sort({ createdAt: -1 });
+    const visits = await Visit.find().sort({
+      createdAt: -1,
+    });
 
-    res.json({
+    res.status(200).json({
       success: true,
+      count: visits.length,
       data: visits,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// GET SINGLE VISIT
+export const getVisitById = async (req, res) => {
+  try {
+    const visit = await Visit.findById(req.params.id);
+
+    if (!visit) {
+      return res.status(404).json({
+        success: false,
+        message: "Visit not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: visit,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// UPDATE VISIT
+export const updateVisit = async (req, res) => {
+  try {
+    const updateData = {
+      schoolName: req.body.schoolName,
+      teacher: req.body.teacher,
+      principal: req.body.principal,
+      designation: req.body.designation,
+      phone: req.body.phone,
+      visitDate: req.body.visitDate,
+      outcome: req.body.outcome,
+      notes: req.body.notes,
+      visitedBy: req.body.visitedBy,
+    };
+
+    // Update photo if new photo uploaded
+    if (req.file) {
+      updateData.photo = `${req.protocol}://${req.get(
+        "host"
+      )}/uploads/${req.file.filename}`;
+    }
+
+    const visit = await Visit.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!visit) {
+      return res.status(404).json({
+        success: false,
+        message: "Visit not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Visit updated successfully",
+      data: visit,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// DELETE VISIT
+export const deleteVisit = async (req, res) => {
+  try {
+    const visit = await Visit.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!visit) {
+      return res.status(404).json({
+        success: false,
+        message: "Visit not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Visit deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };

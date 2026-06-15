@@ -1,182 +1,486 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {
-  FaUser,
-  FaEnvelope,
-  FaPhone,
   FaSchool,
+  FaUser,
+  FaPhone,
+  FaCalendarAlt,
   FaTasks,
   FaUpload,
+  FaStickyNote,
+  FaCamera
 } from "react-icons/fa";
 
 const VisitForm = () => {
   const [form, setForm] = useState({
-    name: "",
-    email: "",
+    schoolName: "",
+    teacher: "",
+    principal: "",
+    designation: "",
     phone: "",
-    school: "",
-    followUp: "",
+    visitDate: "",
+    outcome: "",
+    notes: "",
+   
   });
 
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState(null);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handlePhoto = (e) => {
     const file = e.target.files[0];
-    setPhoto(file);
-    if (file) setPreview(URL.createObjectURL(file));
+
+    if (file) {
+      setPhoto(file);
+      setPreview(URL.createObjectURL(file));
+    }
   };
 
   const submit = async () => {
     try {
-      if (!form.name || !form.phone || !photo) {
-        alert("Name, Phone and Photo required");
+      if (
+        !form.schoolName ||
+        !form.teacher ||
+        !form.phone ||
+        !photo
+      ) {
+        alert(
+          "School Name, Teacher, Phone and Photo are required"
+        );
         return;
       }
 
       const data = new FormData();
-      Object.keys(form).forEach((key) => data.append(key, form[key]));
+
+      Object.keys(form).forEach((key) => {
+        data.append(key, form[key]);
+      });
+
       data.append("photo", photo);
 
-      await axios.post("http://localhost:3000/api/visits/create", data);
+      const res = await axios.post(
+        "http://localhost:3000/api/visits/create",
+        data
+      );
+
+      console.log(res.data);
 
       alert("Visit Saved Successfully ✔");
 
       setForm({
-        name: "",
-        email: "",
+        schoolName: "",
+        teacher: "",
+        principal: "",
+        designation: "",
         phone: "",
-        school: "",
-        followUp: "",
+        visitDate: "",
+        outcome: "",
+        notes: "",
+      
       });
 
       setPhoto(null);
       setPreview(null);
     } catch (error) {
       console.log(error);
-      alert("Error saving visit");
+
+      alert(
+        error.response?.data?.message ||
+          "Error saving visit"
+      );
     }
   };
 
-  return (
-    <div className=" bg-gray-100 ml-[10px]">
+return (
+  <div className="min-h-screen bg-gradient-to-br from-[#fdf7f2] to-[#f5ece3] py-10 px-4">
 
-      <div
-        className="h-full bg-cover  bg-center flex items-center justify-center p-8"
-        style={{
-          backgroundImage:
-            "url('background img.png')",
-        }}
-      >
+    <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+      {/* Header */}
+      <div className=" text-[#572C10] p-8 text-center">
+
+        <h1 className="text-4xl font-bold">
+          📚 School Visit Tracker
+        </h1>
+
+        <p className="mt-6 text-center text-[#572C10] text-lg font-semibold">
+          Capture visits, selfies and outcomes effortlessly.
+        </p>
+
       </div>
 
-      {/* FORM BOX */}
-      <div className="flex justify-center ">
-        <div className="w-full max-w-xl  bg-white shadow-xl rounded-2xl p-6 -mt-10">
+      <div className="p-8">
 
-          {/* NAME */}
-          <label className="text-sm font-semibold">Name</label>
-          <div className="flex items-center border p-2 rounded mb-3">
-            <FaUser className="text-[#572C10] mr-2" />
-            <input
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="Enter name"
-              className="w-full outline-none"
-            />
+        {/* School Name */}
+        <label className="font-semibold">
+          School Name
+        </label>
+
+        <div className="flex items-center border rounded-xl p-3 mt-2 mb-5 focus-within:border-[#572C10]">
+
+          <FaSchool className="mr-3 text-[#572C10]" />
+
+          <input
+            type="text"
+            name="schoolName"
+            value={form.schoolName}
+            onChange={handleChange}
+            placeholder="Enter School Name"
+            className="w-full outline-none"
+          />
+
+        </div>
+
+        {/* Teacher + Principal */}
+
+        <div className="grid md:grid-cols-2 gap-5">
+
+          <div>
+
+            <label className="font-semibold">
+              Teacher Name
+            </label>
+
+            <div className="flex items-center border rounded-xl p-3 mt-2">
+
+              <FaUser className="mr-3 text-[#572C10]" />
+
+              <input
+                type="text"
+                name="teacher"
+                value={form.teacher}
+                onChange={handleChange}
+                placeholder="Teacher Name"
+                className="w-full outline-none"
+              />
+
+            </div>
+
           </div>
 
-          {/* EMAIL */}
-          <label className="text-sm font-semibold">Email</label>
-          <div className="flex items-center border p-2 rounded mb-3">
-            <FaEnvelope className="text-[#572C10] mr-2" />
-            <input
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Enter email"
-              className="w-full outline-none"
-            />
+          <div>
+
+            <label className="font-semibold">
+              Principal Name
+            </label>
+
+            <div className="flex items-center border rounded-xl p-3 mt-2">
+
+              <FaUser className="mr-3 text-[#572C10]" />
+
+              <input
+                type="text"
+                name="principal"
+                value={form.principal}
+                onChange={handleChange}
+                placeholder="Principal Name"
+                className="w-full outline-none"
+              />
+
+            </div>
+
           </div>
 
-          {/* PHONE */}
-          <label className="text-sm font-semibold">Phone</label>
-          <div className="flex items-center border p-2 rounded mb-3">
-            <FaPhone className="text-[#572C10] mr-2" />
-            <input
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="Enter phone"
-              className="w-full outline-none"
-            />
+        </div>
+
+        {/* Designation + Phone */}
+
+        <div className="grid md:grid-cols-2 gap-5 mt-5">
+
+          <div>
+
+            <label className="font-semibold">
+              Designation
+            </label>
+
+            <div className="flex items-center border rounded-xl p-3 mt-2">
+
+              <FaUser className="mr-3 text-[#572C10]" />
+
+              <input
+                type="text"
+                name="designation"
+                value={form.designation}
+                onChange={handleChange}
+                placeholder="Designation"
+                className="w-full outline-none"
+              />
+
+            </div>
+
           </div>
 
-          {/* SCHOOL */}
-          <label className="text-sm font-semibold">School</label>
-          <div className="flex items-center border p-2 rounded mb-3">
-            <FaSchool className="text-[#572C10] mr-2" />
-            <input
-              name="school"
-              value={form.school}
-              onChange={handleChange}
-              placeholder="School name"
-              className="w-full outline-none"
-            />
+          <div>
+
+            <label className="font-semibold">
+              Phone Number
+            </label>
+
+            <div className="flex items-center border rounded-xl p-3 mt-2">
+
+              <FaPhone className="mr-3 text-[#572C10]" />
+
+              <input
+                type="text"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="Phone Number"
+                className="w-full outline-none"
+              />
+
+            </div>
+
           </div>
 
-          {/* FOLLOW UP */}
-          <label className="text-sm font-semibold">Follow Up</label>
-          <div className="flex items-center border p-2 rounded mb-3">
-            <FaTasks className="text-[#572C10] mr-2" />
+        </div>
+
+        {/* Visit Date */}
+
+        <div className="mt-5">
+
+          <label className="font-semibold">
+            Visit Date
+          </label>
+
+          <div className="flex items-center border rounded-xl p-3 mt-2">
+
+            <FaCalendarAlt className="mr-3 text-[#572C10]" />
+
+            <input
+              type="date"
+              name="visitDate"
+              value={form.visitDate}
+              onChange={handleChange}
+              className="w-full outline-none"
+            />
+
+          </div>
+
+        </div>
+
+        {/* Outcome */}
+
+        <div className="mt-5">
+
+          <label className="font-semibold">
+            Outcome
+          </label>
+
+          <div className="flex items-center border rounded-xl p-3 mt-2">
+
+            <FaTasks className="mr-3 text-[#572C10]" />
+
             <select
-              name="followUp"
-              value={form.followUp}
+              name="outcome"
+              value={form.outcome}
               onChange={handleChange}
               className="w-full outline-none"
             >
-              <option value="">Select Status</option>
-              <option value="Order Placed">Order Placed</option>
-              <option value="Interested">Interested</option>
-              <option value="Meeting Scheduled">Meeting Scheduled</option>
-              <option value="Call Back Later">Call Back Later</option>
-              <option value="Not Interested">Not Interested</option>
+
+              <option value="">
+                Select Outcome
+              </option>
+
+              <option value="Pending">
+                  ⏳ Pending
+              </option>
+
+              <option value="Interested">
+                Interested
+              </option>
+
+              <option value="Follow Up">
+                Follow Up
+              </option>
+
+              <option value="Ordered">
+                Ordered
+              </option>
+
+              <option value="Not Interested">
+                Not Interested
+              </option>
+
             </select>
+
           </div>
 
-          {/* PHOTO */}
-          <label className="text-sm font-semibold">Photo</label>
-          <div className="flex items-center border p-2 rounded mb-3">
-            <FaUpload className="text-[#572C10] mr-2" />
-            <input type="file" onChange={handlePhoto} />
+        </div>
+
+        {/* Notes */}
+
+        <div className="mt-5">
+
+          <label className="font-semibold">
+            Notes
+          </label>
+
+          <div className="flex items-start border rounded-xl p-3 mt-2">
+
+            <FaStickyNote className="mr-3 mt-1 text-[#572C10]" />
+
+            <textarea
+              rows="3"
+              name="notes"
+              value={form.notes}
+              onChange={handleChange}
+              placeholder="Write notes..."
+              className="w-full outline-none"
+            />
+
           </div>
 
-          {/* PREVIEW */}
-          {preview && (
-            <div className="flex justify-center mb-3">
-              <img
-                src={preview}
-                className="w-28 h-28 rounded-full object-cover border-4 border-[#572c10]"
-              />
-            </div>
-          )}
+        </div>
 
-          {/* BUTTON */}
+{/* Selfie Upload */}
+
+<div className="mt-6">
+
+  <label className="flex items-center gap-2 text-lg font-bold  mb-3">
+ 
+  <span >Selfie with Teacher / Principal</span>
+</label>
+
+  <label
+    htmlFor="photo"
+    className="
+      flex
+      items-center
+      gap-4
+      border
+      border-gray-300
+      rounded-2xl
+      p-4
+      cursor-pointer
+      hover:border-violet-500
+      transition
+    "
+  >
+
+    {/* Icon Box */}
+
+    <div
+      className="
+        w-12
+        h-12
+        rounded-xl
+       
+        flex
+        items-center
+        justify-center
+      "
+    >
+
+      <FaCamera className="text-[#572C10] text-3xl " />
+
+    </div>
+
+    {/* Text */}
+
+    <div>
+
+      <h3 className="font-semibold text-gray-800">
+
+        {photo
+          ? photo.name
+          : "Take or upload a selfie"}
+
+      </h3>
+
+      <p className="text-sm font-bold text-gray-400">
+
+        JPG, PNG up to 10MB
+
+      </p>
+
+    </div>
+
+  </label>
+
+  <input
+    id="photo"
+    type="file"
+    accept="image/*"
+    capture="user"
+    onChange={handlePhoto}
+    className="hidden"
+  />
+</div>
+       
+
+        {/* Buttons */}
+
+        <div className="flex gap-4 mt-8">
+
+          <button
+            type="button"
+            onClick={() => {
+
+              setForm({
+                schoolName: "",
+                teacher: "",
+                principal: "",
+                designation: "",
+                phone: "",
+                visitDate: "",
+                outcome: "",
+                notes: "",
+              });
+
+              setPhoto(null);
+              setPreview(null);
+
+            }}
+            className="
+              flex-1
+              py-3
+              rounded-xl
+              border
+              border-gray-300
+              font-semibold
+              hover:bg-gray-100
+            "
+          >
+
+            Cancel
+
+          </button>
+
           <button
             onClick={submit}
-            className="w-full bg-[#572c10] hover:bg-[#3f1f0b] text-white py-3 rounded-xl font-bold"
+            className="
+              flex-1
+              py-3
+              rounded-xl
+              bg-[#572C10]
+              text-white
+              font-bold
+              hover:bg-[#3f1f0b]
+              shadow-lg
+            "
           >
+
             Save Visit
+
           </button>
+
         </div>
+
       </div>
+
     </div>
-  );
+
+  </div>
+);
+       
 };
 
 export default VisitForm;

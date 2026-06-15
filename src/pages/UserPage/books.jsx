@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import UploadBooks from "./UploadBooks";
 const Books = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
-
+const [showUpload, setShowUpload] = useState(false);
   
   const [category, setCategory] = useState("");
   const [className, setClassName] = useState("");
@@ -61,6 +61,12 @@ const Books = () => {
 
   return (
     <div className="min-h-screen  bg-[#EFE6DD] px-4 sm:px-6 py-10">
+     <button
+  onClick={() => setShowUpload(true)}
+  className="bg-[#572C10] hover:bg-[#3d1f0a] text-white text-lg sm:text-2xl px-8 py-3 rounded-xl font-semibold transition"
+>
+  Upload Books
+</button>
       {/* HEADING */}
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-[#572C10]">
@@ -204,6 +210,7 @@ const Books = () => {
             <p className="text-[#572C10] mt-2 font-bold">
               Try changing filters or search text
             </p>
+            
           </div>
         )}
       </div>
@@ -223,6 +230,26 @@ const Books = () => {
           Back
         </button>
       </div>
+      {showUpload && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    
+    <div className="bg-white w-[95%] max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl p-4 relative">
+
+      {/* CLOSE BUTTON */}
+      <button
+        onClick={() => setShowUpload(false)}
+        className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded"
+      >
+        ✕
+      </button>
+
+      {/* YOUR UPLOAD COMPONENT */}
+      <UploadBooks />
+
+    </div>
+
+  </div>
+)}
     </div>
   );
 };

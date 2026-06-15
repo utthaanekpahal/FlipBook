@@ -62,6 +62,7 @@ const Books = () => {
   return (
     <div className="min-h-screen  bg-[#EFE6DD] px-4 sm:px-6 py-10">
       {/* HEADING */}
+     
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-[#572C10]">
           Explore Books

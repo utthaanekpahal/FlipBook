@@ -2,15 +2,65 @@ import mongoose from "mongoose";
 
 const visitSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    email: { type: String  , required: true  },
-    phone: { type: String, required: true },
-    school: { type: String , required: true },
-    followUp: { type: String ,required: true },
+    // School details
+    schoolName: {
+      type: String,
+      required: true,
+    },
 
-    photo: { type: String, required: true }, // image URL
+    teacher: {
+      type: String,
+      required: true,
+    },
 
-    visitedBy: { type: String, default: "admin" },
+    principal: {
+      type: String,
+      required: true,
+    },
+
+    designation: {
+      type: String,
+      required: true,
+    },
+
+    phone: {
+      type: String,
+      required: true,
+    },
+
+    // Visit details
+    visitDate: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
+
+    outcome: {
+      type: String,
+      enum: [
+        "Pending",
+        "Interested",
+        "Follow Up",
+        "Ordered",
+        "Not Interested",
+      ],
+      default: "Pending",
+    },
+
+    notes: {
+      type: String,
+    },
+
+    // Selfie / proof image
+    photo: {
+      type: String, // Cloudinary or AWS S3 image URL
+      required: true,
+    },
+
+    visitedBy: {
+      type: String,
+      default: "admin",
+    },
   },
   { timestamps: true }
 );
