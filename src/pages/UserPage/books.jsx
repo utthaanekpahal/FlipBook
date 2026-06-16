@@ -55,11 +55,10 @@ const handleUpdate = async () => {
 };
 
 
- const handleDelete = async (id) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this book?"
-  );
+const handleDelete = async (id) => {
+  console.log("DELETE ID:", id);
 
+  const confirmDelete = window.confirm("Are you sure you want to delete this book?");
   if (!confirmDelete) return;
 
   try {
@@ -67,12 +66,17 @@ const handleUpdate = async () => {
       `https://flipbook-lw1b.onrender.com/api/books/${id}`,
       {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
-    const data = await res.json(); // ✅ THIS WAS MISSING
+    // IMPORTANT: safe parsing (avoid HTML crash)
+    const text = await res.text();
+    console.log("RAW RESPONSE:", text);
 
-    console.log("DELETE RESPONSE:", data);
+    const data = JSON.parse(text);
 
     if (data.success) {
       const updatedBooks = books.filter((b) => b._id !== id);
@@ -85,8 +89,8 @@ const handleUpdate = async () => {
       alert(data.message || "Delete failed");
     }
   } catch (error) {
-    console.log(error);
-    alert("Failed to delete book");
+    console.log("DELETE ERROR:", error);
+    alert("Server error while deleting");
   }
 };
   // fetch books
