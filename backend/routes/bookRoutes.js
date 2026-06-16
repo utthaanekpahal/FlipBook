@@ -1,11 +1,20 @@
 import express from "express";
 import {
   getBooks,
-  uploadBook,
-  getCategories
+  uploadBooks,
+  getCategories,
+  updateBooks,
+  deleteBooks
 } from "../controllers/bookController.js";
 
-import { signup, login , agentsignup, getAgents , agentupdate} from "../controllers/signupController.js";
+import {
+  signup,
+  login,
+  agentsignup,
+  getAgents,
+  agentupdate
+} from "../controllers/signupController.js";
+
 import uploadPdf from "../middleware/uploadPdf.js";
 
 const router = express.Router();
@@ -20,13 +29,23 @@ router.post(
     next();
   },
   uploadPdf.single("file"),
-  uploadBook
+  uploadBooks   // ✅ FIXED HERE
 );
 
 // =========================
 // GET BOOKS
 // =========================
 router.get("/", getBooks);
+
+// =========================
+// UPDATE BOOK
+// =========================
+router.put("/:id", updateBooks);
+
+// =========================
+// DELETE BOOK
+// =========================
+router.delete("/:id", deleteBooks);
 
 // =========================
 // CATEGORY GROUPED API

@@ -15,6 +15,34 @@ const Books = () => {
   const [subject, setSubject] = useState("");
   const [search, setSearch] = useState("");
 
+  const deleteBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedBook = await Book.findByIdAndDelete(id);
+
+    if (!deletedBook) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Book deleted successfully",
+      data: deletedBook._id, // 👈 ADD THIS (important for frontend)
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
   // fetch books
   useEffect(() => {
     const fetchBooks = async () => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import UploadBooks from "./UploadBooks";
+import { FaEdit, FaTrash } from "react-icons/fa";
 const Books = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,7 +15,80 @@ const [showUpload, setShowUpload] = useState(false);
   const [type, setType] = useState("");
   const [subject, setSubject] = useState("");
   const [search, setSearch] = useState("");
+const [editBook, setEditBook] = useState(null);
 
+const handleUpdate = async () => {
+  try {
+    const res = await fetch(
+      `https://flipbook-lw1b.onrender.com/api/books/${editBook._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: editBook.title,
+          description: editBook.description,
+          category: editBook.category,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.success) {
+      const updated = books.map((b) =>
+        b._id === editBook._id ? data.data : b
+      );
+
+      setBooks(updated);
+      setFilteredBooks(updated);
+      setEditBook(null);
+
+      alert("Book updated successfully");
+    } else {
+      alert("Update failed");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+ const handleDelete = async (id) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this book?"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(
+      `https://flipbook-lw1b.onrender.com/api/books/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    const data = await res.json(); // ✅ THIS WAS MISSING
+
+    console.log("DELETE RESPONSE:", data);
+
+    if (data.success) {
+      const updatedBooks = books.filter((b) => b._id !== id);
+
+      setBooks(updatedBooks);
+      setFilteredBooks(updatedBooks);
+
+      alert("Book deleted successfully");
+    } else {
+      alert(data.message || "Delete failed");
+    }
+  } catch (error) {
+    console.log(error);
+    alert("Failed to delete book");
+  }
+};
   // fetch books
   useEffect(() => {
     const fetchBooks = async () => {
@@ -194,9 +268,28 @@ const [showUpload, setShowUpload] = useState(false);
                     </span>
                   </div>
 
-                  <p className="text-sm text-[#572C10] font-bold mt-3 line-clamp-2">
+                  <p className="text-sm text-[#572C10] font-bold mt-3 ">
                     {book.description}
                   </p>
+                  <div className="flex justify-between mt-5">
+  {/* EDIT BUTTON */}
+  <button
+    onClick={() => navigate(`/edit-book/${book._id}`)}
+    className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
+  >
+    <FaEdit />
+    Edit
+  </button>
+
+  {/* DELETE BUTTON */}
+  <button
+    onClick={() => handleDelete(book._id)}
+    className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+  >
+    <FaTrash />
+    Delete
+  </button>
+</div>
                 </div>
               </div>
             ))}

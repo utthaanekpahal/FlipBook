@@ -1,7 +1,9 @@
 import Book from "../models/Book.js";
 
-
-const uploadBook = async (req, res) => {
+// =========================
+// Upload Book
+// =========================
+const uploadBooks = async (req, res) => {
   try {
     console.log("FILE:", req.file);
 
@@ -18,7 +20,7 @@ const uploadBook = async (req, res) => {
       description,
       img,
       category,
-      book,       
+      book,
       className,
       subject,
     } = req.body;
@@ -28,12 +30,10 @@ const uploadBook = async (req, res) => {
       author,
       description,
       img,
-
       category,
-      book,       
+      book,
       className,
       subject,
-
       type: "pdf",
 
       fileUrl: `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`,
@@ -117,8 +117,85 @@ const getCategories = async (req, res) => {
   }
 };
 
+// =========================
+// Update Book
+// =========================
+const updateBooks = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { title, description, category } = req.body;
+
+    const updatedBook = await Book.findByIdAndUpdate(
+      id,
+      {
+        title,
+        description,
+        category,
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedBook) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Book updated successfully",
+      data: updatedBook,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// =========================
+// Delete Book
+// =========================
+const deleteBooks = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedBook = await Book.findByIdAndDelete(id);
+
+    if (!deletedBook) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Book deleted successfully",
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export {
-  uploadBook,
+  uploadBooks,
   getBooks,
   getCategories,
+  updateBooks,
+  deleteBooks,
 };
