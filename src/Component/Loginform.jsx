@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaUser, FaLock, FaFacebook } from "react-icons/fa";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import bgimg from "../assets/imges/bgimg.PNG";
 import axios from "axios"
@@ -9,8 +10,8 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [data, setData] = useState({
-    username: "",
-    password: "",
+    username: "", /*admin@gmail.com,*/
+    password: "", /*Admin@123*/
   });
 
   const [error, setError] = useState("");
@@ -29,7 +30,7 @@ export default function Login() {
   };
   const handleSubmit = async (e) => {
   e.preventDefault();
-
+    console.log("LOGIN BUTTON CLICKED");
   let newErrors = {};
 
   const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -61,20 +62,21 @@ export default function Login() {
 
     console.log("Login Response:", response.data);
 
-    if (response.data.success) {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("role", response.data.role);
+   if (response.data.success) {
+  localStorage.setItem("isLoggedIn", "true");
+  localStorage.setItem("role", response.data.role);
 
-      if (response.data.role === "agent") {
-        navigate("/AgentDashboard", {
-          replace: true,
-        });
-      } else {
-        navigate("/Dashboard", {
-          replace: true,
-        });
-      }
-    }
+  if (response.data.role === "admin") {
+    navigate("/Dashboard", { 
+      replace: true,
+    });
+  } 
+  else if (response.data.role === "agent") {
+    navigate("/AgentDashboard", {
+      replace: true,
+    });
+  }
+}
   } catch (error) {
     console.log("ERROR:", error);
     console.log("RESPONSE:", error.response?.data);
@@ -139,12 +141,12 @@ export default function Login() {
               required
             />
 
-            <span
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-            >
-              👁️
-            </span>
+           <span
+  onClick={() => setShowPassword(!showPassword)}
+  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
+>
+  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+</span>
           </div>
 
           {/* Password Error */}
@@ -153,22 +155,6 @@ export default function Login() {
               {errors.password}
             </p>
           )}
-
-          {/* Forgot */}
-          <div className="text-right mb-3">
-            <a href="#" className="text-sm text-[#99582A] hover:underline">
-              Forgot Password?
-            </a>
-          </div>
-
-          {/* Remember */}
-          <div className="flex items-center mb-4 justify-start">
-            <input type="checkbox" className="accent-[#99582A]" />
-            <label className="ml-2 text-sm text-gray-700">
-              Remember Me
-            </label>
-          </div>
-
           {/* Login Error */}
           {error && (
             <p className="text-red-500 text-xs sm:text-sm mb-3">{error}</p>
@@ -181,41 +167,8 @@ export default function Login() {
           >
             Log In
           </button>
-
-          {/* Social */}
-          <p className="text-center text-sm mt-5 text-gray-600">
-            or log in with
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-3 mt-4">
-            <button
-              type="button"
-              onClick={() => window.open("https://www.google.com", "_blank")}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 border px-4 py-2 rounded-lg hover:bg-gray-100"
-            >
-              <FcGoogle size={20} />
-              Google
-            </button>
-
-            <button
-              type="button"
-              onClick={() => window.open("https://www.facebook.com", "_blank")}
-              className="flex items-center gap-2 border px-4 py-2 rounded-lg hover:bg-gray-100"
-            >
-              <FaFacebook className="text-blue-600" />
-              Facebook
-            </button>
-          </div>
-
           <div className="flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2 mt-6 text-center">
-            <span>If you don't have an account ? </span>
-
-            <Link
-              to="/"
-              className="no-underline font-bold text-[#99582A] cursor-pointer hover:text-black"
-            >
-              Click here
-            </Link>
+            <span>If you don't have an account ? Contact your Admin </span>
           </div>
         </form>
       </div>

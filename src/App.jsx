@@ -6,14 +6,13 @@ import AgentLayout from "./layout/AgentLayout";
 
 import Dashboard from "./Component/Dashboard";
 import AgentDashboard from "./Component/AgentDashboard";
-import Signupform from "./Component/Signform";
 import Loginform from "./Component/Loginform";
 import Agentlogin from "./Component/Agentlogin";
 
 // USER PAGES
 import UserBooks from "./pages/UserPage/books";
 import UserCategory from "./pages/UserPage/Category";
-import UserTicket from "./pages/UserPage/Ticket";
+import UserTicket from "./pages/UserPage/UserTicket";
 import UserClassPage from "./pages/UserPage/ClassPage";
 import UserFlipPage from "./pages/UserPage/FlipPage";
 import UserViewMoreBooks from "./pages/UserPage/ViewMoreBooks";
@@ -23,7 +22,7 @@ import UploadBooks from "./pages/UserPage/UploadBooks";
 // AGENT PAGES
 import AgentBooks from "./pages/AgentPage/books";
 import AgentCategory from "./pages/AgentPage/Category";
-import AgentTicket from "./pages/AgentPage/Ticket";
+import AgentTicket from "./pages/AgentPage/AgentTicket";
 import AgentClassPage from "./pages/AgentPage/ClassPage";
 import AgentFlipPage from "./pages/AgentPage/FlipPage";
 import AgentViewMoreBooks from "./pages/AgentPage/ViewMoreBooks";
@@ -81,12 +80,11 @@ export default function App() {
 
       {/* PUBLIC */}
       <Route element={<PublicRoute />}>
-        <Route path="/" element={<Signupform />} />
         <Route path="/Loginform" element={<Loginform />} />
       </Route>
 
       {/* USER PANEL */}
-      <Route element={<RoleRoute allowedRole="user" />}>
+      <Route element={<RoleRoute allowedRole="admin" />}>
         <Route element={<Layout />}>
 
           <Route path="/Dashboard" element={<Dashboard />} />

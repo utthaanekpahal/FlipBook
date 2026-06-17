@@ -48,7 +48,7 @@ const Header = ({ setOpen }) => {
           <div className="flex items-center gap-2">
             <FaUser size={20} color="#572C10" />
             <span className="font-bold text-[#572C10]">
-              Piyush
+              Welcome Admin
             </span>
           </div>
         </div>

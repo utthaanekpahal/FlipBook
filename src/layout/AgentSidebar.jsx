@@ -42,9 +42,10 @@ const AgentSidebar = ({ open, setOpen }) => {
           fixed 
     lg:top-[14%]
     md:top-[10%]
-    top-[18%]
+    sm:top-[5px]
+    top-[22%]
     left-0
-    h-[60%]       /* Mobile */
+    h-[65%]       /* Mobile */
     sm:h-[75%]    /* Small tablets */
     md:h-[50%]    /* Tablets */
     lg:h-[84%]    /* Desktop */
@@ -55,7 +56,7 @@ const AgentSidebar = ({ open, setOpen }) => {
     z-50
     transition-transform duration-300
 
-    ${open ? "translate-x-0" : "-translate-x-full"}
+    ${open ? "translate-x-0" : "-translate-x-[120%]"}
 
     lg:translate-x-0
         `}

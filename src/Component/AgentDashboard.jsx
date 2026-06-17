@@ -21,116 +21,164 @@ const AgentDashboard = () => {
   }, []);
   const agenttotalViews =localStorage.getItem("viewsagent");
   return (
-    <div className='flex flex-col lg:flex-row min-h-screen bg-[#EFE6DD]'>
-  
-      <section className='flex flex-col mt-[-18px]  w-full overflow-x-hidden '>
-        <div className='p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5'>
-          <div
-            className="min-h-[150px] w-full bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
-            <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
-              <FaBook className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
-            </div>
-            <div className='flex flex-col justify-center gap-[5px]'>
-              <span className='font-bold text-[14px] text-[#572C10] '>Total Books</span>
-              <span className='font-bold text-[17px]'>500</span>
-              <span className='font-bold text-[12px] text-[#995F2F]'>+12 this month</span>
-            </div>
-          </div>
-          <div className="min-h-[150px] w-full bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
-            <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
-              <FaThList className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
-            </div>
-            <div className='flex flex-col justify-center gap-[5px]'>
-              <span className='font-bold text-[14px] text-[#572C10] '>Total Categories</span>
-              <span className='font-bold text-[17px]'>2</span>
-              <span className='font-bold text-[12px] text-[#995F2F]'>4 this month</span>
-            </div>
-          </div>
-          <div className="min-h-[150px] w-full bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
-            <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
-              <MdConfirmationNumber className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
-            </div>
-            <div className='flex flex-col justify-center gap-[5px]'>
-              <span className='font-bold text-[14px] text-[#572C10]'>
-                Ticket Raise
-              </span>
-              <span className='font-bold text-[17px]'>
-                id
-              </span>
-              <span className='font-bold text-[12px] text-[#995F2F]'>
-                this month
-              </span>
-            </div>
-          </div>
-          <div
-            className="min-h-[150px] w-full bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
-            <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
-              <FaEye className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
-            </div>
-            <div className='flex flex-col justify-center gap-[5px]'>
-              <span className='font-bold text-[14px] text-[#572C10] '>Total views</span>
-              <span className='font-bold text-[17px]'>{agenttotalViews}</span>
-              <span className='font-bold text-[12px] text-[#995F2F]'>+17.8% this month</span>
-            </div>
-          </div>
+  <div className="min-h-screen lg:mt-[48px] sm:mt-[48px] mt-[35%] bg-[#EFE6DD]">
+  <section className="w-full overflow-x-hidden">
 
+    {/* Stats Cards */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 p-4 md:p-6">
 
-        </div>
-        <div className='flex flex-col gap-[20px]'>
-
-          <div className='bg-[#F5F5F5] min-h-[170px] mx-5 rounded-sm p-4'>
-
-            <div className='font-bold text-[#572C10] text-[20px] mb-4'>
-              <h1>Browser Category</h1>
-
-            </div>
-
-            <div className='flex flex-wrap justify-center gap-6'>
-              <div className='bg-[#F5F5F5] h-[120px] w-full max-w-[150px] rounded-md flex items-center justify-center text-black bg-amber-700 font-bold text-2xl'>
-                <img onClick={() => { navigate("/Category") }} src="/nav.png" alt="" className='w-[150px] h-[150px] rounded-[5px] object-cover ' />
-
-              </div>
-              <div className='bg-[#F5F5F5] h-[120px] w-full max-w-[150px] rounded-sm text-center flex items-center bg-amber-800 justify-center text-black font-bold text-2xl'>
-                <img onClick={() => { navigate("/Category") }} src="/gyan.png" alt="" className='w-[150px] h-[150px] rounded-[5px] object-cover' />
-
-              </div>
-            </div>
-          </div>
-
-          <div className='bg-[#F5F5F5] min-h-[210px] mx-5 rounded-sm p-4'>
-
-            <div className='font-bold text-[#572C10] text-[20px] mb-4 ml-[15px] mt-[-5px] '>
-              <h1>Recent Add Books</h1>
-
-            </div>
-
-
-            <div className='flex flex-wrap justify-center gap-6'>
-              <div className=' w-full max-w-[150px] h-[180px] text-center text-white mt-[-18px]'>
-                <img onClick={() => { navigate("/FlipPage") }} src="book4.png " alt="" className='w-full h-full object-cover rounded-[5px]' />
-              </div>
-              <div className=' w-full max-w-[150px] h-[180px]  text-center text-white mt-[-23px]'>
-                <img onClick={() => { navigate("/FlipPage") }} src="book2.jfif " alt="" className='w-full h-full object-cover rounded-[5px]' />
-              </div>
-              <div className=' w-full max-w-[150px] h-[180px] text-center text-white  mt-[-23px]'>
-                <img onClick={() => { navigate("/FlipPage") }} src="book 3.jfif " alt="" className='w-full h-full object-cover rounded-[5px]' />
-              </div>
-              <div className=' w-full max-w-[150px] h-[180px]  text-center text-white mt-[-23px]'>
-                <img onClick={() => { navigate("/FlipPage") }} src="book 4.jfif " alt="" className='w-full h-full object-cover rounded-[5px]' />
-              </div>
-              <div className='w-full max-w-[150px] h-[180px] text-center text-white mt-[-23px]'>
-                <img onClick={() => { navigate("/FlipPage") }} src="book 4.jfif " alt="" className='w-full h-full object-cover rounded-[5px]' />
-              </div>
-            </div>
-
-
-          </div>
-
+      {/* Total Books */}
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
+        <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center shrink-0">
+          <FaBook className="text-2xl text-[#572C10]" />
         </div>
 
-      </section>
+        <div>
+          <p className="text-sm font-semibold text-[#572C10]">
+            Total Books
+          </p>
+          <h2 className="text-2xl font-bold">500</h2>
+          <p className="text-xs text-[#995F2F]">
+            +12 this month
+          </p>
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
+        <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center shrink-0">
+          <FaThList className="text-2xl text-[#572C10]" />
+        </div>
+
+        <div>
+          <p className="text-sm font-semibold text-[#572C10]">
+            Categories
+          </p>
+          <h2 className="text-2xl font-bold">2</h2>
+          <p className="text-xs text-[#995F2F]">
+            4 this month
+          </p>
+        </div>
+      </div>
+
+      {/* Tickets */}
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
+        <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center shrink-0">
+          <MdConfirmationNumber className="text-2xl text-[#572C10]" />
+        </div>
+
+        <div>
+          <p className="text-sm font-semibold text-[#572C10]">
+            Ticket Raise
+          </p>
+          <h2 className="text-2xl font-bold">ID</h2>
+          <p className="text-xs text-[#995F2F]">
+            This month
+          </p>
+        </div>
+      </div>
+
+      {/* Views */}
+      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
+        <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center shrink-0">
+          <FaEye className="text-2xl text-[#572C10]" />
+        </div>
+
+        <div>
+          <p className="text-sm font-semibold text-[#572C10]">
+            Total Views
+          </p>
+          <h2 className="text-2xl font-bold">
+            {agenttotalViews}
+          </h2>
+          <p className="text-xs text-[#995F2F]">
+            +17.8% this month
+          </p>
+        </div>
+      </div>
 
     </div>
+
+    {/* Browser Category */}
+    <div className="mx-4 md:mx-6 mb-6 bg-white rounded-2xl shadow-sm border border-[#E8DCCF] p-5">
+
+  <h2 className="text-xl font-bold text-[#572C10] mb-6">
+    Browse Category
+  </h2>
+
+  <div className="flex justify-center items-center gap-10 sm:gap-16 flex-wrap">
+
+    <img
+      onClick={() => navigate("/Category")}
+      src="/nav.png"
+      alt="Navigation"
+      className="
+        w-[120px]
+        sm:w-[150px]
+        md:w-[180px]
+        object-contain
+        cursor-pointer
+        hover:scale-110
+        transition-all
+        duration-300
+      "
+    />
+
+    <img
+      onClick={() => navigate("/Category")}
+      src="/gyan.png"
+      alt="Gyan"
+      className="
+        w-[120px]
+        sm:w-[150px]
+        md:w-[180px]
+        object-contain
+        cursor-pointer
+        hover:scale-110
+        transition-all
+        duration-300
+      "
+    />
+
+  </div>
+
+</div>
+
+    {/* Recent Books */}
+    <div className="mx-4 md:mx-6 bg-white rounded-2xl shadow-sm border border-[#E8DCCF] p-5">
+
+      <h2 className="text-xl font-bold text-[#572C10] mb-5">
+        Recent Added Books
+      </h2>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-5">
+
+        {[
+          "book4.png",
+          "book2.jfif",
+          "book 3.jfif",
+          "book 4.jfif",
+          "book 4.jfif",
+        ].map((book, index) => (
+          <div
+            key={index}
+            onClick={() => navigate("/FlipPage")}
+            className="cursor-pointer rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all"
+          >
+            <img
+              src={book}
+              alt=""
+              className="w-full h-[220px] object-cover"
+            />
+          </div>
+        ))}
+
+      </div>
+
+    </div>
+
+  </section>
+</div>
   )
 }
 

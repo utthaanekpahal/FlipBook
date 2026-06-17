@@ -88,7 +88,7 @@ const Books = () => {
   };
 
   return (
-    <div className="min-h-screen  bg-[#EFE6DD] px-4 sm:px-6 py-10">
+    <div className="min-h-screen lg:mt-[4%] sm:mt-[4%] mt-[25%] bg-[#EFE6DD] px-4 sm:px-6 py-10">
       {/* HEADING */}
      
       <div className="text-center mb-10">

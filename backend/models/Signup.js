@@ -7,10 +7,17 @@ const SignSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+
     password: {
       type: String,
       required: true,
-    }
+    },
+
+    role: {
+      type: String,
+      enum: ["admin", "agent"],
+      default: "agent",
+    },
   },
   { timestamps: true }
 );

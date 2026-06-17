@@ -99,7 +99,7 @@ const VisitForm = () => {
   };
 
 return (
-  <div className="min-h-screen bg-gradient-to-br from-[#fdf7f2] to-[#f5ece3] py-10 px-4">
+  <div className="min-h-screen lg:ml-[15px] mt-[25%] sm:mt-[30px] lg:mt-[30px] bg-gradient-to-br  py-10 px-4">
 
     <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
 

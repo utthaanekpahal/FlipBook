@@ -5,6 +5,7 @@ import { FaEye } from "react-icons/fa";
 import {FaBook,} from 'react-icons/fa';
 import axios from 'axios';
 function Dashboard() {
+  console.log("Dashboard Loaded");
   const navigate = useNavigate();
   useEffect(() => {
 

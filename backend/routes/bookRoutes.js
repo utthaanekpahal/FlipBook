@@ -8,7 +8,6 @@ import {
 } from "../controllers/bookController.js";
 
 import {
-  signup,
   login,
   agentsignup,
   getAgents,
@@ -55,7 +54,6 @@ router.get("/categories", getCategories);
 // =========================
 // AUTH ROUTES
 // =========================
-router.post("/signup", signup);
 router.post("/agentsignup", agentsignup);
 router.post("/login", login);
 router.get("/agents", getAgents);
