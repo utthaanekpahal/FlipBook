@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
+import { FaLayerGroup , FaBook , FaGraduationCap } from "react-icons/fa";
 import axios from "axios";
 import {
   FaBookOpen,
@@ -66,12 +67,8 @@ console.log("Uploaded Book:", res.data.data);
 console.log("PDF URL:", res.data.data.fileUrl);
 
 alert("Book Uploaded Successfully ✅");
+navigate("/books");
 
-navigate(
-  `/flipbook?pdf=${encodeURIComponent(
-    res.data.data.fileUrl
-  )}&title=${encodeURIComponent(book)}`
-);
 
       // RESET
       setCategory("");
@@ -113,109 +110,228 @@ navigate(
           </div>
 
           {/* CATEGORY */}
-          <select
-            value={category}
-            onChange={(e) => {
-              setCategory(e.target.value);
-              setBook("");
-            }}
-            className="w-full p-3 rounded-xl border mb-4"
-          >
-            <option value="">Select Category</option>
-            <option value="Navbodh">Navbodh</option>
-            <option value="Gyanbodh">Gyanbodh</option>
-          </select>
+ <div className="mb-4">
+  <label className="block font-semibold text-[#572C10] mb-2">
+    Category
+  </label>
+
+  <div className="relative">
+
+    {/* Icon */}
+    <FaLayerGroup className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
+
+    <input
+      type="text"
+      placeholder="e.g. Navbodh, Gyanbodh, Prabodh"
+      value={category}
+      onChange={(e) => setCategory(e.target.value)}
+      className="
+        w-full
+        p-3
+        pl-12
+        rounded-xl
+
+        border-2
+        border-[#572C10]
+
+        outline-none
+        bg-white
+      "
+    />
+
+  </div>
+</div>
 
           {/* BOOK */}
-          <select
-            value={book}
-            onChange={(e) => setBook(e.target.value)}
-            className="w-full p-3 rounded-xl border mb-4"
-          >
-            <option value="">Select Book</option>
+         <div className="mb-4">
+  <label className="block font-semibold text-[#572C10] mb-2">
+    Book Name
+  </label>
 
-            {category === "Navbodh" && (
-              <>
-                <option value="Book N1">Book N1</option>
-                <option value="Book N2">Book N2</option>
-              </>
-            )}
+  <div className="relative">
 
-            {category === "Gyanbodh" && (
-              <>
-                <option value="Book G1">Book G1</option>
-                <option value="Book G2">Book G2</option>
-              </>
-            )}
-          </select>
+    {/* Icon */}
+    <FaBook className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
+
+    <input
+      type="text"
+      placeholder="e.g. Book N1, Biology Book"
+      value={book}
+      onChange={(e) => setBook(e.target.value)}
+      className="
+        w-full
+        p-3
+        pl-12
+
+        rounded-xl
+
+        border-2
+        border-[#572C10]
+
+        bg-white
+        outline-none
+      "
+    />
+
+  </div>
+</div>
 
           {/* CLASS */}
-          <select
-            value={className}
-            onChange={(e) => setClassName(e.target.value)}
-            className="w-full p-3 rounded-xl border mb-4"
-          >
-            <option value="">Select Class</option>
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-              <option key={num} value={`Class ${num}`}>
-                Class {num}
-              </option>
-            ))}
-          </select>
+        <div className="mb-4">
+  <label className="block font-semibold text-[#572C10] mb-2">
+    Class
+  </label>
+
+  <div className="relative">
+
+    <FaGraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
+
+    <input
+      type="text"
+      placeholder="e.g. Class 12, B.Sc 1st Year"
+      value={className}
+      onChange={(e) => setClassName(e.target.value)}
+      className="
+        w-full
+        p-3
+        pl-12
+
+        rounded-xl
+
+        border-2
+        border-[#572C10]
+
+        bg-white
+        outline-none
+      "
+    />
+
+  </div>
+</div>
 
           {/* SUBJECT */}
-          <select
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            className="w-full p-3 rounded-xl border mb-6"
-          >
-            <option value="">Select Subject</option>
-            <option value="Maths">Maths</option>
-            <option value="English">English</option>
-            <option value="Hindi">Hindi</option>
-            <option value="EVS">EVS</option>
-            <option value="Science">Science</option>
-            <option value="Social Science">Social Science</option>
-          </select>
+        <div className="mb-6">
+  <label className="block font-semibold text-[#572C10] mb-2">
+    Subject
+  </label>
+
+  <div className="relative">
+
+    <FaBookOpen className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
+
+    <input
+      type="text"
+      placeholder="e.g. Maths, Biology, Physics"
+      value={subject}
+      onChange={(e) => setSubject(e.target.value)}
+      className="
+        w-full
+        p-3
+        pl-12
+
+        rounded-xl
+
+        border-2
+        border-[#572C10]
+
+        bg-white
+        outline-none
+      "
+    />
+
+  </div>
+</div>
 
           {/* DROPZONE */}
           <div
-            {...getRootProps()}
-            className="border-2 border-dashed border-[#572C10] rounded-2xl p-8 text-center"
-          >
-            <input {...getInputProps()} />
+  {...getRootProps()}
+  className="
+    border-2
+    border-dashed
+    border-[#572C10]
 
-            <FaCloudUploadAlt className="text-5xl text-blue-500 mx-auto mb-4" />
+    rounded-2xl
+    p-8
 
-            <h2 className="font-bold text-2xl text-[#572C10]">
-              Drag & Drop PDF Here
-            </h2>
+    text-center
 
-            <p className="text-gray-700 mt-2">Only PDF files allowed</p>
+    bg-white
+  "
+>
+  <input {...getInputProps()} />
 
-            <button
-              type="button"
-              onClick={open}
-              className="mt-4 bg-[#572C10] text-white px-6 py-3 rounded-xl font-bold"
-            >
-              Select PDF
-            </button>
-          </div>
+  <FaCloudUploadAlt className="text-5xl text-[#572C10] mx-auto mb-4" />
 
-          {/* FILE NAME */}
-          {pdfFile && (
-            <div className="mt-6 bg-green-100 border border-green-500 rounded-xl p-4">
-              📄 {pdfFile.name}
-            </div>
-          )}
+  {!pdfFile ? (
+    <>
+      <h2 className="font-bold text-2xl text-[#572C10]">
+        Drag & Drop PDF Here
+      </h2>
 
+      <p className="text-gray-700 mt-2">
+        Only PDF files allowed
+      </p>
+
+      <button
+        type="button"
+        onClick={open}
+        className="
+          mt-4
+          bg-[#572C10]
+          text-white
+
+          px-6
+          py-3
+
+          rounded-xl
+
+          font-bold
+        "
+      >
+        Select PDF
+      </button>
+    </>
+  ) : (
+    <>
+      <h2 className="font-bold text-2xl text-[#572C10]">
+        PDF Selected ✅
+      </h2>
+
+      <p className="mt-4 text-lg font-semibold text-[#572C10] break-words">
+        📄 {pdfFile.name}
+      </p>
+
+      <button
+        type="button"
+        onClick={open}
+        className="
+          mt-5
+
+          border-2
+          border-[#572C10]
+
+          text-[#572C10]
+
+          px-6
+          py-2
+
+          rounded-xl
+
+          font-bold
+        "
+      >
+        Change PDF
+      </button>
+    </>
+  )}
+</div>
           {/* SAVE */}
           <button
             onClick={saveBook}
-            className="w-full mt-6 bg-green-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2"
+            className="w-full mt-6 bg-[#572C10] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2"
           >
             <FaSave />
-            Save & Open FlipBook
+            Save Books
           </button>
 
         </div>

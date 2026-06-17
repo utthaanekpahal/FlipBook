@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import UploadBooks from "./UploadBooks";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaCheck, FaTimes } from "react-icons/fa";
 const Books = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,10 +18,29 @@ const [showUpload, setShowUpload] = useState(false);
   const [search, setSearch] = useState("");
 const [editBook, setEditBook] = useState(null);
 
+  const getBookClasses = (book) => {
+    if (Array.isArray(book.classNames) && book.classNames.length > 0) {
+      return book.classNames;
+    }
+
+    if (typeof book.className === "string" && book.className.trim()) {
+      return book.className
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    return [];
+  };
+
 const handleUpdate = async () => {
+  if (!editBook?._id) return;
+
   try {
+    console.log("UPDATE ID:", editBook._id);
+
     const res = await fetch(
-      `https://flipbook-lw1b.onrender.com/api/books/${editBook._id}`,
+      `http://localhost:3000/api/books/${editBook._id}`,
       {
         method: "PUT",
         headers: {
@@ -34,7 +54,10 @@ const handleUpdate = async () => {
       }
     );
 
-    const data = await res.json();
+    const text = await res.text();
+    console.log("RAW UPDATE RESPONSE:", text);
+
+    const data = JSON.parse(text);
 
     if (data.success) {
       const updated = books.map((b) =>
@@ -47,10 +70,11 @@ const handleUpdate = async () => {
 
       alert("Book updated successfully");
     } else {
-      alert("Update failed");
+      alert(data.message || "Update failed");
     }
   } catch (error) {
-    console.log(error);
+    console.log("UPDATE ERROR:", error);
+    alert("Server error while updating");
   }
 };
 
@@ -63,7 +87,7 @@ const handleDelete = async (id) => {
 
   try {
     const res = await fetch(
-      `https://flipbook-lw1b.onrender.com/api/books/${id}`,
+         `http://localhost:3000/api/books/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -124,7 +148,9 @@ const handleDelete = async (id) => {
         (category === "" ||
           book.category?.toLowerCase() === category.toLowerCase()) &&
         (className === "" ||
-          book.className?.toLowerCase() === className.toLowerCase()) &&
+          getBookClasses(book).some(
+            (item) => item.toLowerCase() === className.toLowerCase()
+          )) &&
         (type === "" ||
           book.type?.toLowerCase() === type.toLowerCase()) &&
         (subject === "" ||
@@ -237,7 +263,7 @@ const handleDelete = async (id) => {
                 className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300"
               >
                 {/* IMAGE */}
-                <div className="h-[250px] sm:h-[300px] overflow-hidden">
+                <div className="h-62.5 sm:h-75 overflow-hidden">
                   <img
                     src={book.img}
                     alt={book.title}
@@ -247,7 +273,7 @@ const handleDelete = async (id) => {
                     }}
                   />
                 </div>
-
+                
                 {/* CONTENT */}
                 <div className="p-4">
                   <h2 className="text-lg font-bold text-[#572C10]">
@@ -264,7 +290,9 @@ const handleDelete = async (id) => {
                     </span>
 
                     <span className="bg-gray-100 text-gray-700 text-xs font-bold px-3 py-2 rounded-full text-center">
-                      {book.className}
+                      {getBookClasses(book).length > 0
+                        ? getBookClasses(book).join(", ")
+                        : book.className}
                     </span>
 
                     <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-2 rounded-full text-center">
@@ -278,7 +306,7 @@ const handleDelete = async (id) => {
                   <div className="flex justify-between mt-5">
   {/* EDIT BUTTON */}
   <button
-    onClick={() => navigate(`/edit-book/${book._id}`)}
+   onClick={() => setEditBook(book)}
     className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
   >
     <FaEdit />
@@ -311,6 +339,255 @@ const handleDelete = async (id) => {
           </div>
         )}
       </div>
+      {editBook && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+
+    <div className="bg-white w-[92%] max-w-lg rounded-3xl shadow-2xl overflow-hidden">
+
+      {/* Header */}
+
+      <div className="bg-linear-to-r from-blue-500 to-purple-500 px-6 py-5">
+
+        <div className="flex justify-between items-center">
+
+          <div className="flex items-center gap-3">
+
+            <div className="bg-white/20 p-3 rounded-full">
+
+              <FaEdit className="text-white text-xl"/>
+
+            </div>
+
+            <h2 className="text-2xl font-bold text-white">
+
+              Edit Book
+
+            </h2>
+
+          </div>
+
+          <button
+
+            onClick={() => setEditBook(null)}
+
+            className="text-white text-xl"
+
+          >
+
+            <FaTimes/>
+
+          </button>
+
+        </div>
+
+      </div>
+
+      {/* Body */}
+
+      <div className="p-6">
+
+        {/* Title */}
+
+        <div className="mb-4">
+
+          <label className="text-sm font-semibold text-gray-600">
+
+            Title
+
+          </label>
+
+          <input
+
+            value={editBook.title}
+
+            onChange={(e) =>
+              setEditBook({
+                ...editBook,
+                title: e.target.value,
+              })
+            }
+
+            className="
+            w-full
+            mt-2
+            border-2
+            border-gray-200
+            rounded-xl
+            p-3
+
+            focus:border-blue-500
+            focus:ring-2
+            focus:ring-blue-100
+
+            outline-none
+            transition
+            "
+          />
+
+        </div>
+
+        {/* Description */}
+
+        <div className="mb-4">
+
+          <label className="text-sm font-semibold text-gray-600">
+
+            Description
+
+          </label>
+
+          <textarea
+
+            rows="4"
+
+            value={editBook.description}
+
+            onChange={(e) =>
+              setEditBook({
+                ...editBook,
+                description: e.target.value,
+              })
+            }
+
+            className="
+            w-full
+            mt-2
+            border-2
+            border-gray-200
+            rounded-xl
+            p-3
+
+            focus:border-blue-500
+            focus:ring-2
+            focus:ring-blue-100
+
+            outline-none
+            transition
+            "
+          />
+
+        </div>
+
+        {/* Category */}
+
+        <div className="mb-6">
+
+          <label className="text-sm font-semibold text-gray-600">
+
+            Category
+
+          </label>
+
+          <input
+
+            value={editBook.category}
+
+            onChange={(e) =>
+              setEditBook({
+                ...editBook,
+                category: e.target.value,
+              })
+            }
+
+            className="
+            w-full
+            mt-2
+            border-2
+            border-gray-200
+            rounded-xl
+            p-3
+
+            focus:border-blue-500
+            focus:ring-2
+            focus:ring-blue-100
+
+            outline-none
+            transition
+            "
+          />
+
+        </div>
+
+        {/* Buttons */}
+
+        <div className="flex gap-4">
+
+          <button
+
+            onClick={handleUpdate}
+
+            className="
+            flex-1
+            bg-green-500
+            hover:bg-green-600
+
+            text-white
+
+            py-3
+
+            rounded-xl
+
+            flex
+
+            items-center
+
+            justify-center
+
+            gap-2
+
+            transition
+            "
+          >
+
+            <FaCheck />
+
+            Update
+
+          </button>
+
+          <button
+
+            onClick={() => setEditBook(null)}
+
+            className="
+            flex-1
+
+            bg-red-500
+
+            hover:bg-red-600
+
+            text-white
+
+            py-3
+
+            rounded-xl
+
+            flex
+
+            items-center
+
+            justify-center
+
+            gap-2
+
+            transition
+            "
+          >
+
+            <FaTimes />
+
+            Cancel
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
 
       {/* BUTTONS */}
       <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12 pb-10">
