@@ -80,7 +80,7 @@ export default function App() {
 
       {/* PUBLIC */}
       <Route element={<PublicRoute />}>
-        <Route path="/" element={<Loginform />} />
+        <Route path="/Loginform" element={<Loginform />} />
       </Route>
 
       {/* USER PANEL */}
