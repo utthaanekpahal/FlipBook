@@ -12,7 +12,7 @@ const AgentSidebar = ({ open, setOpen }) => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("role");
 
-    navigate("/Loginform", { replace: true });
+    navigate("/", { replace: true });
 
     if (window.innerWidth < 1024) {
       setOpen(false);
