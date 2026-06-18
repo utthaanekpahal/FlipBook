@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import HTMLFlipBook from "react-pageflip";
 import * as pdfjsLib from "pdfjs-dist";
@@ -20,20 +20,14 @@ function FlipPage() {
   const bookRef = useRef();
   const audioRef = useRef(null);
 
-  // =========================
-  // LOAD PDF ON START
-  // =========================
+  // ================= LOAD PDF =================
   useEffect(() => {
     audioRef.current = new Audio("/oxidvideos-page-flip-1-178322.mp3");
 
-    if (pdf) {
-      loadPDF();
-    }
+    if (pdf) loadPDF();
   }, [pdf]);
 
-  // =========================
-  // CONVERT PDF → IMAGES
-  // =========================
+  // ================= CONVERT PDF =================
   const loadPDF = async () => {
     try {
       setLoading(true);
@@ -59,10 +53,8 @@ function FlipPage() {
           viewport,
         }).promise;
 
-        // convert to image (compressed for performance)
         loadedPages.push(canvas.toDataURL("image/webp", 0.8));
 
-        // small delay for smooth UI
         await new Promise((r) => setTimeout(r, 30));
       }
 
@@ -74,30 +66,27 @@ function FlipPage() {
     }
   };
 
-  // =========================
-  // PAGE FLIP SOUND
-  // =========================
+  // ================= SOUND =================
   const playSound = () => {
     if (!audioRef.current) return;
-
     audioRef.current.currentTime = 0;
-
-    audioRef.current.play().catch((err) => {
-      console.log("Audio error:", err);
-    });
+    audioRef.current.play().catch(() => {});
   };
 
-  // =========================
-  // PROGRESS BAR
-  // =========================
+  // ================= PROGRESS FIX =================
   const progress =
     pages.length > 0
-      ? (currentPage / pages.length) * 100
+      ? Math.min((currentPage / pages.length) * 100, 100)
       : 0;
 
-  // =========================
-  // LOADING UI
-  // =========================
+  // ================= LAST PAGE FIX =================
+  useEffect(() => {
+    if (currentPage > pages.length && pages.length > 0) {
+      setCurrentPage(pages.length);
+    }
+  }, [currentPage, pages.length]);
+
+  // ================= LOADING =================
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-200">
@@ -110,13 +99,13 @@ function FlipPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-300 overflow-hidden px-4 py-6">
+    <div className="min-h-screen flex flex-col items-center bg-gray-300 px-4 py-6">
 
-      {/* BACK BUTTON */}
+      {/* BACK */}
       <div className="w-full max-w-4xl mt-4">
         <button
           onClick={() => navigate(-1)}
-          className="bg-[#572C10] text-white px-5 py-2 rounded-xl font-bold shadow-lg hover:opacity-90"
+          className="bg-[#572C10] text-white px-5 py-2 rounded-xl font-bold"
         >
           ← Back
         </button>
@@ -161,13 +150,13 @@ function FlipPage() {
             showCover={false}
             mobileScrollSupport={true}
             useMouseEvents={true}
+            drawShadow={true}
+            autoSize={true}
             onFlip={(e) => {
-              setCurrentPage((e.data || 0) + 1);
+              setCurrentPage(e.data + 1);
             }}
             onChangeState={(e) => {
-              if (e.data === "flipping") {
-                playSound();
-              }
+              if (e.data === "flipping") playSound();
             }}
           >
             {pages.map((page, index) => (
@@ -187,26 +176,19 @@ function FlipPage() {
           {/* CONTROLS */}
           <div className="flex items-center gap-6 mt-6 flex-wrap justify-center">
 
-            {/* PREV */}
             <button
-              onClick={() => {
-                bookRef.current.pageFlip().flipPrev();
-              }}
+              onClick={() => bookRef.current.pageFlip().flipPrev()}
               className="bg-[#572C10] text-white px-6 py-2 rounded-xl font-bold"
             >
               ← Previous
             </button>
 
-            {/* PAGE INFO */}
-            <div className="bg-white px-6 py-2 rounded-full shadow-lg font-bold">
+            <div className="bg-white px-6 py-2 rounded-full shadow font-bold">
               Page {currentPage} / {pages.length}
             </div>
 
-            {/* NEXT */}
             <button
-              onClick={() => {
-                bookRef.current.pageFlip().flipNext();
-              }}
+              onClick={() => bookRef.current.pageFlip().flipNext()}
               className="bg-[#572C10] text-white px-6 py-2 rounded-xl font-bold"
             >
               Next →

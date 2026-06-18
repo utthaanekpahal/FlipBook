@@ -88,7 +88,8 @@ useEffect(() => {
 
 const newBook = {
   title: form.subcategory,
-  classes: form.classes,
+  type: "Semester",
+  classes: sortClasses(form.classes),
 };
   if (catIndex !== -1) {
   // ✅ existing category me add
@@ -158,6 +159,7 @@ const openEditBook = (category, book) => {
     category,
     oldTitle: book.title,
     title: book.title,
+    type: book.type || "Semester",
     classes: Array.isArray(book.classes) ? [...book.classes] : [],
   });
 };
@@ -173,6 +175,14 @@ const toggleEditClass = (className) => {
         ? current.classes.filter((item) => item !== className)
         : [...current.classes, className],
     };
+  });
+};
+
+const sortClasses = (classes) => {
+  return [...classes].sort((a, b) => {
+    const numA = parseInt(a.replace(/\D/g, ""));
+    const numB = parseInt(b.replace(/\D/g, ""));
+    return numA - numB;
   });
 };
 
@@ -195,7 +205,8 @@ const saveEditedBook = () => {
             ? {
                 ...book,
                 title: nextTitle,
-                classes: editingBook.classes,
+                type: editingBook.type,
+                classes: sortClasses(editingBook.classes),
               }
             : book
         ),
@@ -487,6 +498,20 @@ const saveEditedBook = () => {
               }
               placeholder="Subcategory"
             />
+
+            <select
+              className="w-full border p-2 mb-3 rounded"
+              value={editingBook.type}
+              onChange={(e) =>
+                setEditingBook({
+                  ...editingBook,
+                  type: e.target.value,
+                })
+              }
+            >
+              <option value="Semester">Semester</option>
+              <option value="Yearly">Yearly</option>
+            </select>
 
             <div className="mb-3">
               <p className="font-semibold mb-2">Classes</p>
