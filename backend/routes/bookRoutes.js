@@ -11,7 +11,8 @@ import {
   login,
   agentsignup,
   getAgents,
-  agentupdate
+  agentupdate,
+  deleteAgent,
 } from "../controllers/signupController.js";
 
 import uploadPdf from "../middleware/uploadPdf.js";
@@ -58,5 +59,6 @@ router.post("/agentsignup", agentsignup);
 router.post("/login", login);
 router.get("/agents", getAgents);
 router.put("/agents/:id", agentupdate);
+router.delete("/agents/:id", deleteAgent);
 
 export default router;

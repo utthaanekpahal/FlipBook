@@ -1,25 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { FaThList } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { MdConfirmationNumber } from "react-icons/md";
 import { FaBook } from "react-icons/fa";
+import axios from 'axios';
 
 const AgentDashboard = () => {
   const navigate = useNavigate();
-  useEffect(() => {
-
-    const views =
-      Number(localStorage.getItem("viewsagent")) || 0;
-
-    localStorage.setItem(
-      "viewsagent",
-      views + 1
-    );
-
-  }, []);
-  const agenttotalViews =localStorage.getItem("viewsagent");
+  const agenttotalViews =localStorage.getItem("viewsagent")||0;
+  const [lengths, setlengths] = useState("")
+  const ticketlength=async()=>{
+    try{
+      const res=await axios.get("http://localhost:3000/api/tickets/all")
+      setlengths(res.data.tickets)
+        }
+    catch(error){
+      console.log("error in tickets lenght")
+    }
+  }
+  useEffect(()=>{
+   ticketlength()
+  },[])
   return (
   <div className="min-h-screen lg:mt-[48px] sm:mt-[48px] mt-[35%] bg-[#EFE6DD]">
   <section className="w-full overflow-x-hidden">
@@ -71,7 +74,10 @@ const AgentDashboard = () => {
           <p className="text-sm font-semibold text-[#572C10]">
             Ticket Raise
           </p>
-          <h2 className="text-2xl font-bold">ID</h2>
+         
+          <div>
+          <h2 className="text-2xl font-bold">{lengths.length}</h2>
+          </div>
           <p className="text-xs text-[#995F2F]">
             This month
           </p>

@@ -2,22 +2,12 @@ import React, { useActionState, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { FaThList, FaUserTie } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import {FaBook,} from 'react-icons/fa';
 import axios from 'axios';
 function Dashboard() {
-  console.log("Dashboard Loaded");
   const navigate = useNavigate();
-  useEffect(() => {
-
-    const views =
-      Number(localStorage.getItem("views")) || 0;
-
-    localStorage.setItem(
-      "views",
-      views + 1
-    );
-
-  }, []);
+  const [showPassword, setShowPassword] = useState(false);
   const [agents, setAgents] = useState([]);
 
 useEffect(() => {
@@ -48,52 +38,70 @@ const fetchTicket=async ()=>{
     console.log(error)
   }
 }
-const [selectedAgent, setSelectedAgent] = useState(null);
- const [isActive, setIsActive] = useState(true);
-  const [agentupdate, setagentupdate] = useState({
+const [selectedAgent, setSelectedAgent] = useState({
     updateagentname : "",
     updateagentemail :"",
     updateagentpass:"",
     updatedstatus:""
-})
+});
+ const [isActive, setIsActive] = useState(true);
 const [passwordError, setPasswordError] = useState("");
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
   const updateagentdata=(e)=>{
     const {name , value}=e.target
-    setagentupdate((prev)=>({...prev,[name]:value}))
+    setSelectedAgent((prev)=>({...prev,[name]:value}))
   }
   useEffect(() => {
-  setagentupdate((prev) => ({
+  setSelectedAgent((prev) => ({
     ...prev,
     updatedstatus: isActive ? "Active" : "Deactivated",
   }));
 }, [isActive]);
-  const updateagentchanges = async (id) => {
-   if (!passwordRegex.test(agentupdate.updateagentpass)) {
-    setPasswordError(
-      "Password must be at least 8 characters and contain uppercase, lowercase, number and special character."
-    );
-    return;
+ const updateagentchanges = async (id) => {
+  const payload = {
+    status: selectedAgent.updatedstatus,
+  };
+
+  // password only if user typed it
+  if (selectedAgent.updateagentpass) {
+    if (!passwordRegex.test(selectedAgent.updateagentpass)) {
+      setPasswordError(
+        "Password must be at least 8 characters and contain uppercase, lowercase, number and special character."
+      );
+      return;
+    }
+
+    payload.NewPassword = selectedAgent.updateagentpass;
   }
 
   setPasswordError("");
+
   try {
-    const response = await axios.put(
+    await axios.put(
       `http://localhost:3000/api/books/agents/${id}`,
-      {
-        updateagentpass: agentupdate.updateagentpass,
-        updatedstatus: agentupdate.updatedstatus,
-      }
+      payload
     );
-     setagenteditpop(false);
+
+    setagenteditpop(false);
   } catch (error) {
-    console.log("Error updating agent:", error.response?.data || error.message);
+    console.log(error);
+  }
+};
+const deleteAgent = async (id) => {
+  try {
+    await axios.delete(`http://localhost:3000/api/books/agents/${id}`);
+
+    // UI update without refresh
+    setAgents((prev) => prev.filter((a) => a._id !== id));
+
+  } catch (error) {
+    console.log("Delete error:", error);
   }
 };
   const [agenteditpop, setagenteditpop] = useState(false)
   const [agentpop, setagentpop] = useState(false)
-  const totalViews =localStorage.getItem("views");
+  const totalViews =localStorage.getItem("adminViews");
   return (
     <div className=''>
 
@@ -304,6 +312,12 @@ const passwordRegex =
                           onClick={()=>{setagenteditpop(true);
                              setSelectedAgent(value);
                           }}>Action</button>
+                          <button
+  onClick={() => deleteAgent(value._id)}
+  className="bg-red-600 text-white py-[5px] px-[10px] rounded-2xl font-bold ml-2"
+>
+  Delete
+</button>
                         </td>
                       </tr>
                     ))}
@@ -364,24 +378,33 @@ const passwordRegex =
         </div>
 
         {/* Password */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">
-            New Password
-          </label>
-          <input
-            type="password"
-            name='updateagentpass'
-            value={agentupdate.updateagentpass}
-            onChange={updateagentdata}
-            placeholder="Enter New Password"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {passwordError && (
-          <p className="text-red-500 text-sm mt-1">
-          {passwordError}
-          </p>
-          )}
-        </div>
+        <div className="mb-4 relative">
+  <label className="block text-sm font-medium mb-1">
+    New Password
+  </label>
+
+  <input
+    type={showPassword ? "text" : "password"}
+    name="updateagentpass"
+    value={selectedAgent.updateagentpass || ""}
+    onChange={updateagentdata}
+    placeholder="Enter New Password"
+    className="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+
+  <span
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-3 top-[38px] cursor-pointer text-gray-500 hover:text-gray-700"
+  >
+    {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+  </span>
+
+  {passwordError && (
+    <p className="text-red-500 text-sm mt-1">
+      {passwordError}
+    </p>
+  )}
+</div>
 
         {/* Status Toggle */}
         <div className="flex items-center justify-between mb-6">
