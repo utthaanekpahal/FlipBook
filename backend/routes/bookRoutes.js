@@ -7,6 +7,14 @@ import {
   deleteBooks
 } from "../controllers/bookController.js";
 
+import {
+  login,
+  agentsignup,
+  getAgents,
+  agentupdate,
+  deleteAgent,
+} from "../controllers/signupController.js";
+
 import uploadPdf from "../middleware/uploadPdf.js";
 import uploadImage from "../middleware/uploadImage.js";
 
@@ -34,5 +42,14 @@ router.delete("/:id", deleteBooks);
 
 // Categories
 router.get("/categories", getCategories);
+
+// =========================
+// AUTH ROUTES
+// =========================
+router.post("/agentsignup", agentsignup);
+router.post("/login", login);
+router.get("/agents", getAgents);
+router.put("/agents/:id", agentupdate);
+router.delete("/agents/:id", deleteAgent);
 
 export default router;

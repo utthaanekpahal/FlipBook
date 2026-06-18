@@ -5,7 +5,6 @@ import bcrypt from 'bcryptjs'
 
 //login---------------------------------------------------------------------------------
 export const login = async (req, res) => {
-   console.log("================================");
   console.log("Login Hit");
    console.log(req.body);
   try {
@@ -47,8 +46,6 @@ export const login = async (req, res) => {
         message: "Agent Login Successful",
       });
     }
-    console.log("Agent Password Failed");
-    console.log("Checking Admin/User...");
     const user = await User.findOne({ username });
 
     if (!user) {
@@ -84,7 +81,6 @@ export const login = async (req, res) => {
     });
   }
 };
-console.log("User Password Failed");
 /*agentlogin------------------------------------------------------------------*/
 export const agentsignup = async (req, res) => {
   try {
@@ -167,13 +163,13 @@ export const agentupdate = async (req, res) => {
 
     // only update password + status
     const updateData = {};
-    if (req.body.updateagentpass) {
-      const hashedPassword = await bcrypt.hash(req.body.updateagentpass, 10);
+    if (req.body.NewPassword) {
+      const hashedPassword = await bcrypt.hash(req.body.NewPassword, 10);
       updateData.password = hashedPassword;
     }
 
-    if (req.body.updatedstatus) {
-      updateData.status = req.body.updatedstatus;
+    if (req.body.status) {
+      updateData.status = req.body.status;
     }
 
     const updatedAgent = await Agent.findByIdAndUpdate(
@@ -190,6 +186,34 @@ export const agentupdate = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+/*Delete agent ----------------------------------*/
+export const deleteAgent = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const agent = await Agent.findById(id);
+
+    if (!agent) {
+      return res.status(404).json({
+        success: false,
+        message: "Agent not found",
+      });
+    }
+
+    await Agent.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Agent deleted successfully",
+    });
+
+  } catch (error) {
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

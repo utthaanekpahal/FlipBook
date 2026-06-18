@@ -2,6 +2,7 @@ import React from "react";
 import { FaSearch, FaUser, FaBookOpen, FaBars } from "react-icons/fa";
 
 const AgentHeader = ({ setOpen }) => {
+  const agentName = localStorage.getItem("agentName");
   return (
   <header className="fixed top-0 left-0 right-0 z-[60] bg-[#F5F5F5] border-b border-[#E6D6C8]">
       <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-8">
@@ -46,14 +47,14 @@ const AgentHeader = ({ setOpen }) => {
           </div>
 
           {/* RIGHT USER */}
-          <div className="flex items-center gap-2 text-[#572C10] shrink-0">
+          <div className="flex items-center gap-4 text-[#572C10] shrink-0">
 
             <FaUser size={22} />
 
             {/* FIX: Agent name always visible on sm+ */}
-            <span className="font-bold whitespace-nowrap text-[14px] sm:text-[16px]">
-              Agent
-            </span>
+            <h1 className="font-bold  whitespace-nowrap text-[14px] lg:text-xl sm:text-[16px]">
+              Welcome {agentName}
+            </h1>
 
           </div>
 

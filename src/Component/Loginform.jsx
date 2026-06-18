@@ -30,7 +30,6 @@ export default function Login() {
   };
   const handleSubmit = async (e) => {
   e.preventDefault();
-    console.log("LOGIN BUTTON CLICKED");
   let newErrors = {};
 
   const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -61,17 +60,32 @@ export default function Login() {
     );
 
     console.log("Login Response:", response.data);
-
+   
    if (response.data.success) {
+  const userName = data.username.split("@")[0].trim();
+  localStorage.setItem("agentName", userName);
   localStorage.setItem("isLoggedIn", "true");
   localStorage.setItem("role", response.data.role);
-
   if (response.data.role === "admin") {
+       const adminViews =
+      Number(localStorage.getItem("adminViews")) || 0;
+
+    localStorage.setItem(
+      "adminViews",
+      adminViews + 1
+    );
     navigate("/Dashboard", { 
       replace: true,
     });
   } 
   else if (response.data.role === "agent") {
+     const agentViews =
+      Number(localStorage.getItem("viewsagent")) || 0;
+
+    localStorage.setItem(
+      "viewsagent",
+      agentViews + 1
+    );
     navigate("/AgentDashboard", {
       replace: true,
     });
