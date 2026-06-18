@@ -37,6 +37,7 @@ const Category = () => {
   const location = useLocation();
 
   const [selectedBook, setSelectedBook] = useState(null);
+  
 
   return (
     <div

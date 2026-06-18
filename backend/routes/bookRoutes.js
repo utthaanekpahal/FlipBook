@@ -7,56 +7,32 @@ import {
   deleteBooks
 } from "../controllers/bookController.js";
 
-import {
-  login,
-  agentsignup,
-  getAgents,
-  agentupdate
-} from "../controllers/signupController.js";
-
 import uploadPdf from "../middleware/uploadPdf.js";
+import uploadImage from "../middleware/uploadImage.js";
 
 const router = express.Router();
 
-// =========================
-// UPLOAD BOOK
-// =========================
+// Upload Book (PDF)
 router.post(
   "/upload",
-  (req, res, next) => {
-    console.log("BOOK UPLOAD ROUTE HIT");
-    next();
-  },
   uploadPdf.single("file"),
-  uploadBooks   // ✅ FIXED HERE
+  uploadBooks
 );
 
-// =========================
-// GET BOOKS
-// =========================
+// Get Books
 router.get("/", getBooks);
 
-// =========================
-// UPDATE BOOK
-// =========================
-router.put("/:id", updateBooks);
+// Update Book + Image
+router.put(
+  "/:id",
+  uploadImage.single("img"),
+  updateBooks
+);
 
-// =========================
-// DELETE BOOK
-// =========================
+// Delete Book
 router.delete("/:id", deleteBooks);
 
-// =========================
-// CATEGORY GROUPED API
-// =========================
+// Categories
 router.get("/categories", getCategories);
-
-// =========================
-// AUTH ROUTES
-// =========================
-router.post("/agentsignup", agentsignup);
-router.post("/login", login);
-router.get("/agents", getAgents);
-router.put("/agents/:id", agentupdate);
 
 export default router;

@@ -10,14 +10,30 @@ const Books = () => {
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
 const [showUpload, setShowUpload] = useState(false);
-  
+  const categories = [...new Set(books.map((b) => b.category).filter(Boolean))];
+
+const subjects = [...new Set(books.map((b) => b.subject).filter(Boolean))];
+
+const types = [...new Set(books.map((b) => b.type).filter(Boolean))];
+
+const classes = [
+  ...new Set(
+    books
+      .flatMap((b) =>
+        (b.className || "")
+          .split(",")
+          .map((c) => c.trim())
+      )
+      .filter(Boolean)
+  ),
+];
   const [category, setCategory] = useState("");
   const [className, setClassName] = useState("");
   const [type, setType] = useState("");
   const [subject, setSubject] = useState("");
   const [search, setSearch] = useState("");
 const [editBook, setEditBook] = useState(null);
-
+const [newImage, setNewImage] = useState(null);
   const getBookClasses = (book) => {
     if (Array.isArray(book.classNames) && book.classNames.length > 0) {
       return book.classNames;
@@ -37,27 +53,26 @@ const handleUpdate = async () => {
   if (!editBook?._id) return;
 
   try {
-    console.log("UPDATE ID:", editBook._id);
+    const formData = new FormData();
+
+    formData.append("title", editBook.title);
+    formData.append("description", editBook.description);
+    formData.append("category", editBook.category);
+
+    // New image selected ho to hi bhejo
+    if (newImage) {
+      formData.append("img", newImage);
+    }
 
     const res = await fetch(
       `http://localhost:3000/api/books/${editBook._id}`,
       {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: editBook.title,
-          description: editBook.description,
-          category: editBook.category,
-        }),
+        body: formData,
       }
     );
 
-    const text = await res.text();
-    console.log("RAW UPDATE RESPONSE:", text);
-
-    const data = JSON.parse(text);
+    const data = await res.json();
 
     if (data.success) {
       const updated = books.map((b) =>
@@ -66,7 +81,9 @@ const handleUpdate = async () => {
 
       setBooks(updated);
       setFilteredBooks(updated);
+
       setEditBook(null);
+      setNewImage(null);
 
       alert("Book updated successfully");
     } else {
@@ -77,8 +94,6 @@ const handleUpdate = async () => {
     alert("Server error while updating");
   }
 };
-
-
 const handleDelete = async (id) => {
   console.log("DELETE ID:", id);
 
@@ -165,8 +180,8 @@ const handleDelete = async (id) => {
 
   return (
     <div className="min-h-screen  bg-[#EFE6DD] px-4 sm:px-6 py-10">
-     <button
-  onClick={() => setShowUpload(true)}
+    <button
+  onClick={() => navigate("/uploadBooks")}
   className="bg-[#572C10] hover:bg-[#3d1f0a] text-white text-lg sm:text-2xl px-8 py-3 rounded-xl font-semibold transition"
 >
   Upload Books
@@ -204,52 +219,63 @@ const handleDelete = async (id) => {
         {/* FILTERS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {/* CATEGORY */}
-          <select
-            className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">Category</option>
-            <option value="Navbodh">Navbodh</option>
-            <option value="Gyanbodh">Gyanbodh</option>
-          </select>
+         {/* CATEGORY */}
+<select
+  className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
+  onChange={(e) => setCategory(e.target.value)}
+>
+  <option value="">Category</option>
+  {categories.map((c, i) => (
+    <option key={i} value={c}>
+      {c}
+    </option>
+  ))}
+</select>
 
-          {/* CLASS */}
-          <select
-            className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
-            onChange={(e) => setClassName(e.target.value)}
-          >
-            <option value="">Class</option>
-            <option value="Class 1">Class 1</option>
-            <option value="Class 2">Class 2</option>
-            <option value="Class 3">Class 3</option>
-            <option value="Class 4">Class 4</option>
-            <option value="Class 5">Class 5</option>
-            <option value="Class 6">Class 6</option>
-            <option value="Class 7">Class 7</option>
-            <option value="Class 8">Class 8</option>
-          </select>
+{/* CLASS */}
+<select
+  className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
+  onChange={(e) => setClassName(e.target.value)}
+>
+  <option value="">Class</option>
 
-          {/* TYPE */}
-          <select
-            className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
-            onChange={(e) => setType(e.target.value)}
-          >
-            <option value="">Type</option>
-            <option value="Semester">Semester</option>
-            <option value="Yearly">Yearly</option>
-          </select>
+  <option value="Class 1">Class 1</option>
+  <option value="Class 2">Class 2</option>
+  <option value="Class 3">Class 3</option>
+  <option value="Class 4">Class 4</option>
+  <option value="Class 5">Class 5</option>
+  <option value="Class 6">Class 6</option>
+  <option value="Class 7">Class 7</option>
+  <option value="Class 8">Class 8</option>
+  <option value="Class 9">Class 9</option>
+  <option value="Class 10">Class 10</option>
+  <option value="Class 11">Class 11</option>
+  <option value="Class 12">Class 12</option>
+</select>
 
-          {/* SUBJECT */}
-          <select
-            className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
-            onChange={(e) => setSubject(e.target.value)}
-          >
-            <option value="">Subject</option>
-            <option value="Maths">Maths</option>
-            <option value="Science">Science</option>
-            <option value="English">English</option>
-            <option value="Hindi">Hindi</option>
-          </select>
+{/* TYPE */}
+<select
+  className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
+  onChange={(e) => setType(e.target.value)}
+>
+  <option value="">Type</option>
+
+  <option value="Semester">Semester</option>
+  <option value="Yearly">Yearly</option>
+</select>
+
+{/* SUBJECT */}
+<select
+  className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
+  onChange={(e) => setSubject(e.target.value)}
+>
+  <option value="">Subject</option>
+  {subjects.map((s, i) => (
+    <option key={i} value={s}>
+      {s}
+    </option>
+  ))}
+</select>
         </div>
       </div>
 
@@ -298,6 +324,9 @@ const handleDelete = async (id) => {
                     <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-2 rounded-full text-center">
                       {book.subject}
                     </span>
+                    <span className="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-2 rounded-full text-center">
+  {book.type}
+</span>
                   </div>
 
                   <p className="text-sm text-[#572C10] font-bold mt-3 ">
@@ -507,6 +536,32 @@ const handleDelete = async (id) => {
           />
 
         </div>
+        {/* Upload New Cover */}
+<div className="mb-6">
+
+  <label className="text-sm font-semibold text-gray-600">
+    Upload New Cover (PNG / JPG)
+  </label>
+
+  <input
+    type="file"
+    accept="image/png,image/jpeg,image/jpg"
+    onChange={(e) => setNewImage(e.target.files[0])}
+    className="
+      w-full
+      mt-2
+      border-2
+      border-dashed
+      border-gray-300
+      rounded-xl
+      p-3
+      cursor-pointer
+      hover:border-blue-500
+      transition
+    "
+  />
+
+</div>
 
         {/* Buttons */}
 

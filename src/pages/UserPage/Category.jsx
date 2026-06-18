@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBook, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -10,11 +10,13 @@ const initialData = [
     books: [
       {
         title: "Book N1",
-        classes: ["Class 1", "Class 2", "Class 3"]
+        subject: "English",
+        classes: ["Class 1", "Class 2", "Class 3"],
       },
       {
         title: "Book N2",
-        classes: ["Class 4", "Class 5"]
+        subject: "Hindi",
+        classes: ["Class 4", "Class 5"],
       },
     ],
   },
@@ -25,19 +27,31 @@ const initialData = [
     books: [
       {
         title: "Book G1",
-        classes: ["Class 1", "Class 2"]
+        subject: "Maths",
+        classes: ["Class 1", "Class 2"],
       },
       {
         title: "Book G2",
-        classes: ["Class 3", "Class 4"]
+        subject: "Science",
+        classes: ["Class 3", "Class 4"],
       },
     ],
   },
 ];
 
-const CLASSES = [
-  "Class 1","Class 2","Class 3","Class 4",
-  "Class 5","Class 6","Class 7","Class 8",
+const CLASS_OPTIONS = [
+  "Class 1",
+  "Class 2",
+  "Class 3",
+  "Class 4",
+  "Class 5",
+  "Class 6",
+  "Class 7",
+  "Class 8",
+  "Class 9",
+  "Class 10",
+  "Class 11",
+  "Class 12",
 ];
 
 const Category = () => {
@@ -46,15 +60,19 @@ const [data, setData] = useState(() => {
   const saved = localStorage.getItem("categories");
   return saved ? JSON.parse(saved) : initialData;
 });
+useEffect(() => {
+  localStorage.setItem("categories", JSON.stringify(data));
+}, [data]);
   const [selectedBook, setSelectedBook] = useState(null);
+  const [editingBook, setEditingBook] = useState(null);
 
   // ADD FORM
   const [showForm, setShowForm] = useState(false);
+  const [showClassDropdown, setShowClassDropdown] = useState(false);
  const [form, setForm] = useState({
   category: "",
-  book: "",
-  icon: "",
-  classes: "",
+  subcategory: "",
+  classes: [],
 });
 
   // ================= ADD FUNCTION =================
@@ -62,41 +80,27 @@ const [data, setData] = useState(() => {
 
   const updated = [...data];
 
-  const catIndex = updated.findIndex(
-    (c) =>
-      c.category.toLowerCase() ===
-      form.category.toLowerCase()
-  );
+ const catIndex = updated.findIndex(
+  (c) =>
+    c.category.replace(/\s+/g, "").toLowerCase() ===
+    form.category.replace(/\s+/g, "").toLowerCase()
+);
 
- const newBook = {
-
-  title: form.book,
-
-  classes: form.classes
-    .split(",")
-    .map((c) => c.trim())
-    .filter(Boolean),
-
+const newBook = {
+  title: form.subcategory,
+  classes: form.classes,
 };
   if (catIndex !== -1) {
-
-    updated[catIndex].books.push(newBook);
-
-  } else {
-
-    updated.push({
-
-      category: form.category,
-
-      icon: form.icon || "/nav.png",
-
-      books: form.book
-        ? [newBook]
-        : [],
-
-    });
-
-  }
+  // ✅ existing category me add
+  updated[catIndex].books.push(newBook);
+} else {
+  // ✅ new category auto create
+  updated.push({
+    category: form.category,
+    icon: "/nav.png",
+    books: [newBook],
+  });
+}
 
   setData(updated);
 
@@ -108,12 +112,9 @@ const [data, setData] = useState(() => {
 
     category: "",
 
-    book: "",
+    subcategory: "",
 
-    icon: "",
-
-    classes: "",
-
+    classes: [],
   });
 
 };
@@ -152,25 +153,57 @@ const deleteBook = (category, bookTitle) => {
   );
 };
 
-const editBook = (category, oldTitle) => {
-  const newTitle = prompt("Enter new book name", oldTitle);
-  if (!newTitle) return;
+const openEditBook = (category, book) => {
+  setEditingBook({
+    category,
+    oldTitle: book.title,
+    title: book.title,
+    classes: Array.isArray(book.classes) ? [...book.classes] : [],
+  });
+};
 
-  setData(
-    data.map((item) => {
-      if (item.category === category) {
-        return {
-          ...item,
-          books: item.books.map((book) =>
-            book.title === oldTitle
-              ? { ...book, title: newTitle }
-              : book
-          ),
-        };
+const toggleEditClass = (className) => {
+  setEditingBook((current) => {
+    if (!current) return current;
+
+    const hasClass = current.classes.includes(className);
+    return {
+      ...current,
+      classes: hasClass
+        ? current.classes.filter((item) => item !== className)
+        : [...current.classes, className],
+    };
+  });
+};
+
+const saveEditedBook = () => {
+  if (!editingBook) return;
+
+  const nextTitle = editingBook.title.trim();
+  if (!nextTitle) return;
+
+  setData((prevData) =>
+    prevData.map((item) => {
+      if (item.category !== editingBook.category) {
+        return item;
       }
-      return item;
+
+      return {
+        ...item,
+        books: item.books.map((book) =>
+          book.title === editingBook.oldTitle
+            ? {
+                ...book,
+                title: nextTitle,
+                classes: editingBook.classes,
+              }
+            : book
+        ),
+      };
     })
   );
+
+  setEditingBook(null);
 };
 
   return (
@@ -182,10 +215,16 @@ const editBook = (category, oldTitle) => {
       {/* TOP ADD BUTTON */}
       <div className="flex justify-end pt-5">
         <button
-          onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 bg-green-600 text-white px-5 py-2 rounded-xl"
+          onClick={() => {
+            setShowClassDropdown(false);
+            setShowForm(true);
+          }}
+          className="group inline-flex items-center gap-3 rounded-full border border-[#99582A]/20 bg-linear-to-r from-[#99582A] via-[#c88b4f] to-[#f2c38b] px-5 py-3 text-white shadow-lg shadow-[#99582A]/25 transition hover:-translate-y-0.5 hover:shadow-xl"
         >
-          <FaPlus /> Add
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 transition group-hover:bg-white/30">
+            <FaPlus />
+          </span>
+          <span className="text-sm font-semibold tracking-wide">Add Category</span>
         </button>
       </div>
 
@@ -199,7 +238,7 @@ const editBook = (category, oldTitle) => {
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-xl w-[90%] max-w-md">
 
-            <h2 className="text-xl font-bold mb-4">Add Category / Book</h2>
+            <h2 className="text-xl font-bold mb-4">Add Category / Subcategory</h2>
 
             <input
               placeholder="Category"
@@ -211,51 +250,89 @@ const editBook = (category, oldTitle) => {
             />
 
             <input
-              placeholder="Book "
+              placeholder="Subcategory"
               className="w-full border p-2 mb-3"
-              value={form.book}
+              value={form.subcategory}
               onChange={(e) =>
-                setForm({ ...form, book: e.target.value })
+                setForm({ ...form, subcategory: e.target.value })
               }
             />
 
-            <input
-              type="file"
-              accept="image/*"
-              className="w-full border p-2 mb-3"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  setForm({
-                    ...form,
-                    icon: URL.createObjectURL(file)
-                  });
-                }
-              }}
-            />
+            <div className="mb-3 relative">
+              <button
+                type="button"
+                onClick={() => setShowClassDropdown((current) => !current)}
+                className="flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2 text-left"
+              >
+                <span>
+                  {form.classes.length
+                    ? `${form.classes.length} class${form.classes.length > 1 ? "es" : ""} selected`
+                    : "Select Classes"}
+                </span>
+                <span className="text-gray-500">▾</span>
+              </button>
 
-            <input
-              type="text"
-              placeholder="Classes (eg. Class 1, Class 2, Class 3)"
-              className="w-full border p-2 mb-3"
-              value={form.classes}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  classes: e.target.value
-                })
-              }
-            />
+              {showClassDropdown && (
+                <div className="absolute z-20 mt-2 w-full rounded-xl border border-gray-200 bg-white p-3 shadow-xl">
+                  <div className="mb-3 flex items-center justify-between">
+                    <p className="font-semibold text-gray-700">Classes</p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setForm((current) => ({
+                          ...current,
+                          classes: [],
+                        }))
+                      }
+                      className="text-xs font-medium text-red-500"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <div className="grid max-h-48 grid-cols-2 gap-2 overflow-y-auto pr-1">
+                    {CLASS_OPTIONS.map((className) => (
+                      <label
+                        key={className}
+                        className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm hover:bg-gray-50"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={form.classes.includes(className)}
+                          onChange={() =>
+                            setForm((current) => {
+                              const hasClass = current.classes.includes(className);
+                              return {
+                                ...current,
+                                classes: hasClass
+                                  ? current.classes.filter((item) => item !== className)
+                                  : [...current.classes, className],
+                              };
+                            })
+                          }
+                        />
+                        <span>{className}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <button
-              onClick={handleAdd}
+              onClick={() => {
+                setShowClassDropdown(false);
+                handleAdd();
+              }}
               className="bg-green-600 text-white w-full py-2 rounded"
             >
               Save
             </button>
 
             <button
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+                setShowClassDropdown(false);
+                setShowForm(false);
+              }}
               className="bg-red-500 text-white w-full py-2 mt-2 rounded"
             >
               Cancel
@@ -332,27 +409,47 @@ const editBook = (category, oldTitle) => {
                   className="flex items-center justify-between bg-white/80 p-3 rounded-xl font-bold"
                 >
                   {/* OPEN BOOK */}
-                  <div
-                    onClick={() =>
-                      setSelectedBook({
-                        ...book,
-                        category: item.category,
-                      })
-                    }
-                    className="flex items-center gap-3 cursor-pointer flex-1"
-                  >
-                    <FaBook className="text-blue-500" />
-                    {book.title}
-                  </div>
+                 <div
+  onClick={() =>
+    setSelectedBook({
+      ...book,
+      category: item.category,
+    })
+  }
+  className="flex items-center gap-3 cursor-pointer flex-1"
+>
+  <FaBook className="text-blue-500" />
+
+  <div className="flex flex-col">
+
+    {/* Book Name */}
+    <span className="font-semibold text-[#572C10]">
+      {book.title}
+    </span>
+
+    {/* Subject */}
+{/* Subject */}
+{book.subject && (
+  <span className="text-sm text-gray-500 block">
+    {book.subject}
+  </span>
+)}
+
+{/* Type */}
+{book.type && (
+  <span className="text-xs bg-purple-200 text-purple-800 px-2 py-1 rounded inline-block mt-1">
+    {book.type}
+  </span>
+)}
+  </div>
+</div>
 
                   {/* EDIT & DELETE BUTTONS */}
                   <div className="flex gap-2">
                     {/* EDIT BUTTON */}
                     <FaEdit
                       className="text-blue-600 cursor-pointer"
-                      onClick={() =>
-                        editBook(item.category, book.title)
-                      }
+                      onClick={() => openEditBook(item.category, book)}
                     />
 
                     {/* DELETE BUTTON */}
@@ -371,6 +468,64 @@ const editBook = (category, oldTitle) => {
         ))}
       </div>
 
+      {/* BOOK EDIT POPUP */}
+      {editingBook && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center px-4 z-50">
+          <div className="bg-white p-6 rounded-2xl shadow-2xl w-[90%] sm:w-[520px] max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-bold text-center mb-4 text-[#99582A]">
+              Edit Subcategory
+            </h2>
+
+            <input
+              className="w-full border p-2 mb-3 rounded"
+              value={editingBook.title}
+              onChange={(e) =>
+                setEditingBook({
+                  ...editingBook,
+                  title: e.target.value,
+                })
+              }
+              placeholder="Subcategory"
+            />
+
+            <div className="mb-3">
+              <p className="font-semibold mb-2">Classes</p>
+              <div className="grid grid-cols-2 gap-2">
+                {CLASS_OPTIONS.map((className) => (
+                  <label
+                    key={className}
+                    className="flex items-center gap-2 border rounded-lg px-3 py-2 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={editingBook.classes.includes(className)}
+                      onChange={() => toggleEditClass(className)}
+                    />
+                    <span>{className}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={saveEditedBook}
+                className="bg-green-600 text-white w-full py-2 rounded"
+              >
+                Save Changes
+              </button>
+
+              <button
+                onClick={() => setEditingBook(null)}
+                className="bg-red-500 text-white w-full py-2 rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* CLASS POPUP */}
       {selectedBook && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center px-4">
@@ -379,6 +534,9 @@ const editBook = (category, oldTitle) => {
             <h2 className="text-xl font-bold text-center mb-4">
               {selectedBook.title}
             </h2>
+   <p className="text-center text-gray-600 mb-3">
+        Subject : {selectedBook.subject}
+      </p>
 
             {selectedBook.classes?.length ? (
               selectedBook.classes.map((cls) => (

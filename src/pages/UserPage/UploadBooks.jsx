@@ -16,6 +16,7 @@ const UploadBooks = () => {
 
   const [category, setCategory] = useState("");
   const [book, setBook] = useState("");
+  const [type, setType] = useState("");
   const [className, setClassName] = useState("");
   const [subject, setSubject] = useState("");
 
@@ -40,7 +41,7 @@ const UploadBooks = () => {
   // =========================
   const saveBook = async () => {
     try {
-      if (!category || !book || !className || !subject || !pdfFile) {
+      if (!category || !book || !className || !subject || !pdfFile || !type) {
         alert("Please fill all fields and upload PDF");
         return;
       }
@@ -53,8 +54,9 @@ const UploadBooks = () => {
       formData.append("category", category);
       formData.append("className", className);
       formData.append("subject", subject);
-      formData.append("type", "pdf");
+      formData.append("filetype", "pdf");
       formData.append("book", book);
+      formData.append("type", type);
 
      const res = await axios.post(
   "http://localhost:3000/api/books/upload",
@@ -175,6 +177,36 @@ navigate("/books");
 
   </div>
 </div>
+<div className="mb-4">
+  <label className="block font-semibold text-[#572C10] mb-2">
+    Type
+  </label>
+
+  <div className="relative">
+
+    <FaLayerGroup className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
+
+    <select
+      value={type}
+      onChange={(e) => setType(e.target.value)}
+      className="
+        w-full
+        p-3
+        pl-12
+        rounded-xl
+        border-2
+        border-[#572C10]
+        bg-white
+        outline-none
+      "
+    >
+      <option value="">Select Type</option>
+      <option value="Semester">Semester</option>
+      <option value="Yearly">Yearly</option>
+    </select>
+
+  </div>
+</div>
 
           {/* CLASS */}
         <div className="mb-4">
@@ -186,58 +218,69 @@ navigate("/books");
 
     <FaGraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
 
-    <input
-      type="text"
-      placeholder="e.g. Class 12, B.Sc 1st Year"
+    <select
       value={className}
       onChange={(e) => setClassName(e.target.value)}
       className="
         w-full
         p-3
         pl-12
-
         rounded-xl
-
         border-2
         border-[#572C10]
-
         bg-white
         outline-none
       "
-    />
+    >
+      <option value="">Select Class</option>
+
+      {[...Array(12)].map((_, i) => (
+        <option key={i + 1} value={`Class ${i + 1}`}>
+          Class {i + 1}
+        </option>
+      ))}
+
+    </select>
 
   </div>
 </div>
 
           {/* SUBJECT */}
-        <div className="mb-6">
+       <div className="mb-4">
   <label className="block font-semibold text-[#572C10] mb-2">
     Subject
   </label>
 
   <div className="relative">
 
-    <FaBookOpen className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
+    <FaBook className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
 
-    <input
-      type="text"
-      placeholder="e.g. Maths, Biology, Physics"
+    <select
       value={subject}
       onChange={(e) => setSubject(e.target.value)}
       className="
         w-full
         p-3
         pl-12
-
         rounded-xl
-
         border-2
         border-[#572C10]
-
         bg-white
         outline-none
       "
-    />
+    >
+      <option value="">Select Subject</option>
+      <option value="English">English</option>
+      <option value="Hindi">Hindi</option>
+      <option value="Maths">Maths</option>
+      <option value="Science">Science</option>
+      <option value="Social Studies">Social Studies</option>
+      <option value="Sanskrit">Sanskrit</option>
+      <option value="Computer Science">Computer Science</option>
+      <option value="Other">Physics</option>
+      <option value="Chemistry">Chemistry</option>
+           <option value="Biology">Biology</option>
+    </select>
 
   </div>
 </div>
