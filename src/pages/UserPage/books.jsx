@@ -1,32 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import UploadBooks from "./UploadBooks";
+import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FaCheck, FaTimes } from "react-icons/fa";
 const Books = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
-const [showUpload, setShowUpload] = useState(false);
   const categories = [...new Set(books.map((b) => b.category).filter(Boolean))];
-
+  const totalBooks = books.length;
 const subjects = [...new Set(books.map((b) => b.subject).filter(Boolean))];
-
-const types = [...new Set(books.map((b) => b.type).filter(Boolean))];
-
-const classes = [
-  ...new Set(
-    books
-      .flatMap((b) =>
-        (b.className || "")
-          .split(",")
-          .map((c) => c.trim())
-      )
-      .filter(Boolean)
-  ),
-];
   const [category, setCategory] = useState("");
   const [className, setClassName] = useState("");
   const [type, setType] = useState("");
@@ -81,7 +64,6 @@ const handleUpdate = async () => {
 
       setBooks(updated);
       setFilteredBooks(updated);
-
       setEditBook(null);
       setNewImage(null);
 
@@ -180,12 +162,21 @@ const handleDelete = async (id) => {
 
   return (
     <div className="min-h-screen  bg-[#EFE6DD] px-4 sm:px-6 py-10">
-    <button
-  onClick={() => navigate("/uploadBooks")}
-  className="bg-[#572C10] hover:bg-[#3d1f0a] text-white text-lg sm:text-2xl px-8 py-3 rounded-xl font-semibold transition"
->
-  Upload Books
-</button>
+      <div className="max-w-6xl mx-auto mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <button
+          onClick={() => navigate("/uploadBooks")}
+          className="w-full sm:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white text-lg sm:text-2xl px-8 py-3 rounded-xl font-semibold transition"
+        >
+          Upload Books
+        </button>
+
+        <div className="w-full   sm:w-auto bg-white border-2 border-[#572C10] rounded-xl px-5 py-3 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[#572C10] text-2xl font-bold">Total Books</p>
+            <p className="text-[#572C10] text-2xl font-bold text-center">{totalBooks}</p>
+          </div>
+        </div>
+      </div>
       {/* HEADING */}
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl font-bold text-[#572C10]">
@@ -659,26 +650,6 @@ const handleDelete = async (id) => {
           Back
         </button>
       </div>
-      {showUpload && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    
-    <div className="bg-white w-[95%] max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl p-4 relative">
-
-      {/* CLOSE BUTTON */}
-      <button
-        onClick={() => setShowUpload(false)}
-        className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded"
-      >
-        ✕
-      </button>
-
-      {/* YOUR UPLOAD COMPONENT */}
-      <UploadBooks />
-
-    </div>
-
-  </div>
-)}
     </div>
   );
 };
