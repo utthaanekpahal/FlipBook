@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FaCheck, FaTimes } from "react-icons/fa";
+ const API = "http://localhost:3000/api/books";;
 const Books = () => {
   const navigate = useNavigate();
 
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const categories = [...new Set(books.map((b) => b.category).filter(Boolean))];
+  const booksByCategory = {
+  Navbodh: ["Buddy", "Little Champ"],
+  Gyanbodh: ["Deep Dives", "Hearing Bee"],
+};
   const totalBooks = books.length;
 const subjects = [...new Set(books.map((b) => b.subject).filter(Boolean))];
   const [category, setCategory] = useState("");
+  const [selectedBook, setSelectedBook] = useState("");
   const [className, setClassName] = useState("");
   const [type, setType] = useState("");
   const [subject, setSubject] = useState("");
@@ -42,7 +48,10 @@ const handleUpdate = async () => {
     formData.append("description", editBook.description);
     formData.append("category", editBook.category);
 
-    // New image selected ho to hi bhejo
+    formData.append("className", editBook.className);
+    formData.append("subject", editBook.subject);
+    formData.append("type", editBook.type);
+
     if (newImage) {
       formData.append("img", newImage);
     }
@@ -64,54 +73,47 @@ const handleUpdate = async () => {
 
       setBooks(updated);
       setFilteredBooks(updated);
+
       setEditBook(null);
       setNewImage(null);
 
       alert("Book updated successfully");
-    } else {
-      alert(data.message || "Update failed");
     }
   } catch (error) {
-    console.log("UPDATE ERROR:", error);
-    alert("Server error while updating");
+    console.log(error);
   }
 };
 const handleDelete = async (id) => {
-  console.log("DELETE ID:", id);
-
-  const confirmDelete = window.confirm("Are you sure you want to delete this book?");
-  if (!confirmDelete) return;
-
   try {
-    const res = await fetch(
-         `http://localhost:3000/api/books/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    console.log("Deleting ID:", id);
 
-    // IMPORTANT: safe parsing (avoid HTML crash)
+    const res = await fetch(`${API}/${id}`, {
+      method: "DELETE",
+    });
+
     const text = await res.text();
     console.log("RAW RESPONSE:", text);
 
-    const data = JSON.parse(text);
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.log("NOT JSON RESPONSE");
+      alert("Server error: not JSON response");
+      return;
+    }
 
     if (data.success) {
-      const updatedBooks = books.filter((b) => b._id !== id);
-
-      setBooks(updatedBooks);
-      setFilteredBooks(updatedBooks);
-
+      const updated = books.filter((b) => b._id !== id);
+      setBooks(updated);
+      setFilteredBooks(updated);
       alert("Book deleted successfully");
     } else {
       alert(data.message || "Delete failed");
     }
   } catch (error) {
-    console.log("DELETE ERROR:", error);
-    alert("Server error while deleting");
+    console.log("Delete Error:", error);
+    alert("Delete failed");
   }
 };
   // fetch books
@@ -140,26 +142,41 @@ const handleDelete = async (id) => {
 
   // search logic
   const handleSearch = () => {
-    const result = books.filter((book) => {
-      return (
-        (category === "" ||
-          book.category?.toLowerCase() === category.toLowerCase()) &&
-        (className === "" ||
-          getBookClasses(book).some(
-            (item) => item.toLowerCase() === className.toLowerCase()
-          )) &&
-        (type === "" ||
-          book.type?.toLowerCase() === type.toLowerCase()) &&
-        (subject === "" ||
-          book.subject?.toLowerCase() === subject.toLowerCase()) &&
-        (search === "" ||
-          book.title?.toLowerCase().includes(search.toLowerCase()))
-      );
-    });
+  const result = books.filter((book) => {
+    return (
+      // Category Filter
+      (category === "" ||
+        book.category?.trim().toLowerCase() ===
+          category.trim().toLowerCase()) &&
 
-    setFilteredBooks(result);
-  };
+      // Book Filter
+      (selectedBook === "" ||
+        book.title?.trim().toLowerCase() ===
+          selectedBook.trim().toLowerCase()) &&
 
+      // Class Filter
+      (className === "" ||
+        book.className?.trim().toLowerCase() ===
+          className.trim().toLowerCase()) &&
+
+      // Type Filter
+      (type === "" ||
+        book.type?.trim().toLowerCase() ===
+          type.trim().toLowerCase()) &&
+
+      // Subject Filter
+      (subject === "" ||
+        book.subject?.trim().toLowerCase() ===
+          subject.trim().toLowerCase()) &&
+
+      // Search Text
+      (search === "" ||
+        book.title?.toLowerCase().includes(search.toLowerCase()))
+    );
+  });
+
+  setFilteredBooks(result);
+};
   return (
     <div className="min-h-screen  bg-[#EFE6DD] px-4 sm:px-6 py-10">
       <div className="max-w-6xl mx-auto mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -192,13 +209,7 @@ const handleDelete = async (id) => {
       <div className="max-w-6xl mx-auto bg-white p-4 sm:p-6 rounded-2xl shadow-md">
         {/* SEARCH */}
         <div className="flex flex-col md:flex-row gap-4 mb-5">
-          <input
-            type="text"
-            placeholder="Search book title..."
-            className="flex-1 border border-[#572C10] px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-
+          
           <button
             onClick={handleSearch}
             className="w-full md:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white text-lg sm:text-2xl px-8 py-3 rounded-xl font-semibold transition"
@@ -209,19 +220,37 @@ const handleDelete = async (id) => {
 
         {/* FILTERS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          {/* CATEGORY */}
+     
          {/* CATEGORY */}
 <select
+  value={category}
+  onChange={(e) => {
+    setCategory(e.target.value);
+    setSelectedBook("");
+  }}
   className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
-  onChange={(e) => setCategory(e.target.value)}
 >
   <option value="">Category</option>
-  {categories.map((c, i) => (
-    <option key={i} value={c}>
-      {c}
-    </option>
-  ))}
+  <option value="Navbodh">Navbodh</option>
+  <option value="Gyanbodh">Gyanbodh</option>
 </select>
+
+<select
+  value={selectedBook}
+  onChange={(e) => setSelectedBook(e.target.value)}
+  disabled={!category}
+  className="border border-[#572C10] px-3 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#572C10]"
+>
+  <option value="">Book Name</option>
+
+  {category &&
+    booksByCategory[category]?.map((item) => (
+      <option key={item} value={item}>
+        {item}
+      </option>
+    ))}
+</select>
+
 
 {/* CLASS */}
 <select

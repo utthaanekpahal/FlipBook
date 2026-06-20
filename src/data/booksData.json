@@ -1,7 +1,8 @@
 {
   "Navbodh": {
-    "Book N1": {
+    "Buddy": {
       "Class 1": [
+      
         { "title": "Maths", "img": "/book21.jpg","description": "A comprehensive Mathematics textbook designed for Class 1 students. It covers fundamental concepts through engaging lessons, examples, and practice exercises to strengthen problem-solving skills.",
     "pdf": "/Maths.pdf", "type": "Semester" },
         { "title": "English", "img": "/book22.jpg","description": "An interactive English language book that helps students develop reading, writing, grammar, vocabulary, and communication skills through enjoyable activities and exercises." ,"pdf": "/English.pdf", "type": "Yearly"},
@@ -60,7 +61,7 @@
       ]
     },
 
-    "Book N2": {
+    "Little Lamp": {
       "Class 1": [
         { "title": "Maths N2", "img": "/book21.jpg","description": "Mathematics book for Class 1" },
         { "title": "English N2", "img": "/book28.jpeg","description": "English book for Class 1" },
@@ -121,7 +122,7 @@
   },
 
   "Gyanbodh": {
-    "Book G1": {
+    "Deep Dives": {
       "Class 1": [
         { "title": "Maths G1", "img": "/book30.jpeg" },
         { "title": "English G1", "img": "/book21.jpeg" },
@@ -180,7 +181,7 @@
       ]
     },
 
-    "Book G2": {
+    "Hearing Bee": {
       "Class 1": [
         { "title": "Maths G2", "img": "/book30.jpeg" },
         { "title": "English G2", "img": "/book21.jpeg" },

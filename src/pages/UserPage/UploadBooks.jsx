@@ -12,14 +12,19 @@ import {
 const UploadBooks = () => {
   const navigate = useNavigate();
 
-  const [pdfFile, setPdfFile] = useState(null);
+const [pdfFile, setPdfFile] = useState(null);
 
-  const [category, setCategory] = useState("");
-  const [book, setBook] = useState("");
-  const [type, setType] = useState("");
-  const [className, setClassName] = useState("");
-  const [subject, setSubject] = useState("");
+const [category, setCategory] = useState("");
+const [book, setBook] = useState("");
 
+const booksByCategory = {
+  Navbodh: ["Buddy", "Little Lamp"],
+  Gyanbodh: ["Deep Dives", "Hearing Bee"],
+};
+
+const [type, setType] = useState("");
+const [className, setClassName] = useState("");
+const [subject, setSubject] = useState("");
   // =========================
   // DROP HANDLER
   // =========================
@@ -86,10 +91,20 @@ navigate("/books");
   };
 
   return (
-    <div
-      className="min-h-screen  ml-[15px] rounded-xl  bg-cover bg-center flex items-center justify-center px-4 py-10"
-      style={{ backgroundImage: "url('/background img.png')" }}
-    >
+  <div
+  className="
+    min-h-screen
+    ml-[15px]
+    rounded-xl
+    bg-cover
+    bg-center
+    flex
+    justify-center
+    px-4
+    py-10
+  "
+  style={{ backgroundImage: "url('/background img.png')" }}
+>
       <div className="w-full max-w-2xl">
 
         {/* BACK */}
@@ -118,63 +133,63 @@ navigate("/books");
   </label>
 
   <div className="relative">
-
-    {/* Icon */}
     <FaLayerGroup className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
 
-    <input
-      type="text"
-      placeholder="e.g. Navbodh, Gyanbodh, Prabodh"
+    <select
       value={category}
-      onChange={(e) => setCategory(e.target.value)}
+      onChange={(e) => {
+        setCategory(e.target.value);
+        setBook(""); // category change hone par book reset
+      }}
       className="
         w-full
         p-3
         pl-12
         rounded-xl
-
         border-2
         border-[#572C10]
-
-        outline-none
         bg-white
+        outline-none
       "
-    />
-
+    >
+      <option value="">Select Category</option>
+      <option value="Navbodh">Navbodh</option>
+      <option value="Gyanbodh">Gyanbodh</option>
+    </select>
   </div>
 </div>
-
-          {/* BOOK */}
-         <div className="mb-4">
+<div className="mb-4">
   <label className="block font-semibold text-[#572C10] mb-2">
     Book Name
   </label>
 
   <div className="relative">
-
-    {/* Icon */}
     <FaBook className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
 
-    <input
-      type="text"
-      placeholder="e.g. Book N1, Biology Book"
+    <select
       value={book}
       onChange={(e) => setBook(e.target.value)}
+      disabled={!category}
       className="
         w-full
         p-3
         pl-12
-
         rounded-xl
-
         border-2
         border-[#572C10]
-
         bg-white
         outline-none
       "
-    />
+    >
+      <option value="">Select Book</option>
 
+      {category &&
+        booksByCategory[category]?.map((item) => (
+          <option key={item} value={item}>
+            {item}
+          </option>
+        ))}
+    </select>
   </div>
 </div>
 <div className="mb-4">
@@ -209,13 +224,12 @@ navigate("/books");
 </div>
 
           {/* CLASS */}
-        <div className="mb-4">
+       <div className="mb-4">
   <label className="block font-semibold text-[#572C10] mb-2">
     Class
   </label>
 
   <div className="relative">
-
     <FaGraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
 
     <select
@@ -234,17 +248,30 @@ navigate("/books");
     >
       <option value="">Select Class</option>
 
-      {[...Array(12)].map((_, i) => (
-        <option key={i + 1} value={`Class ${i + 1}`}>
-          Class {i + 1}
+      {[
+        "Nursery",
+        "LKG",
+        "UKG",
+        "Class 1",
+        "Class 2",
+        "Class 3",
+        "Class 4",
+        "Class 5",
+        "Class 6",
+        "Class 7",
+        "Class 8",
+        "Class 9",
+        "Class 10",
+        "Class 11",
+        "Class 12",
+      ].map((cls) => (
+        <option key={cls} value={cls}>
+          {cls}
         </option>
       ))}
-
     </select>
-
   </div>
 </div>
-
           {/* SUBJECT */}
        <div className="mb-4">
   <label className="block font-semibold text-[#572C10] mb-2">
@@ -273,10 +300,14 @@ navigate("/books");
       <option value="English">English</option>
       <option value="Hindi">Hindi</option>
       <option value="Maths">Maths</option>
+      <option value="Sanskrit">Rhymes</option>
+      <option value="EVS">Drawing</option>
       <option value="Science">Science</option>
       <option value="Social Studies">Social Studies</option>
       <option value="Sanskrit">Sanskrit</option>
-      <option value="Computer Science">Computer Science</option>
+      <option value="EVS">EVS</option>
+      
+      <option value="Computer Science">Computer </option>
       <option value="Other">Physics</option>
       <option value="Chemistry">Chemistry</option>
            <option value="Biology">Biology</option>

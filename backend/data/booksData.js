@@ -1,8 +1,8 @@
 const booksData = [
   {
   img: "/book1.jpg",
-  title: "Navbodh Maths Book 1",
-  author: "NCERT Team",
+  title: "Buddy",
+
   description: "Basic arithmetic and number system for beginners.",
   className: "Class 1",
 
@@ -15,8 +15,8 @@ const booksData = [
 },
   {
     img: "/book12.jpg",
-    title: "Navbodh English Book 1",
-    author: "NCERT Team",
+    title: "Little Lamp",
+   
     description: "Basic English reading and grammar skills.",
     className: "Class 1",
     type: "Semester",
@@ -26,8 +26,8 @@ const booksData = [
   },
   {
     img: "/book21.jpg",
-    title: "Navbodh Hindi Book 1",
-    author: "NCERT Team",
+    title: "Little Lamp",
+    
     description: "Hindi alphabets, words and sentence building.",
     className: "Class 1",
     type: "Semester",
@@ -37,8 +37,8 @@ const booksData = [
   },
   {
     img: "/book22.jpg",
-    title: "Navbodh Science Book 1",
-    author: "NCERT Team",
+    title: "Buddy",
+   
     description: "Introduction to science and daily life concepts.",
     className: "Class 1",
     type: "Semester",
@@ -48,8 +48,8 @@ const booksData = [
   },
   {
     img: "/book23.jpeg",
-    title: "Navbodh EVS Book 1",
-    author: "NCERT Team",
+    title: "Little Lamp",
+    
     description: "Environment and surroundings basics.",
     className: "Class 1",
     type: "Semester",
@@ -60,8 +60,8 @@ const booksData = [
 
   {
     img: "/book24.jpeg",
-    title: "Navbodh Maths Book 2",
-    author: "NCERT Team",
+    title: "Little Lamp",
+   
     description: "Addition, subtraction and problem solving.",
     className: "Class 2",
     type: "Semester",
@@ -71,8 +71,8 @@ const booksData = [
   },
   {
     img: "/book21.jpg",
-    title: "Navbodh English Book 2",
-    author: "NCERT Team",
+    title: "Little Lamp",
+
     description: "Grammar improvement and reading practice.",
     className: "Class 2",
     type: "Semester",
@@ -82,8 +82,8 @@ const booksData = [
   },
   {
     img: "/book22.jpg",
-    title: "Navbodh Hindi Book 2",
-    author: "NCERT Team",
+    title: "Little Lamp",
+  
     description: "Hindi grammar and writing practice.",
     className: "Class 2",
     type: "Semester",
@@ -93,8 +93,8 @@ const booksData = [
   },
   {
     img: "/book22.jpg",
-    title: "Navbodh Science Book 2",
-    author: "NCERT Team",
+    title: "Little Lamp",
+   
     description: "Basic physics and chemistry concepts.",
     className: "Class 2",
     type: "Semester",
@@ -104,8 +104,8 @@ const booksData = [
   },
   {
     img: "/book23.jpeg",
-    title: "Navbodh EVS Book 2",
-    author: "NCERT Team",
+    title: "Little Lamp",
+    
     description: "Environment awareness and activities.",
     className: "Class 2",
     type: "Semester",
@@ -116,8 +116,8 @@ const booksData = [
 
   {
     img: "/book26.jpeg",
-    title: "Gyanbodh Maths Book 3",
-    author: "State Board",
+    title: "Deep Dives",
+   
     description: "Advanced arithmetic and introduction to algebra.",
     className: "Class 3",
     type: "Semester",
@@ -127,8 +127,8 @@ const booksData = [
   },
   {
     img: "/book25.jpeg",
-    title: "Gyanbodh English Book 3",
-    author: "State Board",
+    title: "Hearing Bee",
+   
     description: "English comprehension and grammar skills.",
     className: "Class 3",
     type: "Semester",
@@ -138,8 +138,8 @@ const booksData = [
   },
   {
     img: "/book28.jpeg",
-    title: "Gyanbodh Hindi Book 3",
-    author: "State Board",
+    title: "Deep Dives",
+   
     description: "Hindi literature and grammar basics.",
     className: "Class 3",
     type: "Semester",
@@ -149,8 +149,8 @@ const booksData = [
   },
   {
     img: "/book29.jpeg",
-    title: "Gyanbodh Science Book 3",
-    author: "State Board",
+    title: "Deep Dives",
+   
     description: "Physics, chemistry and biology basics.",
     className: "Class 3",
     type: "Semester",
@@ -161,8 +161,8 @@ const booksData = [
 
   {
     img: "/book30.jpeg",
-    title: "Gyanbodh Social Science Book 3",
-    author: "State Board",
+    title: "Deep Dives",
+   
     description: "History and geography fundamentals.",
     className: "Class 3",
     type: "Semester",
@@ -173,8 +173,8 @@ const booksData = [
 
   {
     img: "/book21.jpg",
-    title: "Gyanbodh Maths Book 4",
-    author: "State Board",
+    title: "Deep Dives",
+  
     description: "Fractions, decimals and geometry basics.",
     className: "Class 4",
     type: "Semester",
@@ -184,8 +184,8 @@ const booksData = [
   },
   {
     img: "/book22.jpg",
-    title: "Gyanbodh English Book 4",
-    author: "State Board",
+    title: "Hearing Bee",
+   
     description: "Advanced grammar and vocabulary.",
     className: "Class 4",
     type: "Semester",
@@ -195,8 +195,8 @@ const booksData = [
   },
   {
     img: "/book23.jpeg",
-    title: "Gyanbodh Hindi Book 4",
-    author: "State Board",
+    title: "Deep Dives",
+  
     description: "Hindi literature and essay writing.",
     className: "Class 4",
     type: "Semester",
@@ -206,8 +206,8 @@ const booksData = [
   },
   {
     img: "/book29.jpeg",
-    title: "Gyanbodh Science Book 4",
-    author: "State Board",
+    title: "Deep Dives",
+ 
     description: "Advanced science concepts and experiments.",
     className: "Class 4",
     type: "Semester",
@@ -217,8 +217,8 @@ const booksData = [
   },
   {
     img: "/book30.jpeg",
-    title: "Gyanbodh Social Science Book 4",
-    author: "State Board",
+    title: "Deep Dives",
+  
     description: "Civics, history and geography deeper concepts.",
     className: "Class 4",
     type: "Semester",
