@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import useApiLoader from "../../hook/useApiLoader";
 const Books = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { loading, execute } = useApiLoader();
 
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
@@ -47,11 +48,9 @@ const Books = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await fetch(
-          "https://flipbook-lw1b.onrender.com/api/books"
-        );
-
-        const data = await res.json();
+        const res = await execute(() =>
+  fetch("https://flipbook-lw1b.onrender.com/api/books")
+);        const data = await res.json();
 
         console.log("Books API Response:", data);
 
@@ -173,70 +172,79 @@ const Books = () => {
       </div>
 
       {/* BOOK GRID */}
-      <div className="max-w-6xl mx-auto mt-14 mb-10">
-        {filteredBooks.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-10">
-            {filteredBooks.map((book) => (
-              <div
-                key={book._id}
-                className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300"
-              >
-                {/* IMAGE */}
-                <div className="h-[250px] sm:h-[300px] overflow-hidden">
-                  <img
-                    src={book.img}
-                    alt={book.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = "/book1.jpg";
-                    }}
-                  />
-                </div>
 
-                {/* CONTENT */}
-                <div className="p-4">
-                  <h2 className="text-lg font-bold text-[#572C10]">
-                    {book.title}
-                  </h2>
-
-                  <p className="text-sm text-[#572C10] font-bold mt-1">
-                    {book.author}
-                  </p>
-
-                  <div className="flex flex-wrap gap-3 mt-4">
-                    <span className="bg-[#f3e7dd] text-[#572C10] text-xs font-bold px-3 py-2 rounded-full text-center">
-                      {book.category}
-                    </span>
-
-                    <span className="bg-gray-100 text-gray-700 text-xs font-bold px-3 py-2 rounded-full text-center">
-                      {book.className}
-                    </span>
-
-                    <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-2 rounded-full text-center">
-                      {book.subject}
-                    </span>
-                  </div>
-
-                  <p className="text-sm text-[#572C10] font-bold mt-3 line-clamp-2">
-                    {book.description}
-                  </p>
-                </div>
-              </div>
-            ))}
+    <div className="max-w-6xl mx-auto mt-14 mb-10">
+  {loading ? (
+   <div className="flex justify-center py-20">
+    <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-md">
+      <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+      <span className="text-[#572C10] font-medium">
+        Loading books...
+      </span>
+    </div>
+  </div>
+  ) : filteredBooks.length > 0 ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-10">
+      {filteredBooks.map((book) => (
+        <div
+          key={book._id}
+          className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300"
+        >
+          {/* IMAGE */}
+          <div className="h-[250px] sm:h-[300px] overflow-hidden">
+            <img
+              src={book.img}
+              alt={book.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.src = "/book1.jpg";
+              }}
+            />
           </div>
-        ) : (
-          <div className="text-center mt-20">
-            <h2 className="text-xl sm:text-2xl font-semibold text-[#572C10]">
-              No Books Found
+
+          {/* CONTENT */}
+          <div className="p-4">
+            <h2 className="text-lg font-bold text-[#572C10]">
+              {book.title}
             </h2>
 
-            <p className="text-[#572C10] mt-2 font-bold">
-              Try changing filters or search text
+            <p className="text-sm text-[#572C10] font-bold mt-1">
+              {book.author}
+            </p>
+
+            <div className="flex flex-wrap gap-3 mt-4">
+              <span className="bg-[#f3e7dd] text-[#572C10] text-xs font-bold px-3 py-2 rounded-full text-center">
+                {book.category}
+              </span>
+
+              <span className="bg-gray-100 text-gray-700 text-xs font-bold px-3 py-2 rounded-full text-center">
+                {book.className}
+              </span>
+
+              <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-2 rounded-full text-center">
+                {book.subject}
+              </span>
+            </div>
+
+            <p className="text-sm text-[#572C10] font-bold mt-3 line-clamp-2">
+              {book.description}
             </p>
           </div>
-        )}
-      </div>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div className="text-center mt-20">
+      <h2 className="text-xl sm:text-2xl font-semibold text-[#572C10]">
+        No Books Found
+      </h2>
 
+      <p className="text-[#572C10] mt-2 font-bold">
+        Try changing filters or search text
+      </p>
+    </div>
+  )}
+</div>
       {/* BUTTONS */}
       <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12 pb-10">
         <button

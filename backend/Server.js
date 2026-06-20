@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import ticketRoutes from "./routes/ticketRoutes.js";
 import visitRoutes from "./routes/visitRoutes.js";
+import categoryRoutes from "./routes/CategoryRoutes.js";
 
 dotenv.config();
 
@@ -45,6 +46,7 @@ connectDB();
 app.use("/api/books", bookRoutes);
 app.use("/api/tickets", ticketRoutes);
 app.use("/api/visits", visitRoutes);
+app.use("/api/categories", categoryRoutes);
 
 // =========================
 // TEST ROUTE

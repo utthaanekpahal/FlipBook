@@ -4,26 +4,33 @@ import { FaThList, FaUserTie } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import {FaBook,} from 'react-icons/fa';
+import { FiSearch } from "react-icons/fi";
 import axios from 'axios';
+import useApiLoader from "../hook/useApiLoader";
 function Dashboard() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [agents, setAgents] = useState([]);
-
+  const { loading, execute } = useApiLoader();
+const agentLoader = useApiLoader();
+const ticketLoader = useApiLoader();
+const [agentError, setAgentError] = useState("");
+const [ticketError, setTicketError] = useState("");
 useEffect(() => {
   fetchAgents();
 }, []);
 
 const fetchAgents = async () => {
   try {
-    const response = await axios.get(
-      "http://localhost:3000/api/books/agents"
+   const response = await agentLoader.execute(() =>
+      axios.get("http://localhost:3000/api/books/agents")
     );
+
     setAgents(response.data.agents);
 
-  } catch (error) {
-    console.log(error);
-  }
+  }catch (error) {
+  setAgentError("Server is unavailable");
+}
 };
 const [Ticketdata, setTicketdata] = useState([])
 useEffect(()=>{
@@ -31,12 +38,15 @@ useEffect(()=>{
 },[])
 const fetchTicket=async ()=>{
   try{
-    const res= await axios.get("http://localhost:3000/api/tickets/all")
+    const res = await ticketLoader.execute(() =>
+      axios.get("http://localhost:3000/api/tickets/all")
+    );
+
     setTicketdata(res.data.tickets)
   }
-  catch(error){
-    console.log(error)
-  }
+catch (error) {
+  setTicketError("Server is unavailable");
+}
 }
 const [selectedAgent, setSelectedAgent] = useState({
     updateagentname : "",
@@ -102,6 +112,11 @@ const deleteAgent = async (id) => {
   const [agenteditpop, setagenteditpop] = useState(false)
   const [agentpop, setagentpop] = useState(false)
   const totalViews =localStorage.getItem("adminViews");
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredAgents = agents.filter((agent) =>
+  agent.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  agent.email?.toLowerCase().includes(searchTerm.toLowerCase())
+);
   return (
     <div className=''>
 
@@ -287,9 +302,25 @@ const deleteAgent = async (id) => {
 
                   </thead>
 
-                  <tbody>
+                              <tbody>
+               {agentLoader.loading ? (
+    <tr>
+      <td colSpan="5" className="text-center py-8">
+        <div className="flex justify-center items-center gap-2">
+          <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+          <span>Loading Agents...</span>
+        </div>
+      </td>
+    </tr>
+  ) :  agentError ? (
+ <tr>
+    <td colSpan="5" className="text-center py-8 text-red-500 font-medium">
+        {agentError}
 
-                    {agents.slice(0, 2).map((value, index) => (
+    </td>
+  </tr>
+):( agents.slice(-2)
+  .reverse().map((value, index) => (
                       <tr key={index}>
                         <td className="text-center p-[12px] border-b border-amber-50">
                           {value.name}
@@ -305,24 +336,24 @@ const deleteAgent = async (id) => {
                          <td className="text-center p-[12px] border-b border-amber-50">
                           {value.lastLogin
                            ? new Date(value.lastLogin).toLocaleDateString("en-GB")
-                           : "Never"}
+                           : "No Login"}
                         </td>
-                        <td className="text-center p-[12px] border-b border-amber-50">
+                        <td className="text-center flex ml-[5%] gap-[15px]  p-[12px] border-b border-amber-50">
                         <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'
                           onClick={()=>{setagenteditpop(true);
                              setSelectedAgent(value);
                           }}>Action</button>
                           <button
-  onClick={() => deleteAgent(value._id)}
-  className="bg-red-600 text-white py-[5px] px-[10px] rounded-2xl font-bold ml-2"
->
-  Delete
-</button>
+      className="bg-red-500 text-white py-[5px] px-[10px] rounded-2xl font-bold"
+      onClick={() => deleteAgent(value._id)}
+    >
+      Delete
+    </button>
                         </td>
                       </tr>
-                    ))}
-
-                  </tbody>
+                    ))
+                      )}
+            </tbody>
 
                 </table>
 
@@ -461,76 +492,142 @@ const deleteAgent = async (id) => {
 }
                 </div>
               <div>
-  {agentpop && (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 p-3">
+ {agentpop && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 p-3">
 
-      {/* Popup Box */}
-      <div className="bg-white w-full sm:w-[90%] md:w-[80%] lg:w-[70%] h-[85vh] sm:h-[80vh] rounded-lg shadow-lg relative flex flex-col">
+    <div className="bg-white w-full sm:w-[90%] md:w-[80%] lg:w-[70%] h-[85vh] sm:h-[80vh] rounded-lg shadow-lg relative flex flex-col">
 
-        {/* Close Button */}
-        <button
-          className="absolute top-2 right-3 text-xl font-bold"
-          onClick={() => setagentpop(false)}
-        >
-          ×
-        </button>
+      {/* Close Button */}
+      <button
+        className="absolute top-2 right-3 text-xl font-bold"
+        onClick={() => setagentpop(false)}
+      >
+        ×
+      </button>
 
-        {/* Header */}
-        <div className="p-3 sm:p-4 border-b font-semibold text-[#572C10] text-sm sm:text-base">
-          Agents Table
-        </div>
+      {/* Header */}
+      <div className="p-3 sm:p-4 font-semibold text-[#572C10] text-sm sm:text-base">
+        Agents Table
+      </div>
 
-        {/* Table Wrapper */}
-        <div className="p-2 sm:p-4 overflow-y-auto">
+      {/* SEARCH BAR ADDED */}
+   {/* SEARCH BAR WITH ICON */}
+<div className="p-3 mt-[-10px]">
+  <div className="relative">
+    
+    {/* Search Icon */}
+    <FiSearch
+      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+      size={18}
+    />
 
-          <table className="w-full min-w-[600px] text-xs sm:text-sm md:text-base border-collapse">
+    <input
+      type="text"
+      placeholder="Please Search Agents..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 focus:outline-none"
+    />
+    
+  </div>
+</div>
+      {/* Table Wrapper */}
+      <div className="p-2 sm:p-4 overflow-y-auto">
 
-            <thead>
-              <tr className="bg-[#EFE6DD]">
-                <th className="p-2 sm:p-3 text-[#A77F60]">Agent Name</th>
-                <th className="p-2 sm:p-3 text-[#A77F60]">Email</th>
-                <th className="p-2 sm:p-3 text-[#A77F60]">Status</th>
-                <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Last login</th>
-                <th className="p-2 sm:p-3 text-[#A77F60]">Edit</th>
+        <table className="w-full min-w-[600px] text-xs sm:text-sm md:text-base border-collapse">
+
+          <thead>
+            <tr className="bg-[#EFE6DD]">
+              <th className="p-2 sm:p-3 text-[#A77F60]">Agent Name</th>
+              <th className="p-2 sm:p-3 text-[#A77F60]">Email</th>
+              <th className="p-2 sm:p-3 text-[#A77F60]">Status</th>
+              <th className="p-[10px] text-[#A77F60] bg-[#EFE6DD]">
+                Last login
+              </th>
+              <th className="p-2 sm:p-3 text-[#A77F60]">Edit</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {agentLoader.loading ? (
+              <tr>
+                <td colSpan="5" className="text-center py-8">
+                  <div className="flex justify-center items-center gap-2">
+                    <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+                    <span>Loading Agents...</span>
+                  </div>
+                </td>
               </tr>
-            </thead>
+            ) : agentError ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="text-center py-8 text-red-500 font-medium"
+                >
+                  {agentError}
+                </td>
+              </tr>
+            ) : filteredAgents.length === 0 ? (
+              // NO RESULT MESSAGE ADDED
+              <tr>
+                <td
+                  colSpan="5"
+                  className="text-center py-8 text-gray-500"
+                >
+                  No Agent Found
+                </td>
+              </tr>
+            ) : (
+              // SEARCH FILTER APPLIED
+              filteredAgents.map((value, index) => (
+                <tr key={index}>
+                  <td className="text-center p-[12px] border-b border-amber-50">
+                    {value.name}
+                  </td>
 
-            <tbody>
-              {agents.map((value, index) => (
-                      <tr key={index}>
-                        <td className="text-center p-[12px] border-b border-amber-50">
-                          {value.name}
-                        </td>
+                  <td className="text-center p-[12px] border-b border-amber-50 break-all">
+                    {value.email}
+                  </td>
 
-                        <td className="text-center p-[12px] border-b border-amber-50 break-all">
-                          {value.email}
-                        </td>
+                  <td className="text-center p-[12px] border-b border-amber-50">
+                    {value.status}
+                  </td>
 
-                        <td className="text-center p-[12px] border-b border-amber-50">
-                          {value.status}
-                        </td>
-                         <td className="text-center p-[12px] border-b border-amber-50">
-                          {value.lastLogin
-                           ? new Date(value.lastLogin).toLocaleDateString("en-GB")
-                           : "Never"}
-                        </td>
-                        <td className="text-center p-[12px] border-b border-amber-50">
-                        <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'
-                          onClick={()=>{setagenteditpop(true);
-                             setSelectedAgent(value);
-                          }}>Action</button>
-                        </td>
-                      </tr>
-                    ))}
-            </tbody>
+                  <td className="text-center p-[12px] border-b border-amber-50">
+                    {value.lastLogin
+                      ? new Date(value.lastLogin).toLocaleDateString("en-GB")
+                      : "No Login"}
+                  </td>
 
-          </table>
+                  <td className="text-center flex ml-[15%] gap-[15px] p-[12px] border-b border-amber-50">
+                    <button
+                      className="bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold"
+                      onClick={() => {
+                        setagenteditpop(true);
+                        setSelectedAgent(value);
+                      }}
+                    >
+                      Action
+                    </button>
 
-        </div>
+                    <button
+                      className="bg-red-500 text-white py-[5px] px-[10px] rounded-2xl font-bold"
+                      onClick={() => deleteAgent(value._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+
+        </table>
 
       </div>
     </div>
-  )}
+  </div>
+)}
 </div>
             {/* CARD */}
             <div className="w-full  h-[258px] xl:w-[300px]  bg-[#F5F5F5] overflow-y-auto rounded-[10px] p-[20px]">
@@ -543,7 +640,20 @@ const deleteAgent = async (id) => {
   </div>
 
   {/* Rows */}
-  {Ticketdata?.map((data, index) => {
+  {ticketLoader.loading ? (
+  <div className="flex justify-center py-8">
+    <div className="flex items-center gap-2">
+      <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+      <span className="text-[#572C10] font-medium">
+        Loading Tickets...
+      </span>
+    </div>
+  </div>
+): ticketError ? (
+  <div className="text-center py-6 text-red-500">
+    {ticketError}
+  </div>
+) :(Ticketdata?.map((data, index) => {
     return (
       <div
         key={index}
@@ -600,7 +710,8 @@ const deleteAgent = async (id) => {
         </div>
       </div>
     );
-  })}
+  })
+  )}
               </div>
             </div>
 

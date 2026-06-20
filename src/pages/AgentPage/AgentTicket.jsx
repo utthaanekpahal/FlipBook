@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
+import useApiLoader from "../../hook/useApiLoader";
 const AgentTicket = () => {
   const navigate = useNavigate();
+  const { loading, execute } = useApiLoader();
 
   // =========================
   // Popup states
@@ -19,6 +20,8 @@ const AgentTicket = () => {
     subject: "",
     message: "",
   });
+const agentName = localStorage.getItem("agentName");
+
 
   // =========================
   // Tickets State
@@ -37,9 +40,9 @@ const AgentTicket = () => {
   // =========================
   const fetchTickets = async () => {
     try {
-      const res = await axios.get(
+      const res = await execute(()=> axios.get(
         "http://localhost:3000/api/tickets/all"
-      );
+      ))
       setAdminUpdates(res.data.tickets);
     } catch (error) {
       console.log(error);
@@ -219,62 +222,98 @@ const getTicketsByStatus = (status) => {
       {/* =========================
           CREATE MODAL
       ========================== */}
-       {
+
+{
   showModal && (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+    <div className="fixed inset-0 z-50 lg:mt-[73px] mt-[65px] flex justify-center items-start sm:items-center p-3 sm:p-4 bg-black/30">
 
       <form
         onSubmit={ticketHandler}
         className="
           relative
-          bg-[#F5F5F5]
-          rounded-md
-          flex flex-col
-          gap-3
           w-full
-          max-w-md
-          sm:max-w-lg
-          md:max-w-xl
-          lg:max-w-2xl
-          p-4
-          sm:p-6
+
+          /* SIDEBAR FRIENDLY WIDTH */
+          max-w-[92vw]
+          sm:max-w-md
+          md:max-w-lg
+          lg:max-w-xl
+
+          /* HEIGHT CONTROL */
+          max-h-[75vh]
+          overflow-y-auto
+
+          bg-white
+          rounded-xl
+          shadow-2xl
+          border border-gray-200
+
+          p-4 sm:p-6
+
+          mt-16 sm:mt-0
         "
       >
 
-        {/* CLOSE BUTTON */}
+        {/* Close Button */}
         <button
           type="button"
           onClick={() => setShowModal(false)}
-          className="absolute right-3 top-2 text-2xl font-bold"
+          className="
+            absolute
+            top-3
+            right-4
+            text-xl
+            font-semibold
+            text-gray-500
+            hover:text-gray-800
+          "
         >
-          ×
+          ✕
         </button>
 
-        <h1 className="font-bold text-xl sm:text-2xl text-[#572C10] text-center">
-          Ticket Raise
-        </h1>
+        {/* Header */}
+        <div className="mb-4 sm:mb-5 text-center">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-[#572C10]">
+            Raise Ticket
+          </h2>
 
-        <div className="flex flex-col gap-4 w-full">
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">
+            Fill the details below to submit your issue
+          </p>
+        </div>
+
+        {/* Fields */}
+        <div className="space-y-3 sm:space-y-4">
 
           {/* Agent Name */}
-          <div className="w-full">
-            <label className="font-bold text-[#572C10] block mb-1">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1">
               Agent Name
             </label>
 
             <input
               onChange={getTicketData}
-              value={upload.Agentname}
+              value={agentName}
               name="Agentname"
               type="text"
               placeholder="Enter your name"
-              className="w-full border-2 border-[#ac8d6f] rounded-md p-2 outline-none"
+              className="
+                w-full
+                border border-gray-300
+                rounded-lg
+                px-3 py-2
+                sm:py-2.5
+                text-sm
+                outline-none
+                focus:border-[#572C10]
+                focus:ring-1 focus:ring-[#572C10]/30
+              "
             />
           </div>
 
           {/* Category */}
-          <div className="w-full">
-            <label className="font-bold text-[#572C10] block mb-1 text-sm sm:text-base">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1">
               Category
             </label>
 
@@ -282,7 +321,18 @@ const getTicketsByStatus = (status) => {
               onChange={getTicketData}
               value={upload.category}
               name="category"
-              className="w-full border-2 border-[#ac8d6f] rounded-md p-2 sm:p-3 text-sm sm:text-base outline-none ">
+              className="
+                w-full
+                border border-gray-300
+                rounded-lg
+                px-3 py-2
+                sm:py-2.5
+                text-sm
+                outline-none
+                focus:border-[#572C10]
+                focus:ring-1 focus:ring-[#572C10]/30
+              "
+            >
               <option value="">Select Category</option>
               <option value="technical">Technical</option>
               <option value="billing">Billing</option>
@@ -291,8 +341,8 @@ const getTicketsByStatus = (status) => {
           </div>
 
           {/* Subject */}
-          <div className="w-full">
-            <label className="font-bold text-[#572C10] block mb-1">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1">
               Subject
             </label>
 
@@ -301,14 +351,24 @@ const getTicketsByStatus = (status) => {
               value={upload.subject}
               name="subject"
               type="text"
-              placeholder="Enter your subject"
-              className="w-full border-2 border-[#ac8d6f] rounded-md p-2 outline-none"
+              placeholder="Enter subject"
+              className="
+                w-full
+                border border-gray-300
+                rounded-lg
+                px-3 py-2
+                sm:py-2.5
+                text-sm
+                outline-none
+                focus:border-[#572C10]
+                focus:ring-1 focus:ring-[#572C10]/30
+              "
             />
           </div>
 
           {/* Description */}
-          <div className="w-full">
-            <label className="font-bold text-[#572C10] block mb-1">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1">
               Description
             </label>
 
@@ -316,45 +376,43 @@ const getTicketsByStatus = (status) => {
               onChange={getTicketData}
               value={upload.message}
               name="message"
-              placeholder="Enter your message"
+              rows={4}
+              placeholder="Describe your issue"
               className="
                 w-full
-                border-2
-                border-[#ac8d6f]
-                rounded-md
-                p-2
+                border border-gray-300
+                rounded-lg
+                px-3 py-2
+                text-sm
+                resize-none
                 outline-none
-                min-h-[120px]
-                sm:min-h-[150px]
+                focus:border-[#572C10]
+                focus:ring-1 focus:ring-[#572C10]/30
               "
             />
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="
-              bg-[#572C10]
-              text-white
-              rounded-md
-              py-2
-              w-full
-              sm:w-1/2
-              mx-auto
-              hover:bg-[#6b3915]
-              transition
-            "
-          >
-            Submit
-          </button>
+         <button
+  type="submit"
+  disabled={loading}
+  className="w-full font-bold bg-[#572C10] text-white py-2.5 rounded-lg flex justify-center items-center"
+>
+  {loading ? (
+    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+  ) : (
+    "Submit Ticket"
+  )}
+</button>
 
         </div>
-
       </form>
 
     </div>
   )
 }
+
+
       {/* =========================
           TICKETS SECTION
       ========================== */}
@@ -409,13 +467,26 @@ const getTicketsByStatus = (status) => {
       });
 
       // EMPTY STATE PER TAB
-      if (filteredTickets.length === 0) {
-        return (
-          <div className="text-center text-gray-500 text-lg sm:text-xl mt-[50px]">
-            No Tickets Available
-          </div>
-        );
-      }
+     if (loading) {
+  return (
+    <div className="flex justify-center py-20">
+      <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-md">
+        <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+        <span className="text-[#572C10] font-medium">
+          Loading tickets...
+        </span>
+      </div>
+    </div>
+  );
+}
+
+if (filteredTickets.length === 0) {
+  return (
+    <div className="text-center text-gray-500 text-lg sm:text-xl mt-[50px]">
+      No Tickets Available
+    </div>
+  );
+}
 
       return filteredTickets.map((item) => (
         <div

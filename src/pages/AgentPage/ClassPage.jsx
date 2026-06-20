@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import booksData from "../../data/booksData.json";
+import useApiLoader from "../../hook/useApiLoader";
 
 const ClassPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { loading, execute } = useApiLoader();
 
   const { className, category, book } = location.state || {};
 
@@ -16,7 +18,7 @@ const ClassPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/books");
+        const res = await execute(()=>axios.get("http://localhost:3000/api/books"))
 
         const filtered = res.data.data.filter(
           (item) =>
@@ -52,7 +54,7 @@ const ClassPage = () => {
   });
 
   return (
-    <div className="min-h-screen ml-[18%] bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
+    <div className="min-h-screen lg:ml-[1%] lg:mt-[7%] mt-[35%] sm:mt-[10%] bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
 
       {/* ================= FILTER BAR ================= */}
       <div className="flex justify-center gap-3 flex-wrap mb-8">
@@ -103,8 +105,18 @@ const ClassPage = () => {
       </div>
 
       {/* ================= BOOK GRID ================= */}
+      {loading ? (
+  <div className="flex justify-center py-20">
+    <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-lg">
+      <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+      <span className="text-[#572C10] font-semibold">
+        Loading books...
+      </span>
+    </div>
+  </div>
+) : (
+    <>
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
         {filteredBooks.map((item, index) => (
           <div
             key={index}
@@ -153,6 +165,8 @@ const ClassPage = () => {
           </p>
         </div>
       )}
+  </>
+)}
 
       {/* ================= BACK ================= */}
       <div className="flex justify-center mt-10">

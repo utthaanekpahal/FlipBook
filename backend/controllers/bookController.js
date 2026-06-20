@@ -7,6 +7,7 @@ export const getBooks = async (req, res) => {
   try {
     const books = await Book.find();
 
+<<<<<<< Updated upstream
     res.json({
       success: true,
       data: books,
@@ -38,6 +39,11 @@ export const uploadBooks = async (req, res) => {
     }
 
     const book = await Book.create({
+=======
+    console.log("FILE:", req.file);
+    console.log("BODY:", req.body);
+    const {
+>>>>>>> Stashed changes
       title,
       description,
       category,

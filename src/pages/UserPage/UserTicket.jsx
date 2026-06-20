@@ -286,7 +286,7 @@ const UserTicket = () => {
             </div>
 
             {/* RIGHT SIDE */}
-            <div className="flex gap-2 items-center shrink-0 min-w-[110px]">
+            <div className="flex lg:flex-col sm:flex-col justify-between gap-2 items-center shrink-0 min-w-[110px]">
 
               {/* REPLY BUTTON */}
               <button
