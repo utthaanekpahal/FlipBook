@@ -18,7 +18,7 @@ const Category = () => {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center px-4 sm:px-6 md:px-10"
+      className="min-h-screen mt-[35%] rounded-xl lg:ml-[15px] sm:mt-[10%] lg:mt-[7%] bg-cover bg-center px-4 sm:px-6 md:px-10"
       style={{ backgroundImage: "url('/background img.png')" }}
     >
       <h1 className="text-4xl font-bold text-center pt-24 text-[#99582A] mb-10">

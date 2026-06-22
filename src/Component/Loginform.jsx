@@ -5,8 +5,10 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import bgimg from "../assets/imges/bgimg.PNG";
 import axios from "axios"
+import useApiLoader from "../hook/useApiLoader";
 export default function Login() {
   const navigate = useNavigate();
+  const { loading, execute } = useApiLoader();
   const [showPassword, setShowPassword] = useState(false);
 
   const [data, setData] = useState({
@@ -51,12 +53,12 @@ export default function Login() {
   setError("");
 
   try {
-    const response = await axios.post(
+    const response = await execute(() => axios.post(
       "http://localhost:3000/api/books/login",
       {
         username: data.username,
         password: data.password,
-      }
+      }) 
     );
 
     console.log("Login Response:", response.data);
@@ -176,11 +178,19 @@ export default function Login() {
 
           {/* Button */}
           <button
-            type="submit"
-            className="w-full bg-[#99582A] text-white py-2 rounded-lg font-semibold hover:bg-[#7f4721]"
-          >
-            Log In
-          </button>
+  type="submit"
+  disabled={loading}
+  className="w-full bg-[#99582A] text-white py-2 rounded-lg font-semibold flex justify-center items-center"
+>
+{loading ? (
+  <>
+    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+    <span className="ml-2">Logging in...</span>
+  </>
+) : (
+  "Log In"
+)}
+</button>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2 mt-6 text-center">
             <span>If you don't have an account ? Contact your Admin </span>
           </div>

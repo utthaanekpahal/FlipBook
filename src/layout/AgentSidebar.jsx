@@ -1,5 +1,6 @@
 import React from 'react';
-import { FaHome, FaBook } from "react-icons/fa";
+import { FaHome, FaBook ,  FaUsers
+} from "react-icons/fa";
 import { FaFolder } from "react-icons/fa6";
 import { MdConfirmationNumber } from "react-icons/md";
 import { FaUser, FaTimes } from "react-icons/fa";
@@ -45,11 +46,10 @@ const AgentSidebar = ({ open, setOpen }) => {
     sm:top-[5px]
     top-[22%]
     left-0
-    h-[65%]       /* Mobile */
-    sm:h-[75%]    /* Small tablets */
+    h-[75%]       /* Mobile */
+    sm:h-[50%]    /* Small tablets */
     md:h-[50%]    /* Tablets */
     lg:h-[84%]    /* Desktop */
-    
     rounded-xl
     w-[250px] ml-[20px]
     bg-[#F5F5F5]
@@ -119,6 +119,14 @@ const AgentSidebar = ({ open, setOpen }) => {
                 <FaFolder className='text-2xl' />
                 School Visit Form
               </li>
+              <li className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'
+              onClick={() =>
+                handleNavigate("/agent/followUp")
+              }
+            >
+              <FaUsers />
+              Follow Up
+            </li>
 
               <li
                 className='flex items-center gap-3 p-[8px] text-xl text-[#572C10] hover:bg-[#572C10] hover:text-white font-bold rounded-lg cursor-pointer'

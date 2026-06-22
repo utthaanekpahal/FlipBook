@@ -45,11 +45,11 @@ const Sidebar = ({ open, setOpen }) => {
   className={`
     fixed 
     lg:top-[14%]
-    md:top-[10%]
-    sm:top-[1000%]
-    top-[18%]
+    md:top-[15%]
+    sm:top-[10%]
+    top-[25%]
     left-0
-    h-[65%]       /* Mobile */
+    h-[70%]       /* Mobile */
     sm:h-[70%]    /* Small tablets */
     md:h-[45%]    /* Tablets */
     lg:h-[84%]    /* Desktop */
