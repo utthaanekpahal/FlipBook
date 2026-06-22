@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import booksData from "../../data/booksData.json";
 
 const ClassPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { className, category, book } = location.state || {};
+  const { className, category } = location.state || {};
 
   const [mongoBooks, setMongoBooks] = useState([]);
   const [typeFilter, setTypeFilter] = useState("All");
@@ -16,12 +15,13 @@ const ClassPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/books");
+        const res = await axios.get(
+          "http://localhost:3000/api/books"
+        );
 
         const filtered = res.data.data.filter(
           (item) =>
             item.category === category &&
-            item.book === book &&
             item.className === className
         );
 
@@ -31,26 +31,20 @@ const ClassPage = () => {
       }
     };
 
-    if (category && book && className) {
+    if (category && className) {
       fetchBooks();
     }
-  }, [category, book, className]);
-
-  // ================= JSON DATA =================
-  const jsonBooks =
-    booksData?.[category]?.[book]?.[className] || [];
-
-  // ================= MERGED DATA =================
-  const allBooks = [...jsonBooks, ...mongoBooks];
+  }, [category, className]);
 
   // ================= FILTER =================
-const books =
-  typeFilter === "All"
-    ? allBooks
-    : allBooks.filter((b) =>
-        (b.type || "").trim().toLowerCase() ===
-        typeFilter.trim().toLowerCase()
-      );
+  const books =
+    typeFilter === "All"
+      ? mongoBooks
+      : mongoBooks.filter(
+          (b) =>
+            (b.type || "").trim().toLowerCase() ===
+            typeFilter.trim().toLowerCase()
+        );
 
   return (
     <div className="min-h-screen ml-[15px] rounded-xl bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
@@ -62,11 +56,11 @@ const books =
         </h1>
 
         <p className="text-lg font-bold mt-2 text-[#572C10]">
-          {category || "Category"} → {book || "Book"}
+          {category || "Category"}
         </p>
       </div>
 
-      {/* ================= TYPE FILTER BUTTONS ================= */}
+      {/* ================= TYPE FILTER ================= */}
       <div className="flex justify-center gap-4 mb-10">
 
         <button
@@ -114,7 +108,7 @@ const books =
               navigate("/flipPage", {
                 state: {
                   title: item.title,
-                  pdf: item.fileUrl || item.pdf,
+                  pdf: item.fileUrl,
                 },
               })
             }
@@ -123,13 +117,14 @@ const books =
 
             <img
               src={item.img || "/default.jpg"}
+              alt={item.title}
               className="w-full h-[300px] object-cover"
             />
 
             <div className="p-4">
 
               <h2 className="text-xl font-bold">
-                {item.title || "Untitled"}
+                {item.title}
               </h2>
 
               {item.subject && (
@@ -145,7 +140,8 @@ const books =
               )}
 
               <p className="text-sm mt-2 text-gray-600">
-                {item.description || "No description available"}
+                {item.description ||
+                  "No description available"}
               </p>
 
             </div>

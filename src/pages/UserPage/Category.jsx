@@ -1,79 +1,116 @@
 import React, { useState, useEffect } from "react";
 import { FaBook, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
+const sortClasses = (classes) => {
+  const order = [
+    "Nursery",
+    "LKG",
+    "UKG",
+    "Class 1",
+    "Class 2",
+    "Class 3",
+    "Class 4",
+    "Class 5",
+    "Class 6",
+    "Class 7",
+    "Class 8",
+    "Class 9",
+    "Class 10",
+    "Class 11",
+    "Class 12",
+  ];
 
-const initialData = [
-  {
-    category: "Navbodh",
-    icon: "/nav.png",
-    books: [
-      {
-        title: "Book N1",
-        subject: "English",
-        classes: ["Class 1", "Class 2", "Class 3"],
-      },
-      {
-        title: "Book N2",
-        subject: "Hindi",
-        classes: ["Class 4", "Class 5"],
-      },
-    ],
-  },
-
-  {
-    category: "Gyanbodh",
-    icon: "/gyan.png",
-    books: [
-      {
-        title: "Book G1",
-        subject: "Maths",
-        classes: ["Class 1", "Class 2"],
-      },
-      {
-        title: "Book G2",
-        subject: "Science",
-        classes: ["Class 3", "Class 4"],
-      },
-    ],
-  },
-];
-
-const CLASS_OPTIONS = [
-  "Class 1",
-  "Class 2",
-  "Class 3",
-  "Class 4",
-  "Class 5",
-  "Class 6",
-  "Class 7",
-  "Class 8",
-  "Class 9",
-  "Class 10",
-  "Class 11",
-  "Class 12",
-];
+  return [...classes].sort(
+    (a, b) => order.indexOf(a) - order.indexOf(b)
+  );
+};
 
 const Category = () => {
   const navigate = useNavigate();
-const [data, setData] = useState(() => {
-  const saved = localStorage.getItem("categories");
-  return saved ? JSON.parse(saved) : initialData;
-});
-useEffect(() => {
-  localStorage.setItem("categories", JSON.stringify(data));
-}, [data]);
+
+  const [data, setData] = useState([]);
+
   const [selectedBook, setSelectedBook] = useState(null);
+
   const [editingBook, setEditingBook] = useState(null);
 
-  // ADD FORM
   const [showForm, setShowForm] = useState(false);
-  const [showClassDropdown, setShowClassDropdown] = useState(false);
- const [form, setForm] = useState({
-  category: "",
-  subcategory: "",
-  classes: [],
-});
+
+  const [showClassDropdown, setShowClassDropdown] =
+    useState(false);
+
+  const [form, setForm] = useState({
+    category: "",
+    subcategory: "",
+    classes: [],
+  });
+
+  // your useEffect here...
+useEffect(() => {
+  const fetchBooks = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/api/books");
+
+      const books = res.data.data;
+
+      const grouped = {};
+
+      books.forEach((item) => {
+        // Category create
+        if (!grouped[item.category]) {
+          grouped[item.category] = {
+            category: item.category,
+
+            icon:
+              item.category === "Navbodh"
+                ? "/nav.png"
+                : "/gyan.png",
+
+            books: [],
+          };
+        }
+
+        // Same title already exists?
+        const existingBook =
+          grouped[item.category].books.find(
+            (b) => b.title === item.title
+          );
+
+        if (existingBook) {
+          if (
+            !existingBook.classes.includes(
+              item.className
+            )
+          ) existingBook.classes.push(item.className);
+
+existingBook.classes = sortClasses(
+  existingBook.classes
+);
+        } else {
+          grouped[item.category].books.push({
+            title: item.title,
+
+            subject: item.subject,
+
+            type: item.type,
+
+            classes: [item.className],
+          });
+        }
+      });
+
+      setData(Object.values(grouped));
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  fetchBooks();
+}, []);
+  // ADD FORM
 
   // ================= ADD FUNCTION =================
  const handleAdd = () => {
@@ -178,13 +215,7 @@ const toggleEditClass = (className) => {
   });
 };
 
-const sortClasses = (classes) => {
-  return [...classes].sort((a, b) => {
-    const numA = parseInt(a.replace(/\D/g, ""));
-    const numB = parseInt(b.replace(/\D/g, ""));
-    return numA - numB;
-  });
-};
+
 
 const saveEditedBook = () => {
   if (!editingBook) return;
@@ -440,18 +471,7 @@ const saveEditedBook = () => {
 
     {/* Subject */}
 {/* Subject */}
-{book.subject && (
-  <span className="text-sm text-gray-500 block">
-    {book.subject}
-  </span>
-)}
 
-{/* Type */}
-{book.type && (
-  <span className="text-xs bg-purple-200 text-purple-800 px-2 py-1 rounded inline-block mt-1">
-    {book.type}
-  </span>
-)}
   </div>
 </div>
 
@@ -568,13 +588,12 @@ const saveEditedBook = () => {
                 <div
                   key={cls}
                   onClick={() =>
-                    navigate("/classpage", {
-                      state: {
-                        className: cls,
-                        book: selectedBook.title,
-                        category: selectedBook.category,
-                      },
-                    })
+                   navigate("/classpage", {
+  state: {
+    className: cls,
+    category: selectedBook.category,
+  },
+})
                   }
                   className="bg-gray-100 p-3 mb-2 rounded cursor-pointer"
                 >

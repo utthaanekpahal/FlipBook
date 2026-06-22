@@ -228,13 +228,24 @@ return (
               <FaPhone className="mr-3 text-[#572C10]" />
 
               <input
-                type="text"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="Phone Number"
-                className="w-full outline-none"
-              />
+  type="tel"
+  name="phone"
+  value={form.phone}
+  onChange={(e) => {
+    const value = e.target.value;
+
+    // Sirf numbers allow + max 10 digits
+    if (/^\d{0,10}$/.test(value)) {
+      setForm({
+        ...form,
+        phone: value,
+      });
+    }
+  }}
+  placeholder="Enter  mobile number"
+  maxLength={10}
+  className="w-full outline-none"
+/>
 
             </div>
 

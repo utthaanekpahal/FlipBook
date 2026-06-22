@@ -2,7 +2,56 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
  const API = "http://localhost:3000/api/books";;
+ function PdfCover({ pdfUrl, title }) {
+  const [cover, setCover] = useState("");
+
+  useEffect(() => {
+    const loadCover = async () => {
+      try {
+        const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+
+        const page = await pdf.getPage(1);
+
+        const viewport = page.getViewport({
+          scale: 0.5,
+        });
+
+        const canvas = document.createElement("canvas");
+
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+        }).promise;
+
+        setCover(canvas.toDataURL("image/jpeg"));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (pdfUrl) {
+      loadCover();
+    }
+  }, [pdfUrl]);
+
+  return (
+    <img
+      src={cover || "/book1.jpg"}
+      alt={title}
+      className="w-full h-full object-cover"
+    />
+  );
+}
 const Books = () => {
   const navigate = useNavigate();
 
@@ -177,6 +226,7 @@ const handleDelete = async (id) => {
 
   setFilteredBooks(result);
 };
+
   return (
     <div className="min-h-screen  bg-[#EFE6DD] px-4 sm:px-6 py-10">
       <div className="max-w-6xl mx-auto mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -212,7 +262,7 @@ const handleDelete = async (id) => {
           
           <button
             onClick={handleSearch}
-            className="w-full md:w-auto bg-[#572C10] hover:bg-[#3d1f0a] text-white text-lg sm:text-2xl px-8 py-3 rounded-xl font-semibold transition"
+            className="w-full md:w-auto  text-[#572C10] text-lg sm:text-2xl px-8 py-3 rounded-xl font-semibold transition"
           >
             Search
           </button>
@@ -258,7 +308,9 @@ const handleDelete = async (id) => {
   onChange={(e) => setClassName(e.target.value)}
 >
   <option value="">Class</option>
-
+<option value="Class 1">Nursery</option>
+<option value="Class 1">LKG</option>
+<option value="Class 1">UKG</option>
   <option value="Class 1">Class 1</option>
   <option value="Class 2">Class 2</option>
   <option value="Class 3">Class 3</option>
@@ -310,14 +362,10 @@ const handleDelete = async (id) => {
               >
                 {/* IMAGE */}
                 <div className="h-62.5 sm:h-75 overflow-hidden">
-                  <img
-                    src={book.img}
-                    alt={book.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.src = "/book1.jpg";
-                    }}
-                  />
+               <PdfCover
+  pdfUrl={book.fileUrl}
+  title={book.title}
+/>
                 </div>
                 
                 {/* CONTENT */}
