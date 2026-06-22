@@ -7,8 +7,7 @@ export const getBooks = async (req, res) => {
   try {
     const books = await Book.find();
 
-<<<<<<< Updated upstream
-    res.json({
+    res.status(200).json({
       success: true,
       data: books,
     });
@@ -21,42 +20,36 @@ export const getBooks = async (req, res) => {
 };
 
 // =========================
-// UPLOAD BOOK
+// CREATE BOOK (optional but useful)
 // =========================
 export const uploadBooks = async (req, res) => {
   try {
-    const { title, description, category, className, subject, type } = req.body;
-
-    let imgUrl = "";
-    let fileUrl = "";
-
-    if (req.files?.img) {
-      imgUrl = `${req.protocol}://${req.get("host")}/uploads/${req.files.img[0].filename}`;
-    }
-
-    if (req.files?.file) {
-      fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.files.file[0].filename}`;
-    }
-
-    const book = await Book.create({
-=======
-    console.log("FILE:", req.file);
-    console.log("BODY:", req.body);
     const {
->>>>>>> Stashed changes
       title,
       description,
       category,
       className,
       subject,
       type,
-      img: imgUrl,
-      fileUrl,
+    } = req.body;
+
+    const newBook = new Book({
+      title,
+      description,
+      category,
+      className,
+      subject,
+      type,
+      img: req.file
+        ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+        : "",
     });
+
+    const saved = await newBook.save();
 
     res.status(201).json({
       success: true,
-      data: book,
+      data: saved,
     });
   } catch (err) {
     res.status(500).json({
@@ -67,7 +60,7 @@ export const uploadBooks = async (req, res) => {
 };
 
 // =========================
-// UPDATE BOOK (FIXED)
+// UPDATE BOOK
 // =========================
 export const updateBooks = async (req, res) => {
   try {
@@ -82,7 +75,7 @@ export const updateBooks = async (req, res) => {
       type: req.body.type,
     };
 
-    // ✅ IMPORTANT FIX (single file middleware use ho raha hai)
+    // update image if new file uploaded
     if (req.file) {
       updateData.img = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
     }
@@ -98,7 +91,7 @@ export const updateBooks = async (req, res) => {
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       data: updated,
     });
@@ -117,9 +110,16 @@ export const deleteBooks = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await Book.findByIdAndDelete(id);
+    const deleted = await Book.findByIdAndDelete(id);
 
-    res.json({
+    if (!deleted) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
+    }
+
+    res.status(200).json({
       success: true,
       message: "Deleted successfully",
     });
