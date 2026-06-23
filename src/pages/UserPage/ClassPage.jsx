@@ -1,6 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+
+// =====================
+// PDF COVER GENERATOR
+// =====================
+const getPdfCover = async (pdfUrl) => {
+  try {
+    const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+    const page = await pdf.getPage(1);
+
+    const viewport = page.getViewport({ scale: 0.7 });
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({
+      canvasContext: ctx,
+      viewport,
+    }).promise;
+
+    return canvas.toDataURL("image/jpeg");
+  } catch (err) {
+    console.log(err);
+    return "/default.jpg";
+  }
+};
 
 const ClassPage = () => {
   const location = useLocation();
@@ -9,11 +41,14 @@ const ClassPage = () => {
   const { className, category } = location.state || {};
 
   const [mongoBooks, setMongoBooks] = useState([]);
-  const [typeFilter, setTypeFilter] = useState("All");
+  const [covers, setCovers] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
+        setLoading(true);
+
         const res = await axios.get("http://localhost:3000/api/books");
 
         const filtered = res.data.data.filter(
@@ -23,176 +58,149 @@ const ClassPage = () => {
         );
 
         setMongoBooks(filtered);
+
+        // generate covers
+        const coverMap = {};
+        for (let book of filtered) {
+          if (book.fileUrl) {
+            coverMap[book._id] = await getPdfCover(book.fileUrl);
+          }
+        }
+
+        setCovers(coverMap);
       } catch (error) {
-        console.log("API ERROR:", error.message);
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    if (category && className) {
-      fetchBooks();
-    }
+    if (category && className) fetchBooks();
   }, [category, className]);
 
-  const books =
-    typeFilter === "All"
-      ? mongoBooks
-      : mongoBooks.filter(
-          (b) =>
-            (b.type || "").trim().toLowerCase() ===
-            typeFilter.trim().toLowerCase()
-        );
-
   return (
-    <div className="min-h-screen lg:ml-[15px] lg:w-[99%] rounded-xl w-full bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7] px-4 sm:px-6 lg:px-10 py-10">
+    <div className="min-h-screen bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7] px-4 py-10">
 
       {/* HEADER */}
-      <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#3b2414]">
-          📚 {className || "Class"}
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-extrabold text-[#3b2414]">
+          📚 {className}
         </h1>
-
-        <p className="text-base sm:text-lg font-semibold text-[#7a4a2a] mt-2">
-          {category || "Category"}
+        <p className="text-[#7a4a2a] font-semibold mt-2">
+          {category}
         </p>
-
-        <div className="w-20 h-1 bg-[#99582A] mx-auto mt-3 rounded-full"></div>
       </div>
 
-      {/* FILTERS */}
-      <div className="flex flex-wrap justify-center gap-3 mb-12">
+      {/* LOADER */}
+      {loading ? (
+        <div className="flex justify-center py-20">
+          <div className="text-[#7a4a2a] font-semibold">
+            Loading Books...
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* GRID CENTER WRAPPER */}
+          <div className="flex justify-center">
+            <div className="w-full max-w-7xl">
 
-        {[
-          { label: "All", color: "red" },
-          { label: "Semester", color: "blue" },
-          { label: "Yearly", color: "purple" },
-        ].map((btn) => (
-          <button
-            key={btn.label}
-            onClick={() => setTypeFilter(btn.label)}
-            className={`
-              px-6 py-2 rounded-full font-semibold text-sm sm:text-base
-              transition-all duration-300 border
-              ${
-                typeFilter === btn.label
-                  ? `bg-${btn.color}-600 text-white shadow-lg scale-105`
-                  : "bg-white text-[#3b2414] border-[#e6d5c9] hover:shadow-md"
-              }
-            `}
-          >
-            {btn.label}
-          </button>
-        ))}
+              {/* BOOK GRID */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
 
-      </div>
+                {mongoBooks.map((item) => (
+                  <div
+                    key={item._id}
+                    onClick={() =>
+                      navigate("/flipPage", {
+                        state: {
+                          title: item.title,
+                          pdf: item.fileUrl,
+                        },
+                      })
+                    }
+                    className="
+                      bg-white
+                      rounded-3xl
+                      overflow-hidden
+                      shadow-lg
+                      hover:shadow-2xl
+                      cursor-pointer
+                      transition-all duration-300
+                      hover:-translate-y-2
+                    "
+                  >
 
-      {/* GRID WRAPPER (CENTER FIX) */}
-      <div className="flex justify-center">
-        <div className="w-full max-w-7xl">
+                    {/* COVER IMAGE BIGGER */}
+                    <div className="relative w-full h-[400px] overflow-hidden">
+                      <img
+                        src={covers[item._id] || "/default.jpg"}
+                        alt={item.title}
+                        className="w-full h-full object-cover transform hover:scale-110 transition duration-500"
+                      />
+                    </div>
 
-          {/* BOOK GRID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
+                   {/* CONTENT */}
+<div className="p-5 space-y-4">
 
-            {books.map((item, index) => (
-              <div
-                key={index}
-                onClick={() =>
-                  navigate("/flipPage", {
-                    state: {
-                      title: item.title,
-                      pdf: item.fileUrl,
-                    },
-                  })
-                }
-                className="
-                  w-full max-w-[360px]
-                  bg-white
-                  border border-[#eadfd3]
-                  rounded-3xl
-                  overflow-hidden
-                  cursor-pointer
-                  shadow-md
-                  hover:shadow-2xl
-                  hover:-translate-y-2
-                  transition-all duration-300
-                "
-              >
+  {/* TOP 3 BOX ROW */}
+  <div className="grid grid-cols-2 gap-2">
 
-                {/* IMAGE */}
-                <div className="relative">
+   
 
-                  <img
-                    src={item.img || "/default.jpg"}
-                    alt={item.title}
-                    className="w-full h-[220px] sm:h-[250px] object-cover"
-                  />
+    {/* SUBJECT BOX */}
+    <div className="bg-[#eaf4ff] border border-[#cfe3ff] rounded-xl px-2 py-2 text-center">
+     
+      <p className="text-xl font-bold text-blue-700 truncate">
+        {item.subject}
+      </p>
+    </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+    {/* TYPE BOX */}
+    <div
+      className={`rounded-xl px-2 py-2 text-center border ${
+        item.type === "Semester"
+          ? "bg-blue-100 border-blue-200 text-blue-700"
+          : item.type === "Yearly"
+          ? "bg-purple-100 border-purple-200 text-purple-700"
+          : "bg-green-100 border-green-200 text-green-700"
+      }`}
+    >
+     
+      <p className="text-xl font-bold truncate">{item.type}</p>
+    </div>
 
-                </div>
+  </div>
 
-                {/* CONTENT */}
-                <div className="p-5">
+  {/* DESCRIPTION */}
+  <div className="bg-gradient-to-r from-[#fff7f0] to-[#fff1e6] border border-[#f3d5c0] rounded-xl p-3">
+    <p className="text-2xl font-bold text-pink-700 leading-relaxed line-clamp-3">
+      {item.description || "No description available"}
+    </p>
+  </div>
 
-                  <h2 className="text-lg font-bold text-[#3b2414]">
-                    {item.title}
-                  </h2>
-
-                  {item.subject && (
-                    <p className="text-[#99582A] font-semibold mt-1">
-                      {item.subject}
-                    </p>
-                  )}
-
-                  {item.type && (
-                    <span className="
-                      inline-block mt-3
-                      px-3 py-1
-                      text-xs font-bold
-                      rounded-full
-                      bg-[#f3e7df]
-                      text-[#7a4a2a]
-                    ">
-                      {item.type}
-                    </span>
-                  )}
-
-                  <p className="text-sm mt-3 text-gray-600 line-clamp-2">
-                    {item.description || "No description available"}
-                  </p>
-
-                </div>
+</div>
+                  </div>
+                ))}
 
               </div>
-            ))}
 
+            </div>
           </div>
 
-        </div>
-      </div>
-
-      {/* NO DATA */}
-      {books.length === 0 && (
-        <div className="text-center mt-20">
-          <p className="text-xl sm:text-2xl text-red-500 font-bold">
-            No Books Found
-          </p>
-        </div>
+          {/* NO DATA */}
+          {mongoBooks.length === 0 && (
+            <p className="text-center text-red-500 mt-10 font-semibold">
+              No Books Found
+            </p>
+          )}
+        </>
       )}
 
       {/* BACK BUTTON */}
-      <div className="flex justify-center mt-14">
+      <div className="flex justify-center mt-12">
         <button
           onClick={() => navigate(-1)}
-          className="
-            bg-gradient-to-r from-[#99582A] to-[#c98b4d]
-            text-white
-            px-10 py-3
-            rounded-2xl
-            font-semibold
-            shadow-lg
-            hover:scale-105
-            transition-all
-          "
+          className="bg-[#99582A] hover:bg-[#7a421f] text-white px-10 py-3 rounded-2xl font-semibold shadow-lg transition"
         >
           Back
         </button>

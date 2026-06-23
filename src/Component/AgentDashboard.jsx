@@ -68,13 +68,13 @@ const AgentDashboard = () => {
 
             <div>
 
-              <p className="text-xl font-bold text-pink-900">
+              <p className="text-xl font-bold text-black">
 
                 Total Books
 
               </p>
 
-              <h2 className="text-xl font-bold text-pink-800">
+              <h2 className="text-xl font-bold text-[#572C10]">
 
                 {books.length}
 
@@ -97,13 +97,13 @@ const AgentDashboard = () => {
 
             <div>
 
-              <p className="text-xl font-bold text-pink-900">
+              <p className="text-xl font-bold text-black">
 
                 Categories
 
               </p>
 
-              <h2 className="text-xl font-bold text-pink-800">
+              <h2 className="text-xl font-bold text-[#572C10]">
 
                 2
 
@@ -126,13 +126,13 @@ const AgentDashboard = () => {
 
             <div>
 
-              <p className="text-xl font-bold text-pink-900">
+              <p className="text-xl font-bold text-black">
 
                 Ticket Raise
 
               </p>
 
-              <h2 className="text-xl font-bold text-pink-800">
+              <h2 className="text-xl font-bold text-[#572C10]">
 
                 {lengths.length}
 
@@ -156,13 +156,13 @@ const AgentDashboard = () => {
 
             <div>
 
-              <p className="text-xl font-bold text-pink-900">
+              <p className="text-xl font-bold text-black">
 
                 Total Views
 
               </p>
 
-              <h2 className="text-xl font-bold text-pink-800">
+              <h2 className="text-xl font-bold text-[#572C10]">
 
                 {agenttotalViews}
 
@@ -178,7 +178,7 @@ const AgentDashboard = () => {
 
         <div className="mx-4 md:mx-6 mb-6 bg-white rounded-2xl shadow-sm border border-[#E8DCCF] p-5">
 
-          <h2 className="text-2xl font-bold text-pink-900 mb-6 text-center">
+          <h2 className="text-2xl font-bold text-black mb-6 text-center">
 
              Category
 
@@ -208,7 +208,7 @@ const AgentDashboard = () => {
 
         <div className="mx-4 md:mx-6 bg-white rounded-2xl shadow-sm border border-[#E8DCCF] p-5">
 
-          <h2 className="text-xl font-bold text-[#572C10] mb-5">
+          <h2 className="text-xl font-bold text-[#572C10] mb-5 text-center">
 
             Recent Added Books
 
@@ -235,9 +235,17 @@ const AgentDashboard = () => {
 
                 <div className="p-3">
 
-                  <h3 className="font-semibold text-center text-[#572C10]">
+                  <h3 className="font-bold text-center text-[#572C10]">
 
                     {book.title}
+
+                  </h3>
+                  <h2 className="font-bold text-blue-600 text-center">
+                    {book.className}
+                  </h2>
+                  <h3 className="font-bold text-[#572C10 ]  text-center">
+
+                    {book.subject}
 
                   </h3>
 

@@ -164,8 +164,8 @@ const fetchBooks = async () => {
                 <FaBook className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
               </div>
               <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[20px] text-pink-900 '>Total Books</span>
-                <span className='font-bold text-[18px] text-pink-700'>{books.length}</span>
+                <span className='font-bold text-[20px] text-black '>Total Books</span>
+                <span className='font-bold text-[18px] text-[#572C10]'>{books.length}</span>
                 
               </div>
             </div>
@@ -175,8 +175,8 @@ const fetchBooks = async () => {
                 <FaThList className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
               </div>
               <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[20px] text-pink-900 '>Total Categories</span>
-                <span className='font-bold text-[18px] text-pink-700'>2</span>
+                <span className='font-bold text-[20px] text-black '>Total Categories</span>
+                <span className='font-bold text-[18px] text-[#572C10]'>2</span>
                
               </div>
             </div>
@@ -186,8 +186,8 @@ const fetchBooks = async () => {
                 <FaUserTie className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
               </div>
               <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[20px] text-pink-900 '>Active Agents</span>
-                <span className='font-bold text-[18px] text-pink-700'>{agents.length}</span>
+                <span className='font-bold text-[20px] text-black '>Active Agents</span>
+                <span className='font-bold text-[18px] text-[#572C10]'>{agents.length}</span>
 
               </div>
             </div>
@@ -197,8 +197,8 @@ const fetchBooks = async () => {
                 <FaEye className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
               </div>
               <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[20px] text-pink-900 '>Total views</span>
-                <span className='font-bold text-[18px] text-pink-700'>{totalViews}</span>
+                <span className='font-bold text-[20px] text-black '>Total views</span>
+                <span className='font-bold text-[18px] text-[#572C10]'>{totalViews}</span>
                 
               </div>
             </div>
@@ -211,7 +211,7 @@ const fetchBooks = async () => {
 
             <div className='text-center mb-[20px] '>
 
-              <h2 className="font-bold text-pink-900 text-[20px]">
+              <h2 className="font-bold text-black text-[20px]">
                 Recent Book
               </h2>
 
@@ -267,11 +267,11 @@ const fetchBooks = async () => {
 
               <div className='flex justify-between mb-[20px]'>
 
-                <h4 className='font-bold text-pink-900 text-[20px]'>
+                <h4 className='font-bold text-black text-[20px]'>
                   Active Agent
                 </h4>
 
-                <button className='border px-[10px] py-[5px] text-pink-900 border-[#EFE6DD] font-bold  rounded'
+                <button className='border px-[10px] py-[5px] text-black border-[#EFE6DD] font-bold  rounded'
                  onClick={()=>{setagentpop(!agentpop)}}>
                   View all
                 </button>
