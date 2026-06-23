@@ -4,7 +4,6 @@ import HTMLFlipBook from "react-pageflip";
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
-// PDF Worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 function FlipPage() {
@@ -20,42 +19,30 @@ function FlipPage() {
   const bookRef = useRef(null);
   const audioRef = useRef(null);
 
-  // ================= LOAD SOUND =================
-
   useEffect(() => {
     audioRef.current = new Audio("/page-flip.mp3");
 
-    if (pdf) {
-      loadPDF();
-    }
+    if (pdf) loadPDF();
 
     return () => {
       audioRef.current?.pause();
     };
   }, [pdf]);
 
-  // ================= LOAD PDF =================
-
   const loadPDF = async () => {
     try {
       setLoading(true);
 
       const pdfDoc = await pdfjsLib.getDocument(pdf).promise;
-
-      // Max 100 pages
       const totalPages = Math.min(pdfDoc.numPages, 100);
 
       const tempPages = [];
 
       for (let i = 1; i <= totalPages; i++) {
         const page = await pdfDoc.getPage(i);
-
-        const viewport = page.getViewport({
-          scale: 1.2,
-        });
+        const viewport = page.getViewport({ scale: 1.2 });
 
         const canvas = document.createElement("canvas");
-
         const context = canvas.getContext("2d");
 
         canvas.width = viewport.width;
@@ -66,228 +53,148 @@ function FlipPage() {
           viewport,
         }).promise;
 
-        tempPages.push(
-          canvas.toDataURL("image/webp", 0.9)
-        );
+        tempPages.push(canvas.toDataURL("image/webp", 0.9));
       }
 
       setPages(tempPages);
-
     } catch (err) {
       console.log(err);
       alert("Unable to load PDF");
-    }
-
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
-  // ================= PAGE SOUND =================
-
   const playSound = () => {
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
-
       audioRef.current.play().catch(() => {});
     }
   };
 
-  // ================= BUTTONS =================
-
-  const flipPrev = () => {
-    bookRef.current?.pageFlip()?.flipPrev();
-  };
-
-  const flipNext = () => {
-    bookRef.current?.pageFlip()?.flipNext();
-  };
-
-  // ================= PROGRESS =================
+  const flipPrev = () => bookRef.current?.pageFlip()?.flipPrev();
+  const flipNext = () => bookRef.current?.pageFlip()?.flipNext();
 
   const totalPages = pages.length;
 
   const progress =
     totalPages > 0
-      ? Math.round(
-          (currentPage / (totalPages - 1)) * 100
-        )
+      ? Math.round((currentPage / (totalPages - 1)) * 100)
       : 0;
-
-  // ================= LOADING =================
 
   if (loading) {
     return (
-      <div className="h-screen flex justify-center items-center">
-
+      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
         <div className="text-center">
-
-          <div className="w-14 h-14 border-4 border-[#572C10] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-
-          <h1 className="text-xl font-bold">
-
+          <div className="w-14 h-14 border-4 border-[#99582A] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <h1 className="text-lg font-semibold text-[#3b2414]">
             Loading Book...
-
           </h1>
-
         </div>
-
       </div>
     );
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 flex flex-col overflow-hidden">
+    <div className="h-[35%] flex flex-col overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
 
-      {/* TITLE */}
-
-     
-      {/* PROGRESS BAR */}
-
+      {/* PROGRESS ONLY (HEADER REMOVED AS REQUESTED) */}
       {pages.length > 0 && (
-
-        <div className="px-5 py-3">
-
-          <div className="flex justify-between text-sm mb-1">
-
+        <div className="px-4 sm:px-6 pt-3">
+          <div className="flex justify-between text-xs text-[#3b2414] mb-1">
             <span>
-
-              Page {Math.min(currentPage + 1, totalPages)}
-
-              {" / "}
-
-              {totalPages}
-
+              Page {Math.min(currentPage + 1, totalPages)} / {totalPages}
             </span>
-
-            <span>
-
-              {progress > 100 ? 100 : progress}%
-
-            </span>
-
+            <span>{progress > 100 ? 100 : progress}%</span>
           </div>
 
-          <div className="h-2 bg-gray-300 rounded-full overflow-hidden">
-
+          <div className="h-2 bg-[#eadfd3] rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#572C10] transition-all duration-500"
-              style={{
-                width: `${
-                  progress > 100 ? 100 : progress
-                }%`,
-              }}
+              className="h-full bg-[#99582A] transition-all duration-500"
+              style={{ width: `${progress > 100 ? 100 : progress}%` }}
             />
-
           </div>
-
         </div>
-
       )}
 
-      {/* FLIP BOOK */}
-
+      {/* FLIPBOOK AREA */}
       <div className="flex-1 flex justify-center items-center overflow-hidden">
 
         {pages.length > 0 && (
-
           <HTMLFlipBook
             ref={bookRef}
-            width={300}
-            height={430}
-            minWidth={220}
-            maxWidth={350}
-            minHeight={320}
-            maxHeight={500}
+            width={340}
+            height={460}
+            minWidth={280}
+            maxWidth={380}
+            minHeight={380}
+            maxHeight={520}
             size="stretch"
             showCover={true}
             drawShadow={true}
             maxShadowOpacity={0.5}
-            mobileScrollSupport={true}
+            mobileScrollSupport={false}
             useMouseEvents={true}
             flippingTime={700}
-            startPage={0}
             onFlip={(e) => {
-
               setCurrentPage(e.data);
-
               playSound();
-
             }}
           >
-
-            {/* 
-            FIRST PAGE OF PDF = COVER
-            LAST PAGE OF PDF = BACK COVER
-            */}
-
             {pages.map((page, index) => (
-
               <div
                 key={index}
-                className="bg-white h-full w-full flex justify-center items-center border border-gray-200"
+                className="bg-white flex items-center justify-center border border-[#eadfd3]"
               >
-
                 <img
                   src={page}
-                  alt={`Page ${index + 1}`}
                   className="w-full h-full object-contain"
+                  alt={`Page ${index + 1}`}
                 />
-
               </div>
-
             ))}
-
           </HTMLFlipBook>
-
         )}
 
       </div>
 
-      {/* BUTTONS */}
+      {/* CONTROLS (BACK BUTTON MOVED HERE) */}
+      <div className="shrink-0 bg-white/90 backdrop-blur-md border-t border-[#eadfd3] py-3">
 
-      <div className="bg-white shadow py-4 flex flex-col items-center gap-3">
-
-        <div className="flex gap-4">
+        <div className="flex justify-center items-center gap-4">
 
           <button
             onClick={flipPrev}
             disabled={currentPage === 0}
-            className={`px-6 py-2 rounded-lg text-white ${
+            className={`px-5 py-2 rounded-xl text-sm font-semibold transition ${
               currentPage === 0
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#572C10] hover:bg-[#3f1f08]"
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-[#99582A] text-white hover:scale-105"
             }`}
           >
-
             ⬅ Prev
+          </button>
 
+          <button
+            onClick={() => navigate(-1)}
+            className="px-5 py-2 rounded-xl text-sm font-semibold bg-red-600 text-white hover:scale-105"
+          >
+            Back
           </button>
 
           <button
             onClick={flipNext}
             disabled={currentPage >= pages.length - 1}
-            className={`px-6 py-2 rounded-lg text-white ${
+            className={`px-5 py-2 rounded-xl text-sm font-semibold transition ${
               currentPage >= pages.length - 1
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#572C10] hover:bg-[#3f1f08]"
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-[#99582A] text-white hover:scale-105"
             }`}
           >
-
             Next ➡
-
           </button>
 
         </div>
-
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-red-600 hover:bg-red-700 text-white px-8 py-2 rounded-lg"
-        >
-
-          Back
-
-        </button>
 
       </div>
 

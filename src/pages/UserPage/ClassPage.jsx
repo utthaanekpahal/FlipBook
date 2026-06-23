@@ -11,13 +11,10 @@ const ClassPage = () => {
   const [mongoBooks, setMongoBooks] = useState([]);
   const [typeFilter, setTypeFilter] = useState("All");
 
-  // ================= API DATA =================
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:3000/api/books"
-        );
+        const res = await axios.get("http://localhost:3000/api/books");
 
         const filtered = res.data.data.filter(
           (item) =>
@@ -36,7 +33,6 @@ const ClassPage = () => {
     }
   }, [category, className]);
 
-  // ================= FILTER =================
   const books =
     typeFilter === "All"
       ? mongoBooks
@@ -47,123 +43,156 @@ const ClassPage = () => {
         );
 
   return (
-    <div className="min-h-screen ml-[15px] rounded-xl bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 px-4 py-10">
+    <div className="min-h-screen lg:ml-[15px] lg:w-[99%] rounded-xl w-full bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7] px-4 sm:px-6 lg:px-10 py-10">
 
-      {/* ================= HEADER ================= */}
-      <div className="text-center mb-6">
-        <h1 className="text-4xl font-bold text-[#572C10]">
+      {/* HEADER */}
+      <div className="text-center mb-10">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#3b2414]">
           📚 {className || "Class"}
         </h1>
 
-        <p className="text-lg font-bold mt-2 text-[#572C10]">
+        <p className="text-base sm:text-lg font-semibold text-[#7a4a2a] mt-2">
           {category || "Category"}
         </p>
+
+        <div className="w-20 h-1 bg-[#99582A] mx-auto mt-3 rounded-full"></div>
       </div>
 
-      {/* ================= TYPE FILTER ================= */}
-      <div className="flex justify-center gap-4 mb-10">
+      {/* FILTERS */}
+      <div className="flex flex-wrap justify-center gap-3 mb-12">
 
-        <button
-          onClick={() => setTypeFilter("All")}
-          className={`px-6 py-2 rounded-xl font-bold border ${
-            typeFilter === "All"
-              ? "bg-[#572C10] text-white"
-              : "bg-white text-[#572C10]"
-          }`}
-        >
-          All
-        </button>
-
-        <button
-          onClick={() => setTypeFilter("Semester")}
-          className={`px-6 py-2 rounded-xl font-bold border ${
-            typeFilter === "Semester"
-              ? "bg-blue-600 text-white"
-              : "bg-white text-blue-600"
-          }`}
-        >
-          Semester
-        </button>
-
-        <button
-          onClick={() => setTypeFilter("Yearly")}
-          className={`px-6 py-2 rounded-xl font-bold border ${
-            typeFilter === "Yearly"
-              ? "bg-purple-600 text-white"
-              : "bg-white text-purple-600"
-          }`}
-        >
-          Yearly
-        </button>
-
-      </div>
-
-      {/* ================= BOOK GRID ================= */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
-        {books.map((item, index) => (
-          <div
-            key={index}
-            onClick={() =>
-              navigate("/flipPage", {
-                state: {
-                  title: item.title,
-                  pdf: item.fileUrl,
-                },
-              })
-            }
-            className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer hover:scale-105 transition"
+        {[
+          { label: "All", color: "red" },
+          { label: "Semester", color: "blue" },
+          { label: "Yearly", color: "purple" },
+        ].map((btn) => (
+          <button
+            key={btn.label}
+            onClick={() => setTypeFilter(btn.label)}
+            className={`
+              px-6 py-2 rounded-full font-semibold text-sm sm:text-base
+              transition-all duration-300 border
+              ${
+                typeFilter === btn.label
+                  ? `bg-${btn.color}-600 text-white shadow-lg scale-105`
+                  : "bg-white text-[#3b2414] border-[#e6d5c9] hover:shadow-md"
+              }
+            `}
           >
-
-            <img
-              src={item.img || "/default.jpg"}
-              alt={item.title}
-              className="w-full h-[300px] object-cover"
-            />
-
-            <div className="p-4">
-
-              <h2 className="text-xl font-bold">
-                {item.title}
-              </h2>
-
-              {item.subject && (
-                <p className="text-blue-600 font-bold mt-1">
-                  {item.subject}
-                </p>
-              )}
-
-              {item.type && (
-                <span className="inline-block mt-2 px-3 py-1 text-xs font-bold rounded-full bg-gray-200">
-                  {item.type}
-                </span>
-              )}
-
-              <p className="text-sm mt-2 text-gray-600">
-                {item.description ||
-                  "No description available"}
-              </p>
-
-            </div>
-          </div>
+            {btn.label}
+          </button>
         ))}
 
       </div>
 
-      {/* ================= NO DATA ================= */}
+      {/* GRID WRAPPER (CENTER FIX) */}
+      <div className="flex justify-center">
+        <div className="w-full max-w-7xl">
+
+          {/* BOOK GRID */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
+
+            {books.map((item, index) => (
+              <div
+                key={index}
+                onClick={() =>
+                  navigate("/flipPage", {
+                    state: {
+                      title: item.title,
+                      pdf: item.fileUrl,
+                    },
+                  })
+                }
+                className="
+                  w-full max-w-[360px]
+                  bg-white
+                  border border-[#eadfd3]
+                  rounded-3xl
+                  overflow-hidden
+                  cursor-pointer
+                  shadow-md
+                  hover:shadow-2xl
+                  hover:-translate-y-2
+                  transition-all duration-300
+                "
+              >
+
+                {/* IMAGE */}
+                <div className="relative">
+
+                  <img
+                    src={item.img || "/default.jpg"}
+                    alt={item.title}
+                    className="w-full h-[220px] sm:h-[250px] object-cover"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+
+                </div>
+
+                {/* CONTENT */}
+                <div className="p-5">
+
+                  <h2 className="text-lg font-bold text-[#3b2414]">
+                    {item.title}
+                  </h2>
+
+                  {item.subject && (
+                    <p className="text-[#99582A] font-semibold mt-1">
+                      {item.subject}
+                    </p>
+                  )}
+
+                  {item.type && (
+                    <span className="
+                      inline-block mt-3
+                      px-3 py-1
+                      text-xs font-bold
+                      rounded-full
+                      bg-[#f3e7df]
+                      text-[#7a4a2a]
+                    ">
+                      {item.type}
+                    </span>
+                  )}
+
+                  <p className="text-sm mt-3 text-gray-600 line-clamp-2">
+                    {item.description || "No description available"}
+                  </p>
+
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* NO DATA */}
       {books.length === 0 && (
         <div className="text-center mt-20">
-          <p className="text-2xl text-red-500 font-bold">
+          <p className="text-xl sm:text-2xl text-red-500 font-bold">
             No Books Found
           </p>
         </div>
       )}
 
-      {/* ================= BACK BUTTON ================= */}
-      <div className="flex justify-center mt-10">
+      {/* BACK BUTTON */}
+      <div className="flex justify-center mt-14">
         <button
           onClick={() => navigate(-1)}
-          className="bg-[#572C10] text-white px-6 py-3 rounded-xl"
+          className="
+            bg-gradient-to-r from-[#99582A] to-[#c98b4d]
+            text-white
+            px-10 py-3
+            rounded-2xl
+            font-semibold
+            shadow-lg
+            hover:scale-105
+            transition-all
+          "
         >
           Back
         </button>
