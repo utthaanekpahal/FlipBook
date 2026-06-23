@@ -8,8 +8,11 @@ import {
   FaTasks,
   FaUpload,
   FaStickyNote,
-  FaCamera
+  FaCamera,
+  FaMicrophone,
+  
 } from "react-icons/fa";
+import { BiCurrentLocation } from "react-icons/bi";
 
 const VisitForm = () => {
   const [form, setForm] = useState({
@@ -21,11 +24,57 @@ const VisitForm = () => {
     visitDate: "",
     outcome: "",
     notes: "",
-   
+  
   });
 
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [isListening, setIsListening] = useState(false);
+
+const startListening = () => {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Speech Recognition is not supported in this browser");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "  en-IN"; // Hindi + English
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  setIsListening(true);
+
+  recognition.start();
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+
+    setForm((prev) => ({
+      ...prev,
+      notes: prev.notes
+        ? prev.notes + " " + transcript
+        : transcript,
+    }));
+
+    setIsListening(false);
+  };
+
+  recognition.onerror = (event) => {
+    console.log(event.error);
+
+    setIsListening(false);
+
+    alert("Mic error: " + event.error);
+  };
+
+  recognition.onend = () => {
+    setIsListening(false);
+  };
+};
 
   const handleChange = (e) => {
     setForm({
@@ -193,30 +242,44 @@ return (
         {/* Designation + Phone */}
 
         <div className="grid md:grid-cols-2 gap-5 mt-5">
+<div>
 
-          <div>
+  <label className="font-semibold">
+    Designation
+  </label>
 
-            <label className="font-semibold">
-              Designation
-            </label>
+  <div className="flex items-center border rounded-xl p-3 mt-2">
 
-            <div className="flex items-center border rounded-xl p-3 mt-2">
+    <FaUser className="mr-3 text-[#572C10]" />
 
-              <FaUser className="mr-3 text-[#572C10]" />
+    <select
+      name="designation"
+      value={form.designation}
+      onChange={handleChange}
+      className="w-full outline-none bg-transparent"
+    >
+      <option value="">
+        Select Designation
+      </option>
 
-              <input
-                type="text"
-                name="designation"
-                value={form.designation}
-                onChange={handleChange}
-                placeholder="Designation"
-                className="w-full outline-none"
-              />
+      <option value="Principal">
+        Principal
+      </option>
 
-            </div>
+      <option value="Vice Principal">
+        Vice Principal
+      </option>
 
-          </div>
+      <option value="Teacher">
+        Teacher
+      </option>
 
+    </select>
+
+  </div>
+
+</div>
+        
           <div>
 
             <label className="font-semibold">
@@ -328,28 +391,46 @@ return (
 
         {/* Notes */}
 
-        <div className="mt-5">
+      <div className="mt-5">
 
-          <label className="font-semibold">
-            Notes
-          </label>
+  <label className="font-semibold">
+    Notes
+  </label>
 
-          <div className="flex items-start border rounded-xl p-3 mt-2">
+  <div className="flex items-start border rounded-xl p-3 mt-2 gap-3">
 
-            <FaStickyNote className="mr-3 mt-1 text-[#572C10]" />
+    <FaStickyNote className="mt-1 text-[#572C10]" />
 
-            <textarea
-              rows="3"
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              placeholder="Write notes..."
-              className="w-full outline-none"
-            />
+    <textarea
+      rows="3"
+      name="notes"
+      value={form.notes}
+      onChange={handleChange}
+      placeholder="Write notes or use mic..."
+      className="w-full outline-none resize-none"
+    />
 
-          </div>
+    <button
+      type="button"
+      onClick={startListening}
+      className={`p-3 rounded-full transition ${
+        isListening
+          ? "bg-red-500 text-white animate-pulse"
+          : "bg-[#572C10] text-white hover:bg-[#3f1f0b]"
+      }`}
+    >
+      <FaMicrophone />
+    </button>
 
-        </div>
+  </div>
+
+  {isListening && (
+    <p className="text-red-500 mt-2 font-semibold">
+      🎤 Listening...
+    </p>
+  )}
+
+</div>
 
 {/* Selfie Upload */}
 

@@ -20,7 +20,7 @@ export const getBooks = async (req, res) => {
 };
 
 // =========================
-// CREATE BOOK (optional but useful)
+// CREATE BOOK
 // =========================
 export const uploadBooks = async (req, res) => {
   try {
@@ -75,7 +75,7 @@ export const updateBooks = async (req, res) => {
       type: req.body.type,
     };
 
-    // update image if new file uploaded
+    // update image if file exists
     if (req.file) {
       updateData.img = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
     }

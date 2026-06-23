@@ -1,191 +1,259 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react';
-import { FaThList } from "react-icons/fa";
-import { FaEye } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { FaThList, FaEye, FaBook } from "react-icons/fa";
 import { MdConfirmationNumber } from "react-icons/md";
-import { FaBook } from "react-icons/fa";
-import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AgentDashboard = () => {
   const navigate = useNavigate();
-  const agenttotalViews =localStorage.getItem("viewsagent")||0;
-  const [lengths, setlengths] = useState("")
-  const ticketlength=async()=>{
-    try{
-      const res=await axios.get("http://localhost:3000/api/tickets/all")
-      setlengths(res.data.tickets)
-        }
-    catch(error){
-      console.log("error in tickets lenght")
+
+  const agenttotalViews =
+    localStorage.getItem("viewsagent") || 0;
+
+  const [lengths, setlengths] = useState([]);
+  const [books, setBooks] = useState([]);
+
+  // Tickets
+  const ticketlength = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:3000/api/tickets/all"
+      );
+
+      setlengths(res.data.tickets);
+    } catch (error) {
+      console.log("error in tickets length");
     }
-  }
-  useEffect(()=>{
-   ticketlength()
-  },[])
+  };
+
+  // Books
+  const getBooks = async () => {
+    try {
+      const res = await axios.get(
+        "https://flipbook-lw1b.onrender.com/api/books"
+      );
+
+      if (res.data.success) {
+        const sortedBooks = res.data.data.sort(
+          (a, b) =>
+            new Date(b.createdAt) -
+            new Date(a.createdAt)
+        );
+
+        setBooks(sortedBooks);
+      }
+    } catch (error) {
+      console.log("Error fetching books", error);
+    }
+  };
+
+  useEffect(() => {
+    ticketlength();
+    getBooks();
+  }, []);
+
   return (
-  <div className="min-h-screen lg:mt-[48px] sm:mt-[48px] mt-[35%] bg-[#EFE6DD]">
-  <section className="w-full overflow-x-hidden">
+    <div className="min-h-screen lg:mt-[48px] sm:mt-[48px] mt-[35%] bg-[#EFE6DD]">
+      <section className="w-full overflow-x-hidden">
 
-    {/* Stats Cards */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 p-4 md:p-6">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 p-4 md:p-6">
 
-      {/* Total Books */}
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
-        <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center shrink-0">
-          <FaBook className="text-2xl text-[#572C10]" />
-        </div>
+          {/* Total Books */}
+          <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
 
-        <div>
-          <p className="text-sm font-semibold text-[#572C10]">
-            Total Books
-          </p>
-          <h2 className="text-2xl font-bold">500</h2>
-          <p className="text-xs text-[#995F2F]">
-            +12 this month
-          </p>
-        </div>
-      </div>
+            <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center">
+              <FaBook className="text-2xl text-[#572C10]" />
+            </div>
 
-      {/* Categories */}
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
-        <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center shrink-0">
-          <FaThList className="text-2xl text-[#572C10]" />
-        </div>
+            <div>
 
-        <div>
-          <p className="text-sm font-semibold text-[#572C10]">
-            Categories
-          </p>
-          <h2 className="text-2xl font-bold">2</h2>
-          <p className="text-xs text-[#995F2F]">
-            4 this month
-          </p>
-        </div>
-      </div>
+              <p className="text-xl font-bold text-pink-900">
 
-      {/* Tickets */}
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
-        <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center shrink-0">
-          <MdConfirmationNumber className="text-2xl text-[#572C10]" />
-        </div>
+                Total Books
 
-        <div>
-          <p className="text-sm font-semibold text-[#572C10]">
-            Ticket Raise
-          </p>
-         
-          <div>
-          <h2 className="text-2xl font-bold">{lengths.length}</h2>
+              </p>
+
+              <h2 className="text-xl font-bold text-pink-800">
+
+                {books.length}
+
+              </h2>
+
+
+            </div>
+
           </div>
-          <p className="text-xs text-[#995F2F]">
-            This month
-          </p>
-        </div>
-      </div>
 
-      {/* Views */}
-      <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
-        <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center shrink-0">
-          <FaEye className="text-2xl text-[#572C10]" />
+          {/* Categories */}
+
+          <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
+
+            <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center">
+
+              <FaThList className="text-2xl text-[#572C10]" />
+
+            </div>
+
+            <div>
+
+              <p className="text-xl font-bold text-pink-900">
+
+                Categories
+
+              </p>
+
+              <h2 className="text-xl font-bold text-pink-800">
+
+                2
+
+              </h2>
+
+
+            </div>
+
+          </div>
+
+          {/* Tickets */}
+
+          <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
+
+            <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center">
+
+              <MdConfirmationNumber className="text-2xl text-[#572C10]" />
+
+            </div>
+
+            <div>
+
+              <p className="text-xl font-bold text-pink-900">
+
+                Ticket Raise
+
+              </p>
+
+              <h2 className="text-xl font-bold text-pink-800">
+
+                {lengths.length}
+
+              </h2>
+
+             
+
+            </div>
+
+          </div>
+
+          {/* Views */}
+
+          <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 flex items-center gap-4 border border-[#E8DCCF]">
+
+            <div className="w-14 h-14 bg-[#FFDBB5] rounded-xl flex items-center justify-center">
+
+              <FaEye className="text-2xl text-[#572C10]" />
+
+            </div>
+
+            <div>
+
+              <p className="text-xl font-bold text-pink-900">
+
+                Total Views
+
+              </p>
+
+              <h2 className="text-xl font-bold text-pink-800">
+
+                {agenttotalViews}
+
+              </h2>
+
+            </div>
+
+          </div>
+
         </div>
 
-        <div>
-          <p className="text-sm font-semibold text-[#572C10]">
-            Total Views
-          </p>
-          <h2 className="text-2xl font-bold">
-            {agenttotalViews}
+        {/* Browse Category */}
+
+        <div className="mx-4 md:mx-6 mb-6 bg-white rounded-2xl shadow-sm border border-[#E8DCCF] p-5">
+
+          <h2 className="text-2xl font-bold text-pink-900 mb-6 text-center">
+
+             Category
+
           </h2>
-          <p className="text-xs text-[#995F2F]">
-            +17.8% this month
-          </p>
-        </div>
-      </div>
 
-    </div>
+          <div className="flex justify-center items-center gap-10 sm:gap-16 flex-wrap">
 
-    {/* Browser Category */}
-    <div className="mx-4 md:mx-6 mb-6 bg-white rounded-2xl shadow-sm border border-[#E8DCCF] p-5">
-
-  <h2 className="text-xl font-bold text-[#572C10] mb-6">
-    Browse Category
-  </h2>
-
-  <div className="flex justify-center items-center gap-10 sm:gap-16 flex-wrap">
-
-    <img
-      onClick={() => navigate("/Category")}
-      src="/nav.png"
-      alt="Navigation"
-      className="
-        w-[120px]
-        sm:w-[150px]
-        md:w-[180px]
-        object-contain
-        cursor-pointer
-        hover:scale-110
-        transition-all
-        duration-300
-      "
-    />
-
-    <img
-      onClick={() => navigate("/Category")}
-      src="/gyan.png"
-      alt="Gyan"
-      className="
-        w-[120px]
-        sm:w-[150px]
-        md:w-[180px]
-        object-contain
-        cursor-pointer
-        hover:scale-110
-        transition-all
-        duration-300
-      "
-    />
-
-  </div>
-
-</div>
-
-    {/* Recent Books */}
-    <div className="mx-4 md:mx-6 bg-white rounded-2xl shadow-sm border border-[#E8DCCF] p-5">
-
-      <h2 className="text-xl font-bold text-[#572C10] mb-5">
-        Recent Added Books
-      </h2>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-5">
-
-        {[
-          "book4.png",
-          "book2.jfif",
-          "book 3.jfif",
-          "book 4.jfif",
-          "book 4.jfif",
-        ].map((book, index) => (
-          <div
-            key={index}
-            onClick={() => navigate("/FlipPage")}
-            className="cursor-pointer rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all"
-          >
             <img
-              src={book}
-              alt=""
-              className="w-full h-[220px] object-cover"
+              onClick={() => navigate("/Category")}
+              src="/nav.png"
+              alt="Navigation"
+              className="w-[120px] sm:w-[150px] md:w-[180px] object-contain cursor-pointer hover:scale-110 transition-all duration-300"
             />
+
+            <img
+              onClick={() => navigate("/Category")}
+              src="/gyan.png"
+              alt="Gyan"
+              className="w-[120px] sm:w-[150px] md:w-[180px] object-contain cursor-pointer hover:scale-110 transition-all duration-300"
+            />
+
           </div>
-        ))}
 
-      </div>
+        </div>
 
+        {/* Recent Added Books */}
+
+        <div className="mx-4 md:mx-6 bg-white rounded-2xl shadow-sm border border-[#E8DCCF] p-5">
+
+          <h2 className="text-xl font-bold text-[#572C10] mb-5">
+
+            Recent Added Books
+
+          </h2>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-5">
+
+            {books.slice(0, 5).map((book) => (
+
+              <div
+                key={book._id}
+                onClick={() => navigate("/FlipPage")}
+                className="cursor-pointer rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all bg-white"
+              >
+
+                <img
+                  src={book.img}
+                  alt={book.title}
+                  className="w-full h-[220px] object-cover"
+                  onError={(e) => {
+                    e.target.src = "/book1.jpg";
+                  }}
+                />
+
+                <div className="p-3">
+
+                  <h3 className="font-semibold text-center text-[#572C10]">
+
+                    {book.title}
+
+                  </h3>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
     </div>
+  );
+};
 
-  </section>
-</div>
-  )
-}
-
-export default AgentDashboard
+export default AgentDashboard;

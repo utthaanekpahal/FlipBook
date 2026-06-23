@@ -16,8 +16,12 @@ const agentLoader = useApiLoader();
 const ticketLoader = useApiLoader();
 const [agentError, setAgentError] = useState("");
 const [ticketError, setTicketError] = useState("");
+const [books, setBooks] = useState([]);
 useEffect(() => {
   fetchAgents();
+}, []);
+useEffect(() => {
+  fetchBooks();
 }, []);
 
 const fetchAgents = async () => {
@@ -117,6 +121,30 @@ const deleteAgent = async (id) => {
   agent.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
   agent.email?.toLowerCase().includes(searchTerm.toLowerCase())
 );
+const fetchBooks = async () => {
+  try {
+    const res = await axios.get(
+      "https://flipbook-lw1b.onrender.com/api/books"
+    );
+
+    if (res.data.success) {
+
+      const sortedBooks = res.data.data.sort(
+        (a, b) =>
+          new Date(b.createdAt) -
+          new Date(a.createdAt)
+      );
+
+      setBooks(sortedBooks);
+
+    }
+
+  } catch (error) {
+
+    console.log("Book fetch error:", error);
+
+  }
+};
   return (
     <div className=''>
 
@@ -136,9 +164,9 @@ const deleteAgent = async (id) => {
                 <FaBook className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
               </div>
               <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[14px] text-[#572C10] '>Total Books</span>
-                <span className='font-bold text-[17px]'>500</span>
-                <span className='font-bold text-[12px] text-[#995F2F]'>+12 this month</span>
+                <span className='font-bold text-[20px] text-pink-900 '>Total Books</span>
+                <span className='font-bold text-[18px] text-pink-700'>{books.length}</span>
+                
               </div>
             </div>
             <div
@@ -147,9 +175,9 @@ const deleteAgent = async (id) => {
                 <FaThList className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
               </div>
               <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[14px] text-[#572C10] '>Total Categories</span>
-                <span className='font-bold text-[17px]'>2</span>
-                <span className='font-bold text-[12px] text-[#995F2F]'>4 this month</span>
+                <span className='font-bold text-[20px] text-pink-900 '>Total Categories</span>
+                <span className='font-bold text-[18px] text-pink-700'>2</span>
+               
               </div>
             </div>
             <div
@@ -158,9 +186,9 @@ const deleteAgent = async (id) => {
                 <FaUserTie className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
               </div>
               <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[14px] text-[#572C10] '>Active Agents</span>
-                <span className='font-bold text-[17px]'>{agents.length}</span>
-                <span className='font-bold text-[12px] text-[#995F2F]'>+5 this month</span>
+                <span className='font-bold text-[20px] text-pink-900 '>Active Agents</span>
+                <span className='font-bold text-[18px] text-pink-700'>{agents.length}</span>
+
               </div>
             </div>
             <div
@@ -169,9 +197,9 @@ const deleteAgent = async (id) => {
                 <FaEye className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
               </div>
               <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[14px] text-[#572C10] '>Total views</span>
-                <span className='font-bold text-[17px]'>{totalViews}</span>
-                <span className='font-bold text-[12px] text-[#995F2F]'>+17.8% this month</span>
+                <span className='font-bold text-[20px] text-pink-900 '>Total views</span>
+                <span className='font-bold text-[18px] text-pink-700'>{totalViews}</span>
+                
               </div>
             </div>
 
@@ -181,92 +209,55 @@ const deleteAgent = async (id) => {
           {/* RECENT BOOK */}
           <div className="bg-[#F5F5F5] rounded-[10px] p-[10px]">
 
-            <div className='flex justify-between items-center mb-[20px]'>
+            <div className='text-center mb-[20px] '>
 
-              <h2 className="font-bold text-[#572C10]">
+              <h2 className="font-bold text-pink-900 text-[20px]">
                 Recent Book
               </h2>
 
             </div>
 
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4'>
+         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
 
-              {/* BOOK 1 */}
-              <div className='flex flex-col items-center gap-[5px]'>
+  {books.slice(0, 6).map((book) => (
 
-               <div className='w-full max-w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-                  <img onClick={() => { navigate("/FlipPage") }} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpvDOaZom26Em_V82vJa8tl-zovil5OlgmwA&s" alt="" className='w-full h-full object-cover rounded' />
-                </div>
+    <div
+      key={book._id}
+      className="flex flex-col items-center gap-[5px]"
+    >
 
-                <span className="text-[14px] font-bold">Mathematics</span>
-                <span className="text-[12px] font-bold">Class 8</span>
-                <span className="text-[12px] font-bold">May 25 2026</span>
+      <div className="w-full max-w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center">
 
-              </div>
+        <img
+          onClick={() => navigate("/FlipPage")}
+          src={book.img}
+          alt={book.title}
+          className="w-full h-full object-cover rounded cursor-pointer"
+          onError={(e) => {
+            e.target.src = "/book1.jpg";
+          }}
+        />
 
-              {/* BOOK 2 */}
-              <div className='flex flex-col items-center gap-[5px]'>
+      </div>
 
-               <div className='w-full max-w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-                  <img onClick={() => { navigate("/FlipPage") }} src="https://m.media-amazon.com/images/I/81zleB1itJL._AC_UF1000,1000_QL80_.jpg" alt="" className='w-full h-full object-cover rounded' />
-                </div>
+      <span className="text-[18px] font-bold text-center">
+        {book.title}
+      </span>
 
-                <span className="text-[14px] font-bold">English</span>
-                <span className="text-[12px] font-bold">Class 8</span>
-                <span className="text-[12px] font-bold">May 25 2026</span>
+      <span className="text-[14px] font-bold text-purple-700 t">
+        {book.className}
+      </span>
 
-              </div>
+      
+      <span className="text-[16px] font-bold text-blue-900">
+        {book.subject || "Subject"}
+      </span>
 
-              {/* BOOK 3 */}
-              <div className='flex flex-col items-center gap-[5px]'>
-                <div className='w-full max-w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-                  <img onClick={() => { navigate("/FlipPage") }} src="https://sureshbookdepot.com/wp-content/uploads/2025/07/20250707_180109-scaled.jpg" alt="" className='w-full h-full object-cover rounded' />
-                </div>
+    </div>
 
-                <span className="text-[14px] font-bold">Hindi</span>
-                <span className="text-[12px] font-bold">Class 8</span>
-                <span className="text-[12px] font-bold">May 25 2026</span>
-
-              </div>
-
-              {/* BOOK 4 */}
-              <div className='flex flex-col items-center gap-[5px]'>
-
-                <div className='w-full max-w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-                  <img onClick={() => { navigate("/FlipPage") }} src="/book 4.jfif" alt="" className='w-full h-full object-cover rounded' />
-                </div>
-
-                <span className="text-[14px] font-bold">Science</span>
-                <span className="text-[12px] font-bold">Class 8</span>
-                <span className="text-[12px] font-bold">May 25 2026</span>
-
-              </div>
-              <div className='flex flex-col items-center gap-[5px]'>
-
-               <div className='w-full max-w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-                  <img onClick={() => { navigate("/FlipPage") }} src="/book12.jpg" alt="" className='w-full h-full object-cover rounded' />
-                </div>
-
-                <span className="text-[14px] font-bold">Science</span>
-                <span className="text-[12px] font-bold">Class 8</span>
-                <span className="text-[12px] font-bold">May 25 2026</span>
-
-              </div>
-              <div className='flex flex-col items-center gap-[5px]'>
-
-               <div className='w-full max-w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center'>
-                  <img onClick={() => { navigate("/FlipPage") }} src="/book8.jpg" alt="" className='w-full h-full object-cover rounded' />
-                </div>
-
-                <span className="text-[14px] font-bold">Science</span>
-                <span className="text-[12px] font-bold">Class 8</span>
-                <span className="text-[12px] font-bold">May 25 2026</span>
-
-              </div>
-
-            </div>
-
-          </div>
+  ))}
+</div>
+</div>
 
           {/* TABLE + CARD */}
           <div className='flex flex-col xl:flex-row gap-2'>
@@ -276,11 +267,11 @@ const deleteAgent = async (id) => {
 
               <div className='flex justify-between mb-[20px]'>
 
-                <h4 className='font-bold text-[#572C10]'>
+                <h4 className='font-bold text-pink-900 text-[20px]'>
                   Active Agent
                 </h4>
 
-                <button className='border px-[10px] py-[5px] text-[#572C10] border-[#EFE6DD] font-bold  rounded'
+                <button className='border px-[10px] py-[5px] text-pink-900 border-[#EFE6DD] font-bold  rounded'
                  onClick={()=>{setagentpop(!agentpop)}}>
                   View all
                 </button>

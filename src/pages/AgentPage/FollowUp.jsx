@@ -215,6 +215,14 @@ const FollowUp = () => {
               <b>Phone:</b> {v.phone}
             </p>
 
+            <p>
+              <b>Visit Date:</b>{" "}
+              {new Date(v.visitDate).toLocaleDateString()}
+            </p>
+            <p>
+              <b>Notes:</b> {v.notes}
+            </p>
+
             <p className="mt-3">
   <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">
     Status : {v.outcome}
