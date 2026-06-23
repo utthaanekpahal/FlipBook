@@ -24,9 +24,53 @@ const VisitForm = () => {
     visitDate: "",
     outcome: "",
     notes: "",
+    location:"",
   
   });
+  const [location, setLocation] = useState("");
+const [loading, setLoading] = useState(false);
+const getCurrentLocation = () => {
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+  }
 
+  setLoading(true);
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      const address = await getAddressFromCoords(lat, lon);
+
+      setForm((prev) => ({
+        ...prev,
+        location: address,   // ✅ store in form
+      }));
+
+      setLoading(false);
+    },
+    (error) => {
+      console.error(error);
+      alert("Location permission denied or error");
+      setLoading(false);
+    }
+  );
+};
+const getAddressFromCoords = async (lat, lon) => {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+    );
+
+    const data = await res.json();
+    return data.display_name;
+  } catch (err) {
+    console.log(err);
+    return `${lat}, ${lon}`;
+  }
+};
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isListening, setIsListening] = useState(false);
@@ -431,7 +475,21 @@ return (
   )}
 
 </div>
+{/* location */}
+<div>
+ <input
+  type="text"
+  value={form.location}
+  onChange={(e) =>
+    setForm({ ...form, location: e.target.value })
+  }
+  placeholder="Enter location"
+/>
 
+<button onClick={getCurrentLocation}>
+  {loading ? "Fetching..." : "Use current location"}
+</button>
+</div>
 {/* Selfie Upload */}
 
 <div className="mt-6">

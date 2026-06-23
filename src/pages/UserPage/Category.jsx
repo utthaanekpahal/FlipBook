@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBook } from "react-icons/fa";
 import axios from "axios";
+import useApiLoader from "../../hook/useApiLoader";
+
 
 const sortClasses = (classes) => {
   const order = [
@@ -29,57 +31,63 @@ const sortClasses = (classes) => {
 
 const Category = () => {
   const navigate = useNavigate();
+  const { loading, execute } = useApiLoader();
   const [data, setData] = useState([]);
   const [selectedBook, setSelectedBook] = useState(null);
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const res = await axios.get("http://localhost:3000/api/books");
-        const books = res.data.data;
+ useEffect(() => {
+  const fetchBooks = async () => {
+    try {
+      const res = await execute(() =>
+        axios.get("http://localhost:3000/api/books")
+      );
 
-        const grouped = {};
+      const books = res.data.data;
 
-        books.forEach((item) => {
-          if (!grouped[item.category]) {
-            grouped[item.category] = {
-              category: item.category,
-              icon:
-                item.category === "Navbodh"
-                  ? "/nav.png"
-                  : "/gyan.png",
-              books: [],
-            };
+      const grouped = {};
+
+      books.forEach((item) => {
+        if (!grouped[item.category]) {
+          grouped[item.category] = {
+            category: item.category,
+            icon:
+              item.category === "Navbodh"
+                ? "/nav.png"
+                : "/gyan.png",
+            books: [],
+          };
+        }
+
+        const existingBook = grouped[item.category].books.find(
+          (b) => b.title === item.title
+        );
+
+        if (existingBook) {
+          if (!existingBook.classes.includes(item.className)) {
+            existingBook.classes.push(item.className);
           }
 
-          const existingBook = grouped[item.category].books.find(
-            (b) => b.title === item.title
+          existingBook.classes = sortClasses(
+            existingBook.classes
           );
+        } else {
+          grouped[item.category].books.push({
+            title: item.title,
+            subject: item.subject,
+            type: item.type,
+            classes: [item.className],
+          });
+        }
+      });
 
-          if (existingBook) {
-            if (!existingBook.classes.includes(item.className)) {
-              existingBook.classes.push(item.className);
-            }
+      setData(Object.values(grouped));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-            existingBook.classes = sortClasses(existingBook.classes);
-          } else {
-            grouped[item.category].books.push({
-              title: item.title,
-              subject: item.subject,
-              type: item.type,
-              classes: [item.className],
-            });
-          }
-        });
-
-        setData(Object.values(grouped));
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchBooks();
-  }, []);
+  fetchBooks();
+}, []);
 
   return (
     <div className="min-h-screen lg:ml-[15px] rounded-xl w-full lg:w-[99%] flex bg-[#faf6f2]">
@@ -100,7 +108,16 @@ const Category = () => {
           <div className="w-full max-w-7xl">
 
             {/* GRID */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
+            {loading ? (
+   <div className="flex justify-center lg:mr-[30%] py-20">
+    <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-md">
+      <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+      <span className="text-[#572C10] font-medium">
+        Loading Categories...
+      </span>
+    </div>
+  </div>
+) : ( <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
 
               {data.map((item) => (
                 <div
@@ -178,7 +195,7 @@ const Category = () => {
               ))}
 
             </div>
-
+)}
           </div>
         </div>
 
@@ -209,14 +226,9 @@ const Category = () => {
 
           <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6">
 
-            <h2 className="text-2xl font-bold text-center text-[#3b2414]">
+            <h2 className="text-2xl mb-3 font-bold text-center text-[#3b2414]">
               {selectedBook.title}
             </h2>
-
-            <p className="text-center text-gray-500 mt-2 mb-6">
-              Subject : {selectedBook.subject}
-            </p>
-
             <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
 
               {selectedBook.classes?.length ? (

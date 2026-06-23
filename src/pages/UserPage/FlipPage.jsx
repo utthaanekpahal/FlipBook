@@ -3,17 +3,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import HTMLFlipBook from "react-pageflip";
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import useApiLoader from "../../hook/useApiLoader";
+
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 function FlipPage() {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const { loading, execute } = useApiLoader();
   const { pdf, title } = location.state || {};
 
   const [pages, setPages] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
 
   const bookRef = useRef(null);
@@ -29,10 +30,9 @@ function FlipPage() {
     };
   }, [pdf]);
 
-  const loadPDF = async () => {
-    try {
-      setLoading(true);
-
+ const loadPDF = async () => {
+  try {
+    await execute(async () => {
       const pdfDoc = await pdfjsLib.getDocument(pdf).promise;
       const totalPages = Math.min(pdfDoc.numPages, 100);
 
@@ -57,13 +57,12 @@ function FlipPage() {
       }
 
       setPages(tempPages);
-    } catch (err) {
-      console.log(err);
-      alert("Unable to load PDF");
-    } finally {
-      setLoading(false);
-    }
-  };
+    });
+  } catch (err) {
+    console.log(err);
+    alert("Unable to load PDF");
+  }
+};
 
   const playSound = () => {
     if (audioRef.current) {
@@ -81,25 +80,20 @@ function FlipPage() {
     totalPages > 0
       ? Math.round((currentPage / (totalPages - 1)) * 100)
       : 0;
-
-  if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
-        <div className="text-center">
-          <div className="w-14 h-14 border-4 border-[#99582A] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <h1 className="text-lg font-semibold text-[#3b2414]">
-            Loading Book...
-          </h1>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="h-[35%] flex flex-col overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
+    <div className="lg:h-[84.5vh] sm:h-[75vh]  h-[75vh] flex flex-col lg:ml-[15px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
 
       {/* PROGRESS ONLY (HEADER REMOVED AS REQUESTED) */}
-      {pages.length > 0 && (
+       {loading ? (
+   <div className="flex justify-center lg:mt-[12%] sm:mt-[43%] mt-[37%] py-20">
+    <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-md">
+      <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+      <span className="text-[#572C10] font-medium">
+        Loading Book...
+      </span>
+    </div>
+  </div>
+  ) : ( pages.length > 0 && (
         <div className="px-4 sm:px-6 pt-3">
           <div className="flex justify-between text-xs text-[#3b2414] mb-1">
             <span>
@@ -115,10 +109,10 @@ function FlipPage() {
             />
           </div>
         </div>
-      )}
+      ))}
 
       {/* FLIPBOOK AREA */}
-      <div className="flex-1 flex justify-center items-center overflow-hidden">
+      <div className="flex-1 mt-[10px] flex justify-center items-center overflow-hidden">
 
         {pages.length > 0 && (
           <HTMLFlipBook
@@ -177,7 +171,7 @@ function FlipPage() {
 
           <button
             onClick={() => navigate(-1)}
-            className="px-5 py-2 rounded-xl text-sm font-semibold bg-red-600 text-white hover:scale-105"
+            className="px-5 py-2 rounded-xl text-sm font-semibold bg-blue-500 text-white hover:scale-105"
           >
             Back
           </button>
