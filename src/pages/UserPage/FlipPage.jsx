@@ -132,27 +132,29 @@ function FlipPage() {
 
             {pages.length > 0 && (
               <HTMLFlipBook
-                ref={bookRef}
-                width={340}
-                height={460}
-                minWidth={280}
-                maxWidth={380}
-                minHeight={380}
-                maxHeight={520}
-                size="stretch"
-                showCover={true}
-                drawShadow={true}
-                maxShadowOpacity={0.5}
-                mobileScrollSupport={true}
-                useMouseEvents={true}
-                flippingTime={700}
-                onFlip={(e) => {
-                  setCurrentPage(e.data);
-
-                  // 🔊 EVERY FLIP SOUND
-                  playFlipSound();
-                }}
-              >
+  ref={bookRef}
+  width={340}
+  height={460}
+  minWidth={280}
+  maxWidth={380}
+  minHeight={380}
+  maxHeight={520}
+  size="stretch"
+  showCover={true}
+  drawShadow={true}
+  maxShadowOpacity={0.5}
+  mobileScrollSupport={true}
+  useMouseEvents={true}
+  flippingTime={700}
+  onChangeState={(e) => {
+    if (e.data === "flipping") {
+      playFlipSound();
+    }
+  }}
+  onFlip={(e) => {
+    setCurrentPage(e.data);
+  }}
+>
                 {pages.map((page, index) => (
                   <div
                     key={index}

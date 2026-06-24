@@ -13,6 +13,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
   const [cover, setCover] = useState("");
 
   useEffect(() => {
+      console.log("PDF URL =", pdfUrl);
     const loadCover = async () => {
       try {
         const pdf = await pdfjsLib.getDocument(pdfUrl).promise;

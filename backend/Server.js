@@ -33,6 +33,8 @@ app.use(express.urlencoded({ extended: true }));
 // =========================
 // STATIC FILES (UPLOADS)
 // =========================
+
+// 👇 THIS IS REQUIRED
 app.use("/uploads", express.static("uploads"));
 
 // =========================

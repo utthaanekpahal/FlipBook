@@ -12,6 +12,8 @@ export const getBooks = async (req, res) => {
       data: books,
     });
   } catch (err) {
+    console.error(err);
+
     res.status(500).json({
       success: false,
       message: err.message,
@@ -20,7 +22,7 @@ export const getBooks = async (req, res) => {
 };
 
 // =========================
-// CREATE BOOK
+// CREATE BOOK (UPLOAD PDF + IMAGE)
 // =========================
 export const uploadBooks = async (req, res) => {
   try {
@@ -33,6 +35,19 @@ export const uploadBooks = async (req, res) => {
       type,
     } = req.body;
 
+    let pdfUrl = "";
+    let imageUrl = "";
+
+    // ✅ PDF FILE
+    if (req.files?.file?.[0]) {
+      pdfUrl = `${req.protocol}://${req.get("host")}/uploads/${req.files.file[0].filename}`;
+    }
+
+    // ✅ IMAGE FILE
+    if (req.files?.img?.[0]) {
+      imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.files.img[0].filename}`;
+    }
+
     const newBook = new Book({
       title,
       description,
@@ -40,18 +55,20 @@ export const uploadBooks = async (req, res) => {
       className,
       subject,
       type,
-      img: req.file
-        ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-        : "",
+      fileUrl: pdfUrl,
+      img: imageUrl,
     });
 
     const saved = await newBook.save();
 
     res.status(201).json({
       success: true,
+      message: "Book uploaded successfully",
       data: saved,
     });
   } catch (err) {
+    console.error(err);
+
     res.status(500).json({
       success: false,
       message: err.message,
@@ -75,9 +92,10 @@ export const updateBooks = async (req, res) => {
       type: req.body.type,
     };
 
-    // update image if file exists
-    if (req.file) {
-      updateData.img = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    // ✅ IMAGE UPDATE (multer fields => req.files)
+    if (req.files?.img?.[0]) {
+      updateData.img =
+        `${req.protocol}://${req.get("host")}/uploads/${req.files.img[0].filename}`;
     }
 
     const updated = await Book.findByIdAndUpdate(id, updateData, {
@@ -93,9 +111,12 @@ export const updateBooks = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      message: "Book updated successfully",
       data: updated,
     });
   } catch (err) {
+    console.error(err);
+
     res.status(500).json({
       success: false,
       message: err.message,
@@ -121,9 +142,11 @@ export const deleteBooks = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Deleted successfully",
+      message: "Book deleted successfully",
     });
   } catch (err) {
+    console.error(err);
+
     res.status(500).json({
       success: false,
       message: err.message,
