@@ -20,7 +20,7 @@ const ViewMoreBooks = () => {
   }, []);
 
   return (
- <div className="min-h-screen lg:mt-[-18px] flex items-center justify-center p-4">
+ <div className="min-h-screen lg:mt-[-18px] lg:ml-[25px] flex items-center justify-center p-4">
 
   {/* OUTER GLASS BACKDROP */}
   <div className="w-full max-w-7xl min-h-[90vh] bg-white/70 backdrop-blur-xl 

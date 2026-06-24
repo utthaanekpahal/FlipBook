@@ -11,42 +11,48 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
  const API = "http://localhost:3000/api/books";;
  function PdfCover({ pdfUrl, title }) {
   const [cover, setCover] = useState("");
+useEffect(() => {
+  let isMounted = true;
 
+<<<<<<< Updated upstream
   useEffect(() => {
       console.log("PDF URL =", pdfUrl);
     const loadCover = async () => {
       try {
         const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+=======
+  const loadCover = async () => {
+    try {
+      setCover("");
+>>>>>>> Stashed changes
 
-        const page = await pdf.getPage(1);
+      const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+      const page = await pdf.getPage(1);
 
-        const viewport = page.getViewport({
-          scale: 0.5,
-        });
+      const viewport = page.getViewport({ scale: 0.5 });
 
-        const canvas = document.createElement("canvas");
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
-        const ctx = canvas.getContext("2d");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
 
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
+      await page.render({ canvasContext: ctx, viewport }).promise;
 
-        await page.render({
-          canvasContext: ctx,
-          viewport,
-        }).promise;
-
+      if (isMounted) {
         setCover(canvas.toDataURL("image/jpeg"));
-      } catch (err) {
-        console.log(err);
       }
-    };
-
-    if (pdfUrl) {
-      loadCover();
+    } catch (err) {
+      console.log(err);
     }
-  }, [pdfUrl]);
+  };
 
+  if (pdfUrl) loadCover();
+
+  return () => {
+    isMounted = false;
+  };
+}, [pdfUrl]);
   return (
     <img
       src={cover || "/book1.jpg"}
@@ -184,6 +190,7 @@ useEffect(() => {
       const data = await res.json();
 
       if (data.success) {
+          console.log("FILE URLS:", data.data.map(b => b.fileUrl));
         setBooks(data.data);
         setFilteredBooks(data.data);
       }
@@ -233,7 +240,7 @@ useEffect(() => {
 };
 
   return (
-  <div className="min-h-screen mt-[-35px] bg-gradient-to-br from-[#EFE6DD] px-4 sm:px-6 py-10">
+  <div className="min-h-screen mt-[-35px] lg:ml-[15px] bg-gradient-to-br from-[#EFE6DD] px-4 sm:px-6 py-10">
 
   {/* TOP BAR */}
   <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
@@ -384,7 +391,7 @@ useEffect(() => {
 
             {/* COVER */}
             <div className="h-64 sm:h-72 overflow-hidden">
-              <PdfCover pdfUrl={book.fileUrl} title={book.title} />
+         <PdfCover pdfUrl={book.fileUrl} title={book.title} />
             </div>
 
             {/* CONTENT */}

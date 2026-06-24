@@ -94,7 +94,7 @@ function FlipPage() {
       : 0;
 
   return (
-    <div className="lg:h-[84.5vh] sm:h-[75vh] h-[75vh] flex flex-col lg:ml-[15px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
+    <div className="lg:h-[84.5vh] lg:mt-[6.5%] sm:mt-[10%] mt-[37%] sm:h-[75vh] h-[75vh] flex flex-col lg:ml-[15px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
 
       {/* LOADER */}
       {loading ? (
@@ -110,7 +110,7 @@ function FlipPage() {
         <>
           {/* PROGRESS BAR */}
           {pages.length > 0 && (
-            <div className="px-4 sm:px-6 pt-3">
+            <div className="px-4 mb-3 sm:px-6 pt-3">
               <div className="flex justify-between text-xs text-[#3b2414] mb-1">
                 <span>
                   Page {currentPage + 1} / {totalPages}
@@ -128,7 +128,7 @@ function FlipPage() {
           )}
 
           {/* FLIPBOOK */}
-          <div className="flex-1 mt-[10px] flex justify-center items-center overflow-hidden">
+          <div className="flex-1 flex justify-center items-center overflow-hidden">
 
             {pages.length > 0 && (
               <HTMLFlipBook

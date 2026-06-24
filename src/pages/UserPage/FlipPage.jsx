@@ -94,7 +94,7 @@ function FlipPage() {
       : 0;
 
   return (
-    <div className="lg:h-[84.5vh] sm:h-[75vh] h-[75vh] flex flex-col lg:ml-[15px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
+    <div className="lg:h-[82.5vh] sm:h-[75vh] h-[75vh] flex flex-col lg:ml-[30px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
 
       {/* LOADER */}
       {loading ? (

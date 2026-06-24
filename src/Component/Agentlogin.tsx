@@ -99,7 +99,7 @@ const clicked = async (e) => {
 // Form Submit
  return (
     <div
-  className="min-h-screen w-[99%] lg:ml-[15px] rounded-xl flex items-center justify-center bg-cover bg-center p-4"
+  className="min-h-screen lg-w-[97%] sm-w-[99%] lg:ml-[33px] rounded-xl flex items-center justify-center bg-cover bg-center p-4"
   style={{ backgroundImage: `url(${bgimg})` }}
 >
   <form

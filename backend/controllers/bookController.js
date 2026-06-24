@@ -35,18 +35,9 @@ export const uploadBooks = async (req, res) => {
       type,
     } = req.body;
 
-    let pdfUrl = "";
-    let imageUrl = "";
-
-    // ✅ PDF FILE
-    if (req.files?.file?.[0]) {
-      pdfUrl = `${req.protocol}://${req.get("host")}/uploads/${req.files.file[0].filename}`;
-    }
-
-    // ✅ IMAGE FILE
-    if (req.files?.img?.[0]) {
-      imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.files.img[0].filename}`;
-    }
+    const filePath = req.file
+      ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+      : "";
 
     const newBook = new Book({
       title,
@@ -55,8 +46,10 @@ export const uploadBooks = async (req, res) => {
       className,
       subject,
       type,
-      fileUrl: pdfUrl,
-      img: imageUrl,
+
+      // FIX: both img and fileUrl properly set
+      img: filePath,
+      fileUrl: filePath,
     });
 
     const saved = await newBook.save();
@@ -92,10 +85,12 @@ export const updateBooks = async (req, res) => {
       type: req.body.type,
     };
 
-    // ✅ IMAGE UPDATE (multer fields => req.files)
-    if (req.files?.img?.[0]) {
-      updateData.img =
-        `${req.protocol}://${req.get("host")}/uploads/${req.files.img[0].filename}`;
+    // FIX: update both img and fileUrl if file exists
+    if (req.file) {
+      const filePath = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
+      updateData.img = filePath;
+      updateData.fileUrl = filePath;
     }
 
     const updated = await Book.findByIdAndUpdate(id, updateData, {

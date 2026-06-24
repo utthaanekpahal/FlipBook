@@ -121,7 +121,7 @@ const UserTicket = () => {
   };
 
   return (
-    <div className="min-h-screen w-[102%] mt-[-33px] bg-[#EFE6DD] p-4 sm:p-5">
+    <div className="min-h-screen lg:ml-[15px] lg:w-[101%] mt-[-33px] bg-[#EFE6DD] p-4 sm:p-5">
 
       {/* HEADER */}
       <div className="flex justify-between items-center p-[15px] rounded-md">

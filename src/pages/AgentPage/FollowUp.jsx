@@ -97,6 +97,7 @@ const FollowUp = () => {
           outcome: editData.outcome,
           notes: editData.notes,
           visitedBy: editData.visitedBy,
+          location: editData.location,
         }
       ))
 
@@ -218,6 +219,9 @@ const FollowUp = () => {
             <p>
               <b>Visit Date:</b>{" "}
               {new Date(v.visitDate).toLocaleDateString()}
+            </p>
+            <p>
+              <b>Loaction:</b> {v.location}
             </p>
             <p>
               <b>Notes:</b> {v.notes}

@@ -79,7 +79,7 @@ const ClassPage = () => {
   }, [category, className]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7] px-4 py-10">
+    <div className="min-h-screen lg:ml-[20px] mt-[120px] sm:mt-[70px] rounded-xl mt-[70px] bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7] px-4 py-10">
 
       {/* HEADER */}
       <div className="text-center mb-12">
@@ -93,11 +93,14 @@ const ClassPage = () => {
 
       {/* LOADER */}
       {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="text-[#7a4a2a] font-semibold">
-            Loading Books...
-          </div>
-        </div>
+       <div className="flex justify-center py-20">
+    <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-md">
+      <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+      <span className="text-[#572C10] font-medium">
+        Loading class...
+      </span>
+    </div>
+  </div>
       ) : (
         <>
           {/* GRID CENTER WRAPPER */}
@@ -111,7 +114,7 @@ const ClassPage = () => {
                   <div
                     key={item._id}
                     onClick={() =>
-                      navigate("/flipPage", {
+                      navigate("/agent/FlipPage", {
                         state: {
                           title: item.title,
                           pdf: item.fileUrl,
