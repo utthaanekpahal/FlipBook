@@ -27,7 +27,7 @@ useEffect(() => {
 const fetchAgents = async () => {
   try {
    const response = await agentLoader.execute(() =>
-      axios.get("http://localhost:3000/api/books/agents")
+      axios.get("https://flipbook-1-l2tf.onrender.com/api/books/agents")
     );
 
     setAgents(response.data.agents);
@@ -43,7 +43,7 @@ useEffect(()=>{
 const fetchTicket=async ()=>{
   try{
     const res = await ticketLoader.execute(() =>
-      axios.get("http://localhost:3000/api/tickets/all")
+      axios.get("https://flipbook-1-l2tf.onrender.com/api/tickets/all")
     );
 
     setTicketdata(res.data.tickets)
@@ -93,7 +93,7 @@ const passwordRegex =
 
   try {
     await axios.put(
-      `http://localhost:3000/api/books/agents/${id}`,
+      `https://flipbook-1-l2tf.onrender.com/api/books/agents/${id}`,
       payload
     );
 
@@ -104,7 +104,7 @@ const passwordRegex =
 };
 const deleteAgent = async (id) => {
   try {
-    await axios.delete(`http://localhost:3000/api/books/agents/${id}`);
+    await axios.delete(`https://flipbook-1-l2tf.onrender.com/api/books/agents/${id}`);
 
     // UI update without refresh
     setAgents((prev) => prev.filter((a) => a._id !== id));
@@ -124,7 +124,7 @@ const deleteAgent = async (id) => {
 const fetchBooks = async () => {
   try {
     const res = await axios.get(
-      "https://flipbook-lw1b.onrender.com/api/books"
+      "https://flipbook-1-l2tf.onrender.com/api/books"
     );
 
     if (res.data.success) {

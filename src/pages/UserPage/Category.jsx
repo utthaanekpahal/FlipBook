@@ -39,7 +39,7 @@ const Category = () => {
   const fetchBooks = async () => {
     try {
       const res = await execute(() =>
-        axios.get("http://localhost:3000/api/books")
+        axios.get("https://flipbook-1-l2tf.onrender.com/api/books")
       );
 
       const books = res.data.data;

@@ -192,7 +192,7 @@ const startListening = () => {
       data.append("photo", photo);
 
       const res = await axios.post(
-        "http://localhost:3000/api/visits/create",
+        "https://flipbook-1-l2tf.onrender.com/api/visits/create",
         data
       );
 

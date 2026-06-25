@@ -43,7 +43,7 @@ const UserTicket = () => {
   const fetchTickets = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/api/tickets/all"
+        "https://flipbook-1-l2tf.onrender.com/api/tickets/all"
       );
       setAdminUpdates(res.data.tickets);
     } catch (error) {
@@ -60,7 +60,7 @@ const UserTicket = () => {
 
     try {
       await axios.put(
-        `http://localhost:3000/api/tickets/reply/${selectedTicket._id}`,
+        `https://flipbook-1-l2tf.onrender.com/api/tickets/reply/${selectedTicket._id}`,
         {
           status: replyData.status,
           message: replyData.message,
@@ -88,7 +88,7 @@ const UserTicket = () => {
   const deleteUpdate = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:3000/api/tickets/delete/${id}`
+        `https://flipbook-1-l2tf.onrender.com/api/tickets/delete/${id}`
       );
 
       setAdminUpdates((prev) =>

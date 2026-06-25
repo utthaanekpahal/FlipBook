@@ -41,7 +41,7 @@ const agentName = localStorage.getItem("agentName");
   const fetchTickets = async () => {
     try {
       const res = await execute(()=> axios.get(
-        "http://localhost:3000/api/tickets/all"
+        "https://flipbook-1-l2tf.onrender.com/api/tickets/all"
       ))
       setAdminUpdates(res.data.tickets);
     } catch (error) {
@@ -72,7 +72,7 @@ const agentName = localStorage.getItem("agentName");
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/tickets/create",
+        "https://flipbook-1-l2tf.onrender.com/api/tickets/create",
         upload
       );
 
@@ -106,7 +106,7 @@ const agentName = localStorage.getItem("agentName");
   const deleteUpdate = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:3000/api/tickets/delete/${id}`
+        `https://flipbook-1-l2tf.onrender.com/api/tickets/delete/${id}`
       );
 
       setAdminUpdates((prev) =>

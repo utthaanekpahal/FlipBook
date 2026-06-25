@@ -69,7 +69,7 @@ const [subject, setSubject] = useState("");
       formData.append("type", type);
 
       const res = await axios.post(
-        "http://localhost:3000/api/books/upload",
+        "https://flipbook-1-l2tf.onrender.com/api/books/upload",
         formData
       );
 
