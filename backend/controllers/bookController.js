@@ -5,14 +5,14 @@ import Book from "../models/Book.js";
 // =========================
 export const getBooks = async (req, res) => {
   try {
-    const books = await Book.find();
+    const books = await Book.find().sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
       data: books,
     });
   } catch (err) {
-    console.error(err);
+    console.error("GET BOOKS ERROR:", err);
 
     res.status(500).json({
       success: false,
@@ -22,7 +22,7 @@ export const getBooks = async (req, res) => {
 };
 
 // =========================
-// CREATE BOOK (UPLOAD PDF + IMAGE)
+// CREATE BOOK (UPLOAD PDF)
 // =========================
 export const uploadBooks = async (req, res) => {
   try {
@@ -35,21 +35,34 @@ export const uploadBooks = async (req, res) => {
       type,
     } = req.body;
 
-    const filePath = req.file
-      ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-      : "";
+    // validation
+    if (!title || !category || !className || !subject || !type) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "PDF file is required",
+      });
+    }
+
+    // PDF URL
+    const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
     const newBook = new Book({
-      title,
-      description,
-      category,
-      className,
-      subject,
+      title: title.trim(),
+      description: description || "",
+      category: category.trim(),
+      className: className.trim(),
+      subject: subject.toLowerCase().trim(), // IMPORTANT FIX
       type,
 
-      // FIX: both img and fileUrl properly set
-      img: filePath,
-      fileUrl: filePath,
+      fileUrl,
+      img: "", // optional (not used now)
     });
 
     const saved = await newBook.save();
@@ -60,7 +73,7 @@ export const uploadBooks = async (req, res) => {
       data: saved,
     });
   } catch (err) {
-    console.error(err);
+    console.error("UPLOAD ERROR:", err);
 
     res.status(500).json({
       success: false,
@@ -81,16 +94,13 @@ export const updateBooks = async (req, res) => {
       description: req.body.description,
       category: req.body.category,
       className: req.body.className,
-      subject: req.body.subject,
+      subject: req.body.subject?.toLowerCase(),
       type: req.body.type,
     };
 
-    // FIX: update both img and fileUrl if file exists
+    // if new PDF uploaded
     if (req.file) {
-      const filePath = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-
-      updateData.img = filePath;
-      updateData.fileUrl = filePath;
+      updateData.fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
     }
 
     const updated = await Book.findByIdAndUpdate(id, updateData, {
@@ -110,7 +120,7 @@ export const updateBooks = async (req, res) => {
       data: updated,
     });
   } catch (err) {
-    console.error(err);
+    console.error("UPDATE ERROR:", err);
 
     res.status(500).json({
       success: false,
@@ -140,7 +150,7 @@ export const deleteBooks = async (req, res) => {
       message: "Book deleted successfully",
     });
   } catch (err) {
-    console.error(err);
+    console.error("DELETE ERROR:", err);
 
     res.status(500).json({
       success: false,

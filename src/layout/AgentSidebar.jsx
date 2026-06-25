@@ -1,9 +1,16 @@
-import React from 'react';
-import { FaHome, FaBook, FaUsers } from "react-icons/fa";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
+import {
+  FaHome,
+  FaBook,
+  FaUsers,
+  FaUser,
+  FaTimes,
+} from "react-icons/fa";
+
 import { FaFolder } from "react-icons/fa6";
 import { MdConfirmationNumber } from "react-icons/md";
-import { FaUser, FaTimes } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
 
 const AgentSidebar = ({ open, setOpen }) => {
   const navigate = useNavigate();
@@ -38,7 +45,7 @@ const AgentSidebar = ({ open, setOpen }) => {
       )}
 
       {/* Sidebar */}
-      <header
+      <aside
         className={`
           fixed
           lg:top-[14%]
@@ -56,126 +63,130 @@ const AgentSidebar = ({ open, setOpen }) => {
           w-[250px]
           ml-[20px]
 
-          bg-white/80 backdrop-blur-xl
-          border border-[#E6D6C8]
-          rounded-2xl
-          shadow-[0_10px_40px_rgba(0,0,0,0.08)]
+          bg-white
+          border border-[#E9E1D8]
+          rounded-3xl
+          shadow-[0_10px_40px_rgba(0,0,0,0.06)]
 
           z-50
-          transition-all duration-300
+          transition-transform duration-300
 
           ${open ? "translate-x-0" : "-translate-x-[120%]"}
 
           lg:translate-x-0
         `}
       >
+        <div className="h-full flex flex-col p-4">
+          {/* Header */}
+          <div className="pb-4 border-b border-[#F2E8DF] relative">
+            <h2 className="text-lg font-extrabold text-[#572C10]">
+              Agent Panel
+            </h2>
 
-        {/* Close Button Mobile */}
-        <div className="flex justify-end p-3 lg:hidden">
-          <button
-            onClick={() => setOpen(false)}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F5F0EB] transition"
-          >
-            <FaTimes size={16} className="text-[#572C10]" />
-          </button>
-        </div>
+            <p className="text-xs font-medium text-[#A77F60] mt-1">
+              Dashboard Navigation
+            </p>
 
-        <div className='flex flex-col h-full px-3 pb-4'>
-
-          {/* MENU */}
-          <ul className='flex flex-col gap-2 flex-1'>
-
-            {/* ITEM */}
-            <li
-              onClick={() => handleNavigate("/agentDashboard")}
-              className='flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-semibold
-              hover:bg-[#572C10] hover:text-white transition-all duration-200'
+            {/* Close Button */}
+            <button
+              onClick={() => setOpen(false)}
+              className="lg:hidden absolute top-0 right-0 text-[#572C10] text-xl font-bold"
             >
-              <FaHome className='text-lg' />
-              Home
+              <FaTimes />
+            </button>
+          </div>
+
+          {/* Menu */}
+          <ul className="flex-1 mt-4 space-y-2 overflow-y-auto">
+            <li
+              className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-bold hover:bg-[#572C10] hover:text-white transition-all duration-200"
+              onClick={() => handleNavigate("/agentDashboard")}
+            >
+              <FaHome className="text-base" />
+              <span>Home</span>
             </li>
 
             <li
+              className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-bold hover:bg-[#572C10] hover:text-white transition-all duration-200"
               onClick={() =>
                 handleNavigate("/agent/category", {
-                  from: "agent"
+                  from: "agent",
                 })
               }
-              className='flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-semibold
-              hover:bg-[#572C10] hover:text-white transition-all duration-200'
             >
-              <FaFolder className='text-lg' />
-              Categories
+              <FaFolder className="text-base" />
+              <span>Categories</span>
             </li>
 
             <li
+              className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-bold hover:bg-[#572C10] hover:text-white transition-all duration-200"
               onClick={() =>
                 handleNavigate("/agent/books", {
-                  from: "agent"
+                  from: "agent",
                 })
               }
-              className='flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-semibold
-              hover:bg-[#572C10] hover:text-white transition-all duration-200'
             >
-              <FaBook className='text-lg' />
-              All Books
+              <FaBook className="text-base" />
+              <span>All Books</span>
             </li>
 
             <li
+              className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-bold hover:bg-[#572C10] hover:text-white transition-all duration-200"
               onClick={() =>
                 handleNavigate("/VisitForm", {
-                  from: "agent"
+                  from: "agent",
                 })
               }
-              className='flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-semibold
-              hover:bg-[#572C10] hover:text-white transition-all duration-200'
             >
-              <FaFolder className='text-lg' />
-              School Visit Form
+              <FaFolder className="text-base" />
+              <span>School Visit Form</span>
             </li>
 
             <li
-              onClick={() =>
-                handleNavigate("/agent/followUp")
-              }
-              className='flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-semibold
-              hover:bg-[#572C10] hover:text-white transition-all duration-200'
+              className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-bold hover:bg-[#572C10] hover:text-white transition-all duration-200"
+              onClick={() => handleNavigate("/agent/followUp")}
             >
-              <FaUsers className='text-lg' />
-              Follow Up
+              <FaUsers className="text-base" />
+              <span>Follow Up</span>
             </li>
 
             <li
+              className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-bold hover:bg-[#572C10] hover:text-white transition-all duration-200"
               onClick={() =>
                 handleNavigate("/agent/Ticket", {
-                  role: "agent"
+                  role: "agent",
                 })
               }
-              className='flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-[#572C10] font-semibold
-              hover:bg-[#572C10] hover:text-white transition-all duration-200'
             >
-              <MdConfirmationNumber className='text-lg' />
-              Ticket
+              <MdConfirmationNumber className="text-base" />
+              <span>Ticket</span>
             </li>
-
           </ul>
 
-          {/* LOGOUT */}
-          <div className="pt-3 border-t border-[#E6D6C8]">
-
-            <li
+          {/* Logout */}
+          <div className="pt-4 border-t border-[#F2E8DF]">
+            <button
               onClick={handleLogout}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer
-              text-red-600 font-semibold hover:bg-red-50 transition"
+              className="
+                w-full
+                flex
+                items-center
+                gap-3
+                px-4
+                py-3
+                rounded-xl
+                text-red-600
+                font-bold
+                hover:bg-red-50
+                transition-all
+              "
             >
               <FaUser />
               Logout
-            </li>
-
+            </button>
           </div>
-
         </div>
-      </header>
+      </aside>
     </>
   );
 };

@@ -194,43 +194,42 @@ useEffect(() => {
   fetchBooks();
 }, []);
   // search logic
-  const handleSearch = () => {
+ const handleSearch = () => {
   const result = books.filter((book) => {
     return (
       // Category Filter
       (category === "" ||
-        book.category?.trim().toLowerCase() ===
-          category.trim().toLowerCase()) &&
+        (book.category || "").trim().toLowerCase() ===
+        category.trim().toLowerCase()) &&
 
       // Book Filter
       (selectedBook === "" ||
-        book.title?.trim().toLowerCase() ===
-          selectedBook.trim().toLowerCase()) &&
+        (book.title || "").trim().toLowerCase() ===
+        selectedBook.trim().toLowerCase()) &&
 
       // Class Filter
       (className === "" ||
-        book.className?.trim().toLowerCase() ===
-          className.trim().toLowerCase()) &&
+        (book.className || "").trim().toLowerCase() ===
+        className.trim().toLowerCase()) &&
 
       // Type Filter
       (type === "" ||
-        book.type?.trim().toLowerCase() ===
-          type.trim().toLowerCase()) &&
+        (book.type || "").trim().toLowerCase() ===
+        type.trim().toLowerCase()) &&
 
       // Subject Filter
       (subject === "" ||
-        book.subject?.trim().toLowerCase() ===
-          subject.trim().toLowerCase()) &&
+        (book.subject || "").trim().toLowerCase() ===
+        subject.trim().toLowerCase()) &&
 
       // Search Text
       (search === "" ||
-        book.title?.toLowerCase().includes(search.toLowerCase()))
+        (book.title || "").toLowerCase().includes(search.toLowerCase()))
     );
   });
 
   setFilteredBooks(result);
 };
-
   return (
   <div className="min-h-screen mt-[-35px] lg:ml-[15px] bg-gradient-to-br from-[#EFE6DD] px-4 sm:px-6 py-10">
 
@@ -300,7 +299,7 @@ useEffect(() => {
         value={selectedBook}
         onChange={(e) => setSelectedBook(e.target.value)}
         disabled={!category}
-        className="bg-white border border-[#572C10]/30 px-4 py-3 rounded-xl shadow-sm focus:ring-2 focus:ring-[#572C10] outline-none disabled:opacity-50"
+        className="bg-white border border-[#572C10]/30 px-4 py-3 rounded-xl shadow-sm focus:ring-2 focus:ring-[#572C10] outline-none "
       >
         <option value="">Book Name</option>
         {category &&

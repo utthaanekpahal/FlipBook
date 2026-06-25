@@ -46,7 +46,6 @@ const [subject, setSubject] = useState("");
 
   // =========================
   // SAVE + UPLOAD
-  // =========================
  const saveBook = async () => {
   try {
     if (!category || !book || !className || !subject || !pdfFile || !type) {
@@ -58,14 +57,17 @@ const [subject, setSubject] = useState("");
       const formData = new FormData();
 
       formData.append("file", pdfFile);
+
+      // 🔥 IMPORTANT FIX
       formData.append("title", book);
-      formData.append("author", "Admin");
+
       formData.append("description", "Book uploaded via system");
       formData.append("category", category);
       formData.append("className", className);
-      formData.append("subject", subject);
-      formData.append("filetype", "pdf");
-      formData.append("book", book);
+
+      // 🔥 schema expects lowercase
+      formData.append("subject", subject.toLowerCase());
+
       formData.append("type", type);
 
       const res = await axios.post(

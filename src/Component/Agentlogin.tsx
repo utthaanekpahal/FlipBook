@@ -7,6 +7,7 @@ import axios from "axios";
 const Agentlogin = () => {
 
 const navigate = useNavigate();
+const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
 const [infodata, setinfodata] = useState({
@@ -32,8 +33,7 @@ const clicked = async (e) => {
 
   let newErrors = {};
 
-  const gmailRegex =
-    /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
@@ -51,12 +51,8 @@ const clicked = async (e) => {
       "Password must contain uppercase, lowercase, number, special character and minimum 8 characters";
   }
 
-  if (
-    infodata.Password !==
-    infodata.AgentconfirmPassword
-  ) {
-    newErrors.AgentconfirmPassword =
-      "Passwords do not match";
+  if (infodata.Password !== infodata.AgentconfirmPassword) {
+    newErrors.AgentconfirmPassword = "Passwords do not match";
   }
 
   if (Object.keys(newErrors).length > 0) {
@@ -67,33 +63,27 @@ const clicked = async (e) => {
   setErrors({});
 
   try {
+    setLoading(true);
+
     const response = await axios.post(
-     "https://flipbook-1-l2tf.onrender.com/api/books/agentsignup",
+      "https://flipbook-1-l2tf.onrender.com/api/books/agentsignup",
       {
         agentname: infodata.agentname,
         email: infodata.email,
         password: infodata.Password,
-        confirmPassword:
-          infodata.AgentconfirmPassword,
+        confirmPassword: infodata.AgentconfirmPassword,
       }
     );
-    console.log("Response:", response.data);
+
     if (response.data.success) {
       alert("Agent Registered Successfully");
 
-      navigate("/Loginform", {
-        replace: true,
-      });
+      navigate("/Loginform", { replace: true });
     }
-
   } catch (error) {
-    console.log("ERROR:", error);
-    console.log("RESPONSE:", error.response?.data);
-
-    alert(
-      error.response?.data?.message ||
-      "Registration Failed"
-    );
+    alert(error.response?.data?.message || "Registration Failed");
+  } finally {
+    setLoading(false);
   }
 };
 // Form Submit
@@ -232,22 +222,32 @@ const clicked = async (e) => {
     </div>
 
     {/* BUTTON */}
-    <button
-      type="submit"
-      className="
-        bg-[#572C10]
-        text-white
-        font-semibold
-        rounded-xl
-        py-3
-        text-lg
-        hover:bg-[#6b3512]
-        transition
-      "
-    >
-      Submit
-    </button>
+   <button
+  type="submit"
+  disabled={loading}
+  className="relative w-full bg-[#572C10] text-white font-semibold rounded-xl py-3 text-lg overflow-hidden transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+>
+  {/* shimmer layer */}
+  {loading && (
+    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.2s_infinite]"></span>
+  )}
 
+  {/* spinner */}
+  {loading && (
+    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+  )}
+
+  <span className="relative z-10">
+    {loading ? "Creating Agent..." : "Submit"}
+  </span>
+
+  <style>{`
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+  `}</style>
+</button>
   </form>
 </div>
   );

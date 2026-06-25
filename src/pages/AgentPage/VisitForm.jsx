@@ -169,63 +169,56 @@ const startListening = () => {
     }
   };
 
-  const submit = async () => {
-    try {
-      if (
-        !form.schoolName ||
-        !form.teacher ||
-        !form.phone ||
-        !photo
-      ) {
-        alert(
-          "School Name, Teacher, Phone and Photo are required"
-        );
-        return;
-      }
+ const submit = async () => {
+  setLoading(true);
 
-      const data = new FormData();
-
-      Object.keys(form).forEach((key) => {
-        data.append(key, form[key]);
-      });
-
-      data.append("photo", photo);
-
-      const res = await axios.post(
-        "https://flipbook-1-l2tf.onrender.com/api/visits/create",
-        data
-      );
-
-      console.log(res.data);
-
-      alert("Visit Saved Successfully ✔");
-
-      setForm({
-        schoolName: "",
-        teacher: "",
-        principal: "",
-        designation: "",
-        phone: "",
-        visitDate: "",
-        outcome: "",
-        notes: "",
-        location:"",
-       latitude: "",
-  longitude: "",
-      });
-
-      setPhoto(null);
-      setPreview(null);
-    } catch (error) {
-      console.log(error);
-
-      alert(
-        error.response?.data?.message ||
-          "Error saving visit"
-      );
+  try {
+    if (!form.schoolName || !form.teacher || !form.phone || !photo) {
+      alert("School Name, Teacher, Phone and Photo are required");
+      return;
     }
-  };
 
+    const data = new FormData();
+
+    Object.keys(form).forEach((key) => {
+      data.append(key, form[key]);
+    });
+
+    data.append("photo", photo);
+
+    const res = await axios.post(
+      "https://flipbook-1-l2tf.onrender.com/api/visits/create",
+      data
+    );
+
+    alert("Visit Saved Successfully ✔");
+
+    setForm({
+      schoolName: "",
+      teacher: "",
+      principal: "",
+      designation: "",
+      phone: "",
+      visitDate: "",
+      outcome: "",
+      notes: "",
+      location: "",
+      latitude: "",
+      longitude: "",
+    });
+
+    setPhoto(null);
+    setPreview(null);
+
+  } catch (error) {
+    console.log(error);
+    alert(error.response?.data?.message || "Error saving visit");
+
+  } finally {
+    // 🔥 ALWAYS RUNS (MOST IMPORTANT FIX)
+    setLoading(false);
+  }
+};
 return (
   <div className="min-h-screen lg:ml-[15px] mt-[25%] sm:mt-[30px] lg:mt-[30px] bg-gradient-to-br  py-10 px-4">
 
@@ -709,22 +702,22 @@ return (
           </button>
 
           <button
-            onClick={submit}
-            className="
-              flex-1
-              py-3
-              rounded-xl
-              bg-[#572C10]
-              text-white
-              font-bold
-              hover:bg-[#3f1f0b]
-              shadow-lg
-            "
-          >
+  onClick={submit}
+  disabled={loading}
+  className="flex-1 py-3 rounded-xl bg-[#572C10] text-white font-bold hover:bg-[#3f1f0b] shadow-lg flex items-center justify-center"
+>
+  {loading ? (
+    <div className="flex items-center gap-2">
+      <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+      <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+      <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce"></span>
 
-            Save Visit
-
-          </button>
+      <span className="ml-2 text-sm">Saving...</span>
+    </div>
+  ) : (
+    "Save Visit"
+  )}
+</button>
 
         </div>
 

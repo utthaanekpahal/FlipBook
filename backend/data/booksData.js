@@ -1,4 +1,5 @@
 const booksData = [
+  
   {
   img: "/book1.jpg",
   title: "Buddy",
@@ -11,7 +12,7 @@ const booksData = [
   category: "Navbodh",
   subject: "Maths",
 
-  fileUrl: "/uploads/maths1.pdf", // ✅ still required
+  fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/maths1.pdf", // ✅ still required
 },
   {
     img: "/book12.jpg",
@@ -22,7 +23,7 @@ const booksData = [
     type: "Semester",
     category: "Navbodh",
     subject: "English",
-    fileUrl: "/uploads/english1.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/english1.pdf",
   },
   {
     img: "/book21.jpg",
@@ -33,7 +34,7 @@ const booksData = [
     type: "Semester",
     category: "Navbodh",
     subject: "Hindi",
-    fileUrl: "/uploads/hindi1.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/hindi1.pdf",
   },
   {
     img: "/book22.jpg",
@@ -44,7 +45,7 @@ const booksData = [
     type: "Semester",
     category: "Navbodh",
     subject: "Science",
-    fileUrl: "/uploads/science1.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/science1.pdf",
   },
   {
     img: "/book23.jpeg",
@@ -55,7 +56,7 @@ const booksData = [
     type: "Semester",
     category: "Navbodh",
     subject: "EVS",
-    fileUrl: "/uploads/evs1.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/evs1.pdf",
   },
 
   {
@@ -67,7 +68,7 @@ const booksData = [
     type: "Semester",
     category: "Navbodh",
     subject: "Maths",
-    fileUrl: "/uploads/maths2.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/maths2.pdf",
   },
   {
     img: "/book21.jpg",
@@ -78,7 +79,7 @@ const booksData = [
     type: "Semester",
     category: "Navbodh",
     subject: "English",
-    fileUrl: "/uploads/english2.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/english2.pdf",
   },
   {
     img: "/book22.jpg",
@@ -89,7 +90,7 @@ const booksData = [
     type: "Semester",
     category: "Navbodh",
     subject: "Hindi",
-    fileUrl: "/uploads/hindi2.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/hindi2.pdf",
   },
   {
     img: "/book22.jpg",
@@ -100,7 +101,7 @@ const booksData = [
     type: "Semester",
     category: "Navbodh",
     subject: "Science",
-    fileUrl: "/uploads/science2.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/science2.pdf",
   },
   {
     img: "/book23.jpeg",
@@ -111,7 +112,7 @@ const booksData = [
     type: "Semester",
     category: "Navbodh",
     subject: "EVS",
-    fileUrl: "/uploads/evs2.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/evs2.pdf",
   },
 
   {
@@ -123,7 +124,7 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "Maths",
-    fileUrl: "/uploads/maths3.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/maths3.pdf",
   },
   {
     img: "/book25.jpeg",
@@ -134,7 +135,7 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "English",
-    fileUrl: "/uploads/english3.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/english3.pdf",
   },
   {
     img: "/book28.jpeg",
@@ -145,7 +146,7 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "Hindi",
-    fileUrl: "/uploads/hindi3.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/hindi3.pdf",
   },
   {
     img: "/book29.jpeg",
@@ -156,7 +157,7 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "Science",
-    fileUrl: "/uploads/science3.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/science3.pdf",
   },
 
   {
@@ -168,7 +169,7 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "Social Science",
-    fileUrl: "/uploads/socialscience3.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/socialscience3.pdf",
   },
 
   {
@@ -180,7 +181,7 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "Maths",
-    fileUrl: "/uploads/maths4.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/maths4.pdf",
   },
   {
     img: "/book22.jpg",
@@ -191,7 +192,7 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "English",
-    fileUrl: "/uploads/english4.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/english4.pdf",
   },
   {
     img: "/book23.jpeg",
@@ -202,7 +203,7 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "Hindi",
-    fileUrl: "/uploads/hindi4.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/hindi4.pdf",
   },
   {
     img: "/book29.jpeg",
@@ -213,7 +214,7 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "Science",
-    fileUrl: "/uploads/science4.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/science4.pdf",
   },
   {
     img: "/book30.jpeg",
@@ -224,8 +225,68 @@ const booksData = [
     type: "Semester",
     category: "Gyanbodh",
     subject: "Social Science",
-    fileUrl: "/uploads/socialscience4.pdf",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/socialscience4.pdf",
   },
+ {
+    img: "/nursery.jpg",
+    title: "Buddy",
+    description: "Alphabet, numbers, colors and basic learning for nursery kids.",
+    className: "Nursery",
+    type: "Semester",
+    category: "Gyanbodh",
+    subject: "Rhymes",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/nursery.pdf"
+  },
+  {
+    img: "/hindi1.jpg",
+    title: "Buddy",
+    description: "Hindi vowels, consonants, words and sentences practice.",
+    className: "Class 1",
+    type: "Semester",
+    category: "Gyanbodh",
+    subject: "Hindi",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/hindi.pdf"
+  },
+  {
+    img: "/gk1.jpg",
+    title: "Deep Dives",
+    description: "India, world facts, important days and basic awareness.",
+    className: "Class 1",
+    type: "Semester",
+    category: "Gyanbodh",
+    subject: "General knowledge",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/gk.pdf"
+  },
+  {
+    img: "/maths1.jpg",
+    title: "Gyanbodh",
+    description: "Number system, addition, subtraction and tables.",
+    className: "Class 1",
+    type: "Semester",
+    category: "Navbodh",
+    subject: "Maths",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/maths1.pdf"
+  },
+  {
+    img: "/drawing1.jpg",
+    title:"buddy",
+    description: "Shapes, animals, fruits and creative drawing practice.",
+    className: "LKG",
+    type: "Semester",
+    category: "Gyanbodh",
+    subject: "Drawing",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/drawing.pdf"
+  },
+  {
+    img: "/coding1.jpg",
+    title: "litle buddy",
+    description: "Introduction to HTML, CSS, JavaScript and logic building.",
+    className: "UKg",
+    type: "Semester",
+    category: "Navbodh",
+    subject: "Coding",
+    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/coding.pdf"
+  }
 ];
 
 export default booksData;

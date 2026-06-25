@@ -9,6 +9,7 @@ import axios from 'axios';
 import useApiLoader from "../hook/useApiLoader";
 function Dashboard() {
   const navigate = useNavigate();
+  const [saveLoading, setSaveLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [agents, setAgents] = useState([]);
   const { loading, execute } = useApiLoader();
@@ -72,12 +73,11 @@ const passwordRegex =
     updatedstatus: isActive ? "Active" : "Deactivated",
   }));
 }, [isActive]);
- const updateagentchanges = async (id) => {
+const updateagentchanges = async (id) => {
   const payload = {
     status: selectedAgent.updatedstatus,
   };
 
-  // password only if user typed it
   if (selectedAgent.updateagentpass) {
     if (!passwordRegex.test(selectedAgent.updateagentpass)) {
       setPasswordError(
@@ -92,6 +92,8 @@ const passwordRegex =
   setPasswordError("");
 
   try {
+    setSaveLoading(true);
+
     await axios.put(
       `https://flipbook-1-l2tf.onrender.com/api/books/agents/${id}`,
       payload
@@ -100,6 +102,8 @@ const passwordRegex =
     setagenteditpop(false);
   } catch (error) {
     console.log(error);
+  } finally {
+    setSaveLoading(false);
   }
 };
 const deleteAgent = async (id) => {
@@ -256,10 +260,10 @@ const fetchBooks = async () => {
   {/* Header */}
   <div className="flex items-center justify-between mb-6">
     <div>
-      <h2 className="text-xl font-bold text-gray-900">
+      <h2 className="text-xl font-bold text-[#572C10]">
         Recent Books
       </h2>
-      <p className="text-sm text-gray-500 mt-1">
+      <p className="text-sm text-[#572C10] mt-1">
         Latest books added to your library
       </p>
     </div>
@@ -671,13 +675,32 @@ const fetchBooks = async () => {
             Cancel
           </button>
 
-          <button
-            className="w-full bg-[#572C10] text-white py-2 rounded-lg"
-             disabled={passwordError !== ""}
-            onClick={() => updateagentchanges(selectedAgent?._id)}
-          >
-            Save Changes
-          </button>
+         <button
+  className="relative w-full bg-[#572C10] text-white py-2 rounded-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden transition-all"
+  disabled={saveLoading || passwordError !== ""}
+  onClick={() => updateagentchanges(selectedAgent?._id)}
+>
+  {/* shimmer effect */}
+  {saveLoading && (
+    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.2s_infinite]"></span>
+  )}
+
+  {/* spinner */}
+  {saveLoading && (
+    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+  )}
+
+  <span className="relative z-10">
+    {saveLoading ? "Saving Changes..." : "Save Changes"}
+  </span>
+
+  <style>{`
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+  `}</style>
+</button>
         </div>
       </div>
     </div>

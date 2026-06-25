@@ -5,7 +5,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const UserTicket = () => {
   const navigate = useNavigate();
-
+const [loading, setLoading] = useState(false);
+const [submitLoading, setSubmitLoading] = useState(false);
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [TicketMessage, setTicketMessage] = useState("");
 
@@ -40,50 +41,58 @@ const UserTicket = () => {
     setShowReplyModal(true);
   };
 
-  const fetchTickets = async () => {
-    try {
-      const res = await axios.get(
-        "https://flipbook-1-l2tf.onrender.com/api/tickets/all"
-      );
-      setAdminUpdates(res.data.tickets);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+ const fetchTickets = async () => {
+  try {
+    setLoading(true);
 
+    const res = await axios.get(
+      "https://flipbook-1-l2tf.onrender.com/api/tickets/all"
+    );
+
+    setAdminUpdates(res.data.tickets);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
   useEffect(() => {
     fetchTickets();
   }, []);
 
-  const submitReply = async (e) => {
-    e.preventDefault();
+ const submitReply = async (e) => {
+  e.preventDefault();
 
-    try {
-      await axios.put(
-        `https://flipbook-1-l2tf.onrender.com/api/tickets/reply/${selectedTicket._id}`,
-        {
-          status: replyData.status,
-          message: replyData.message,
-          repliedBy: "user",
-        }
-      );
+  try {
+    setSubmitLoading(true);
 
-      fetchTickets();
+    await axios.put(
+      `https://flipbook-1-l2tf.onrender.com/api/tickets/reply/${selectedTicket._id}`,
+      {
+        status: replyData.status,
+        message: replyData.message,
+        repliedBy: "user",
+      }
+    );
 
-      setTicketMessage("Replied Successfully ✅");
+    fetchTickets();
 
-      setTimeout(() => setTicketMessage(""), 3000);
+    setTicketMessage("Replied Successfully ✅");
 
-      setReplyData({
-        status: "",
-        message: "",
-      });
+    setTimeout(() => setTicketMessage(""), 3000);
 
-      setShowReplyModal(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    setReplyData({
+      status: "",
+      message: "",
+    });
+
+    setShowReplyModal(false);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setSubmitLoading(false);
+  }
+};
 
   const deleteUpdate = async (id) => {
     try {
@@ -216,13 +225,31 @@ const UserTicket = () => {
 
               {/* Submit */}
 
-              <button
-                type='submit'
-                className='bg-[#572C10] text-white p-[10px] rounded-md'
-              >
-                Submit Reply
-              </button>
+<button
+  type="submit"
+  disabled={submitLoading}
+  className="relative overflow-hidden bg-[#572C10] text-white p-[10px] rounded-md w-full flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70"
+>
+  {submitLoading && (
+    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.2s_infinite]"></span>
+  )}
 
+  {submitLoading && (
+    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+  )}
+
+  <span className="relative z-10">
+    {submitLoading ? "Processing..." : "Submit Reply"}
+  </span>
+
+  {/* shimmer animation */}
+  <style>{`
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+  `}</style>
+</button>
             </form>
 
           </div>
@@ -233,8 +260,16 @@ const UserTicket = () => {
      <div className="mt-[30px]">
 
   <div className="flex flex-col gap-[20px]">
-
-    {adminUpdates.length > 0 ? (
+{loading ? (
+    <div className="flex justify-center lg:mr-[30%] py-20">
+    <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-md">
+      <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+      <span className="text-[#572C10] font-medium">
+        Loading Ticket...
+      </span>
+    </div>
+  </div>
+) : adminUpdates.length > 0 ? (
       adminUpdates
         .filter((item) => !hiddenTickets.includes(item._id))
         .map((item) => (

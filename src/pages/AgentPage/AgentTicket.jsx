@@ -22,7 +22,14 @@ const AgentTicket = () => {
   });
 const agentName = localStorage.getItem("agentName");
 
-
+useEffect(() => {
+  if (agentName) {
+    setUpload((prev) => ({
+      ...prev,
+      Agentname: agentName,
+    }));
+  }
+}, [agentName]);
   // =========================
   // Tickets State
   // =========================
@@ -71,10 +78,10 @@ const agentName = localStorage.getItem("agentName");
     e.preventDefault();
 
     try {
-      const response = await axios.post(
+      const response = await execute(()=>  axios.post(
         "https://flipbook-1-l2tf.onrender.com/api/tickets/create",
         upload
-      );
+      ))
 
       setAdminUpdates((prev) => [
         ...prev,
@@ -293,7 +300,7 @@ const getTicketsByStatus = (status) => {
 
             <input
               onChange={getTicketData}
-              value={agentName}
+              value={upload.Agentname}
               name="Agentname"
               type="text"
               placeholder="Enter your name"
@@ -399,7 +406,15 @@ const getTicketsByStatus = (status) => {
   className="w-full font-bold bg-[#572C10] text-white py-2.5 rounded-lg flex justify-center items-center"
 >
   {loading ? (
-    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+   <div className="flex items-center justify-center gap-2">
+  <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+  <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+  <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce"></span>
+
+  <span className="ml-2 text-sm font-medium text-white">
+    Submitting...
+  </span>
+</div>
   ) : (
     "Submit Ticket"
   )}
