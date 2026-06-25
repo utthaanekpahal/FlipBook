@@ -300,15 +300,15 @@ navigate("/books");
       <option value="English">English</option>
       <option value="Hindi">Hindi</option>
       <option value="Maths">Maths</option>
-      <option value="Sanskrit">Rhymes</option>
-      <option value="EVS">Drawing</option>
+      <option value="Sanskrit">Sanskrit</option>
+    
       <option value="Science">Science</option>
       <option value="Social Studies">Social Studies</option>
       <option value="Sanskrit">Sanskrit</option>
       <option value="EVS">EVS</option>
       
-      <option value="Computer Science">Computer </option>
-      <option value="Other">Physics</option>
+      <option value="Computer ">Computer </option>
+      <option value="Physics">Physics</option>
       <option value="Chemistry">Chemistry</option>
            <option value="Biology">Biology</option>
     </select>

@@ -64,7 +64,7 @@ const Books = () => {
   const [filteredBooks, setFilteredBooks] = useState([]);
   const categories = [...new Set(books.map((b) => b.category).filter(Boolean))];
   const booksByCategory = {
-  Navbodh: ["Buddy", "Little Champ"],
+  Navbodh: ["Buddy", "Little Lamp"],
   Gyanbodh: ["Deep Dives", "Hearing Bee"],
 };
   const totalBooks = books.length;
@@ -318,9 +318,9 @@ useEffect(() => {
         onChange={(e) => setClassName(e.target.value)}
       >
         <option value="">Class</option>
-        <option value="Class 1">Nursery</option>
-        <option value="Class 1">LKG</option>
-        <option value="Class 1">UKG</option>
+        <option value="Nursery">Nursery</option>
+        <option value="LKG">LKG</option>
+        <option value="UKG">UKG</option>
         <option value="Class 1">Class 1</option>
         <option value="Class 2">Class 2</option>
         <option value="Class 3">Class 3</option>
