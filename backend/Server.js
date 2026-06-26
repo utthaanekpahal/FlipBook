@@ -8,72 +8,53 @@ import ticketRoutes from "./routes/ticketRoutes.js";
 import visitRoutes from "./routes/visitRoutes.js";
 import categoryRoutes from "./routes/CategoryRoutes.js";
 
+
 dotenv.config();
 
 const app = express();
 
-// =========================
-// CORS
-// =========================
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:4173",
-  process.env.FRONTEND_URL,
-];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
+    origin:[
+      "http://localhost:5173",
+      "https://flip-book-dzbj.vercel.app"
+    ],
+    credentials:true
   })
 );
-// =========================
-// BODY PARSER
-// =========================
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// =========================
-// STATIC FILES (UPLOADS)
-// =========================
 
-// 👇 THIS IS REQUIRED
-app.use("/uploads", express.static("uploads"));
+app.use(express.json({
+  limit:"500mb"
+}));
 
-// =========================
-// DATABASE CONNECT
-// =========================
+app.use(express.urlencoded({
+  extended:true,
+  limit:"500mb"
+}));
+
+
+app.use("/uploads",express.static("uploads"));
+
+
 connectDB();
 
-// =========================
-// ROUTES
-// =========================
-app.use("/api/books", bookRoutes);
-app.use("/api/tickets", ticketRoutes);
-app.use("/api/visits", visitRoutes);
-app.use("/api/categories", categoryRoutes);
 
-// =========================
-// TEST ROUTE
-// =========================
-app.get("/", (req, res) => {
-  res.send("Server is running ");
+app.use("/api/books",bookRoutes);
+app.use("/api/tickets",ticketRoutes);
+app.use("/api/visits",visitRoutes);
+app.use("/api/categories",categoryRoutes);
+
+
+
+app.get("/",(req,res)=>{
+ res.send("Server running");
 });
 
-// =========================
-// START SERVER
-// =========================
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
+const PORT=process.env.PORT || 3000;
+
+app.listen(PORT,()=>{
+ console.log(`Server running on ${PORT}`);
 });

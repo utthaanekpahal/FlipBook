@@ -12,7 +12,7 @@ import {
   getAgents,
   agentupdate,
   deleteAgent,
-} from "../controllers/SignupController.js";
+} from "../controllers/signupController.js";
 
 import uploadPdf from "../middleware/uploadPdf.js";
 import uploadImage from "../middleware/uploadImage.js";
@@ -21,13 +21,13 @@ const router = express.Router();
 
 
 // =========================
-// UPLOAD BOOK (PDF + IMAGE)
+// UPLOAD BOOK (IMAGE + PDF BOTH SUPPORT)
 // =========================
 router.post(
   "/upload",
   uploadPdf.fields([
-    { name: "file", maxCount: 1 }, // PDF
-    { name: "img", maxCount: 1 }   // Image
+    { name: "file", maxCount: 1 },
+    { name: "img", maxCount: 1 }
   ]),
   uploadBooks
 );

@@ -1,45 +1,45 @@
 import multer from "multer";
 import fs from "fs";
-import path from "path";
 
-// 📁 ensure uploads folder exists
-const uploadDir = "uploads";
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
+console.log("UPLOAD PDF MIDDLEWARE LOADED");
+
+// 📁 Ensure uploads folder exists
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
 }
 
-// 📦 storage config
+// 📦 Storage config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir);
+    cb(null, "uploads/");
   },
+
   filename: (req, file, cb) => {
+    // remove spaces + unsafe chars
     const cleanName = file.originalname.replace(/\s+/g, "-");
+
+    // unique filename
     const uniqueName = Date.now() + "-" + cleanName;
+
     cb(null, uniqueName);
   },
 });
 
-// 🔥 PDF filter
+// 🔒 File filter (only PDF allowed)
 const fileFilter = (req, file, cb) => {
-  const isPdf =
-    file.mimetype === "application/pdf" ||
-    file.originalname.toLowerCase().endsWith(".pdf");
+  console.log("FILE TYPE:", file.mimetype);
 
-  if (isPdf) {
+  if (file.mimetype === "application/pdf") {
     cb(null, true);
   } else {
     cb(new Error("Only PDF files are allowed"), false);
   }
 };
 
-// 🚀 multer instance
+// 🚀 Multer instance
 const uploadPdf = multer({
   storage,
   fileFilter,
-  limits: {
-    fileSize: 20 * 1024 * 1024, // 20MB
-  },
 });
 
 export default uploadPdf;

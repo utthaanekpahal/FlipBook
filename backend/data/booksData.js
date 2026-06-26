@@ -1,4 +1,4 @@
-const booksData = [
+/*const booksData = [
   
   {
   img: "/book1.jpg",
@@ -230,4 +230,4 @@ const booksData = [
 
 ];
 
-export default booksData;
+export default booksData;*/

@@ -3,7 +3,6 @@ import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import { FaLayerGroup , FaBook , FaGraduationCap } from "react-icons/fa";
 import axios from "axios";
-import useApiLoader from "../../hook/useApiLoader";
 import {
   FaBookOpen,
   FaCloudUploadAlt,
@@ -12,8 +11,6 @@ import {
 
 const UploadBooks = () => {
   const navigate = useNavigate();
-      const { loading, execute } = useApiLoader();
-
 
 const [pdfFile, setPdfFile] = useState(null);
 
@@ -46,58 +43,58 @@ const [subject, setSubject] = useState("");
 
   // =========================
   // SAVE + UPLOAD
-const saveBook = async () => {
-  try {
-    if (!category || !book || !className || !subject || !pdfFile || !type) {
-      alert("Please fill all fields and upload PDF");
-      return;
-    }
+  // =========================
+  const saveBook = async () => {
+    try {
+      if (!category || !book || !className || !subject || !pdfFile || !type) {
+        alert("Please fill all fields and upload PDF");
+        return;
+      }
 
-    await execute(async () => {
       const formData = new FormData();
-
       formData.append("file", pdfFile);
       formData.append("title", book);
+      formData.append("author", "Admin");
       formData.append("description", "Book uploaded via system");
       formData.append("category", category);
       formData.append("className", className);
-      formData.append("subject", subject.toLowerCase());
+      formData.append("subject", subject);
+      formData.append("filetype", "pdf");
+      formData.append("book", book);
       formData.append("type", type);
-console.log("PDF:", pdfFile);
 
-for (const [key, value] of formData.entries()) {
-  console.log(key, value);
-}
-   const res = await axios.post(
+     const res = await axios.post(
   "https://flipbook-1-l2tf.onrender.com/api/books/upload",
   formData
 );
-      console.log("UPLOAD SUCCESS:", res.data);
 
-      alert("Book Uploaded Successfully ✅");
+    
+    console.log("UPLOAD SUCCESS:", res.data);
+console.log("Uploaded Book:", res.data.data);
+console.log("PDF URL:", res.data.data.fileUrl);
 
-      navigate("/books");
+alert("Book Uploaded Successfully ✅");
+navigate("/books");
 
+
+      // RESET
       setCategory("");
       setBook("");
       setClassName("");
       setSubject("");
       setPdfFile(null);
-      setType("");
 
-      return res;
-    });
-  } catch (error) {
-    console.log("UPLOAD ERROR:", error.response?.data || error.message);
-    alert("Upload Failed ❌");
-  }
+    } catch (error) {
+      console.log("UPLOAD ERROR:", error.response?.data || error.message);
+      alert("Upload Failed ❌");
+    }
+  };
 
-};
   return (
   <div
   className="
     min-h-screen
-    lg:ml-[35px]
+    ml-[15px]
     rounded-xl
     bg-cover
     bg-center
@@ -303,14 +300,14 @@ for (const [key, value] of formData.entries()) {
       <option value="English">English</option>
       <option value="Hindi">Hindi</option>
       <option value="Maths">Maths</option>
-      <option value="Rhymes">Rhymes</option>
-      <option value="Drawing">Drawing</option>
+      <option value="Sanskrit">Sanskrit</option>
+    
       <option value="Science">Science</option>
       <option value="Social Studies">Social Studies</option>
       <option value="Sanskrit">Sanskrit</option>
       <option value="EVS">EVS</option>
       
-      <option value="Computer Science">Computer </option>
+      <option value="Computer ">Computer </option>
       <option value="Physics">Physics</option>
       <option value="Chemistry">Chemistry</option>
            <option value="Biology">Biology</option>
@@ -403,44 +400,13 @@ for (const [key, value] of formData.entries()) {
   )}
 </div>
           {/* SAVE */}
-     <button
-  onClick={saveBook}
-  disabled={loading}
-  className={`
-    w-full mt-6 py-4 rounded-xl font-bold
-    flex items-center justify-center gap-3
-    transition-all duration-300
-    ${
-      loading
-        ? "bg-gradient-to-r from-[#8B5A2B] to-[#572C10] cursor-not-allowed"
-        : "bg-[#572C10] hover:bg-[#6b3414] text-white hover:scale-[1.02]"
-    }
-  `}
->
-  {loading ? (
-    <>
-      <div className="relative">
-        <FaCloudUploadAlt className="text-2xl animate-bounce text-white" />
-
-        <span className="absolute inset-0 rounded-full border-2 border-white/40 animate-ping"></span>
-      </div>
-
-      <div className="flex flex-col items-start leading-tight">
-        <span className="text-white font-bold">
-          Uploading Book...
-        </span>
-        <span className="text-xs text-white/80">
-          Please wait, don't close this page
-        </span>
-      </div>
-    </>
-  ) : (
-    <>
-      <FaSave className="text-lg" />
-      Save Books
-    </>
-  )}
-</button>
+          <button
+            onClick={saveBook}
+            className="w-full mt-6 bg-[#572C10] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2"
+          >
+            <FaSave />
+            Save Books
+          </button>
 
         </div>
       </div>

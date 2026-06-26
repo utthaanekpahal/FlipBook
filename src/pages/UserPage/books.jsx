@@ -9,44 +9,42 @@ import useApiLoader from "../../hook/useApiLoader";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
  const API = "https://flipbook-1-l2tf.onrender.com/api/books";;
-function PdfCover({ pdfUrl, title }) {
+ function PdfCover({ pdfUrl, title }) {
   const [cover, setCover] = useState("");
 
   useEffect(() => {
-    if (!pdfUrl) return;
-
-    let isMounted = true;
-
+      console.log("PDF URL =", pdfUrl);
     const loadCover = async () => {
       try {
-        setCover("");
-
         const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+
         const page = await pdf.getPage(1);
 
-        const viewport = page.getViewport({ scale: 0.5 });
+        const viewport = page.getViewport({
+          scale: 0.5,
+        });
 
         const canvas = document.createElement("canvas");
+
         const ctx = canvas.getContext("2d");
 
         canvas.width = viewport.width;
         canvas.height = viewport.height;
 
-        await page.render({ canvasContext: ctx, viewport }).promise;
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+        }).promise;
 
-        if (isMounted) {
-          setCover(canvas.toDataURL("image/jpeg"));
-        }
+        setCover(canvas.toDataURL("image/jpeg"));
       } catch (err) {
-        console.log("PDF LOAD ERROR:", err);
+        console.log(err);
       }
     };
 
-    loadCover();
-
-    return () => {
-      isMounted = false;
-    };
+    if (pdfUrl) {
+      loadCover();
+    }
   }, [pdfUrl]);
 
   return (
@@ -66,7 +64,7 @@ const Books = () => {
   const [filteredBooks, setFilteredBooks] = useState([]);
   const categories = [...new Set(books.map((b) => b.category).filter(Boolean))];
   const booksByCategory = {
-  Navbodh: ["Buddy", "Little Champ"],
+  Navbodh: ["Buddy", "Little Lamp"],
   Gyanbodh: ["Deep Dives", "Hearing Bee"],
 };
   const totalBooks = books.length;
@@ -180,13 +178,12 @@ useEffect(() => {
   const fetchBooks = async () => {
     try {
       const res = await execute(() =>
-        fetch("https://flipbook-1-l2tf.onrender.com/api/books")
+        fetch("https://flipbook-lw1b.onrender.com/api/books")
       );
 
       const data = await res.json();
 
       if (data.success) {
-          console.log("FILE URLS:", data.data.map(b => b.fileUrl));
         setBooks(data.data);
         setFilteredBooks(data.data);
       }
@@ -198,44 +195,45 @@ useEffect(() => {
   fetchBooks();
 }, []);
   // search logic
- const handleSearch = () => {
+  const handleSearch = () => {
   const result = books.filter((book) => {
     return (
       // Category Filter
       (category === "" ||
-        (book.category || "").trim().toLowerCase() ===
-        category.trim().toLowerCase()) &&
+        book.category?.trim().toLowerCase() ===
+          category.trim().toLowerCase()) &&
 
       // Book Filter
       (selectedBook === "" ||
-        (book.title || "").trim().toLowerCase() ===
-        selectedBook.trim().toLowerCase()) &&
+        book.title?.trim().toLowerCase() ===
+          selectedBook.trim().toLowerCase()) &&
 
       // Class Filter
       (className === "" ||
-        (book.className || "").trim().toLowerCase() ===
-        className.trim().toLowerCase()) &&
+        book.className?.trim().toLowerCase() ===
+          className.trim().toLowerCase()) &&
 
       // Type Filter
       (type === "" ||
-        (book.type || "").trim().toLowerCase() ===
-        type.trim().toLowerCase()) &&
+        book.type?.trim().toLowerCase() ===
+          type.trim().toLowerCase()) &&
 
       // Subject Filter
       (subject === "" ||
-        (book.subject || "").trim().toLowerCase() ===
-        subject.trim().toLowerCase()) &&
+        book.subject?.trim().toLowerCase() ===
+          subject.trim().toLowerCase()) &&
 
       // Search Text
       (search === "" ||
-        (book.title || "").toLowerCase().includes(search.toLowerCase()))
+        book.title?.toLowerCase().includes(search.toLowerCase()))
     );
   });
 
   setFilteredBooks(result);
 };
+
   return (
-  <div className="min-h-screen mt-[-35px] lg:ml-[15px] bg-gradient-to-br from-[#EFE6DD] px-4 sm:px-6 py-10">
+  <div className="min-h-screen mt-[-35px] bg-gradient-to-br from-[#EFE6DD] px-4 sm:px-6 py-10">
 
   {/* TOP BAR */}
   <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
@@ -303,7 +301,7 @@ useEffect(() => {
         value={selectedBook}
         onChange={(e) => setSelectedBook(e.target.value)}
         disabled={!category}
-        className="bg-white border border-[#572C10]/30 px-4 py-3 rounded-xl shadow-sm focus:ring-2 focus:ring-[#572C10] outline-none "
+        className="bg-white border border-[#572C10]/30 px-4 py-3 rounded-xl shadow-sm focus:ring-2 focus:ring-[#572C10] outline-none disabled:opacity-50"
       >
         <option value="">Book Name</option>
         {category &&
@@ -320,9 +318,9 @@ useEffect(() => {
         onChange={(e) => setClassName(e.target.value)}
       >
         <option value="">Class</option>
-        <option value="Class 1">Nursery</option>
-        <option value="Class 1">LKG</option>
-        <option value="Class 1">UKG</option>
+        <option value="Nursery">Nursery</option>
+        <option value="LKG">LKG</option>
+        <option value="UKG">UKG</option>
         <option value="Class 1">Class 1</option>
         <option value="Class 2">Class 2</option>
         <option value="Class 3">Class 3</option>
@@ -386,7 +384,7 @@ useEffect(() => {
 
             {/* COVER */}
             <div className="h-64 sm:h-72 overflow-hidden">
-         <PdfCover pdfUrl={book.fileUrl} title={book.title} />
+              <PdfCover pdfUrl={book.fileUrl} title={book.title} />
             </div>
 
             {/* CONTENT */}
