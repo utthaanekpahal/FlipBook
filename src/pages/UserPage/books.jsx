@@ -9,42 +9,46 @@ import useApiLoader from "../../hook/useApiLoader";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
  const API = "https://flipbook-1-l2tf.onrender.com/api/books";;
- function PdfCover({ pdfUrl, title }) {
+function PdfCover({ pdfUrl, title }) {
   const [cover, setCover] = useState("");
-useEffect(() => {
-  let isMounted = true;
 
-  const loadCover = async () => {
-    try {
-      setCover("");
+  useEffect(() => {
+    if (!pdfUrl) return;
 
-      const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
-      const page = await pdf.getPage(1);
+    let isMounted = true;
 
-      const viewport = page.getViewport({ scale: 0.5 });
+    const loadCover = async () => {
+      try {
+        setCover("");
 
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+        const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+        const page = await pdf.getPage(1);
 
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
+        const viewport = page.getViewport({ scale: 0.5 });
 
-      await page.render({ canvasContext: ctx, viewport }).promise;
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
 
-      if (isMounted) {
-        setCover(canvas.toDataURL("image/jpeg"));
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        if (isMounted) {
+          setCover(canvas.toDataURL("image/jpeg"));
+        }
+      } catch (err) {
+        console.log("PDF LOAD ERROR:", err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    };
 
-  if (pdfUrl) loadCover();
+    loadCover();
 
-  return () => {
-    isMounted = false;
-  };
-}, [pdfUrl]);
+    return () => {
+      isMounted = false;
+    };
+  }, [pdfUrl]);
+
   return (
     <img
       src={cover || "/book1.jpg"}

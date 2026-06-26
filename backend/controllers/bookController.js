@@ -1,5 +1,6 @@
 import Book from "../models/Book.js";
 
+
 // =========================
 // GET ALL BOOKS
 // =========================
@@ -13,25 +14,23 @@ export const getBooks = async (req, res) => {
     });
   } catch (err) {
     console.error("GET BOOKS ERROR:", err);
-
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
+
+
 // =========================
-// CREATE BOOK (UPLOAD PDF)
+// UPLOAD BOOK (FIXED)
 // =========================
 export const uploadBooks = async (req, res) => {
   try {
-    const { title, description, category, className, subject, type } =
-      req.body;
+     console.log("BODY:", req.body);
+    console.log("FILES:", req.files);
 
-    // -------------------------
-    // VALIDATION (TEXT FIELDS)
-    // -------------------------
+    const { title, description, category, className, subject, type } = req.body;
+
+    // ✅ VALIDATION
     if (!title || !category || !className || !subject || !type) {
       return res.status(400).json({
         success: false,
@@ -39,39 +38,35 @@ export const uploadBooks = async (req, res) => {
       });
     }
 
-    // -------------------------
-    // FILE CHECK (IMPORTANT FIX)
-    // multer.fields() → req.files
-    // -------------------------
-    if (!req.files || !req.files.file || !req.files.file[0]) {
+    // ✅ FILE CHECK (IMPORTANT FIX)
+    const pdfFile = req.files?.file?.[0];
+
+    if (!pdfFile) {
       return res.status(400).json({
         success: false,
-        message: "PDF file is required",
+        message: "PDF file is required (form-data key: file)",
       });
     }
 
-    const pdfFile = req.files.file[0];
+    // ✅ SAFE URL (WORKS IN LOCAL + RENDER)
+    const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${pdfFile.filename}`;
 
-    // -------------------------
-    // FILE URL
-    // -------------------------
-    // const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${
-    //   pdfFile.filename
-    // }`;
+    const imgFile = req.files?.img?.[0];
+    const imgUrl = imgFile
+      ? `${req.protocol}://${req.get("host")}/uploads/${imgFile.filename}`
+      : "";
 
-    const fileUrl = `${process.env.BACKEND_URL}/uploads/${pdfFile.filename}`;
-    // -------------------------
-    // CREATE BOOK
-    // -------------------------
+    // ✅ SAVE IN DB
     const newBook = new Book({
       title: title.trim(),
       description: description || "",
       category: category.trim(),
       className: className.trim(),
-      subject: subject.toLowerCase().trim(),
+      subject: subject.trim(),
       type: type.trim(),
-      fileUrl,
-      img: "",
+
+      fileUrl,   // 🔥 FIXED
+      img: imgUrl,
     });
 
     const saved = await newBook.save();
@@ -81,18 +76,17 @@ export const uploadBooks = async (req, res) => {
       message: "Book uploaded successfully",
       data: saved,
     });
+
   } catch (err) {
     console.error("UPLOAD ERROR:", err);
-
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
+
+
 // =========================
-// UPDATE BOOK
+// UPDATE BOOK (FIXED)
 // =========================
 export const updateBooks = async (req, res) => {
   try {
@@ -103,19 +97,15 @@ export const updateBooks = async (req, res) => {
       description: req.body.description,
       category: req.body.category,
       className: req.body.className,
-      subject: req.body.subject?.toLowerCase(),
+      subject: req.body.subject,
       type: req.body.type,
     };
 
-    // -------------------------
-    // OPTIONAL NEW FILE UPDATE
-    // -------------------------
-    if (req.files && req.files.file && req.files.file[0]) {
-      const pdfFile = req.files.file[0];
+    // ✅ OPTIONAL PDF UPDATE
+    const pdfFile = req.files?.file?.[0];
 
-      updateData.fileUrl = `${req.protocol}://${req.get(
-        "host"
-      )}/uploads/${pdfFile.filename}`;
+    if (pdfFile) {
+      updateData.fileUrl = `${req.protocol}://${req.get("host")}/uploads/${pdfFile.filename}`;
     }
 
     const updated = await Book.findByIdAndUpdate(id, updateData, {
@@ -134,15 +124,14 @@ export const updateBooks = async (req, res) => {
       message: "Book updated successfully",
       data: updated,
     });
+
   } catch (err) {
     console.error("UPDATE ERROR:", err);
-
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
+
+
 
 // =========================
 // DELETE BOOK
@@ -164,12 +153,9 @@ export const deleteBooks = async (req, res) => {
       success: true,
       message: "Book deleted successfully",
     });
+
   } catch (err) {
     console.error("DELETE ERROR:", err);
-
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
+    res.status(500).json({ success: false, message: err.message });
   }
 };

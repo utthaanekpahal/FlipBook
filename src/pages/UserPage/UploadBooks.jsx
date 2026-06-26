@@ -69,7 +69,7 @@ for (const [key, value] of formData.entries()) {
   console.log(key, value);
 }
    const res = await axios.post(
-  "https://flipbook-1-l2tf.onrender.com/api/books/upload" ||"http://localhost:3000/api/books/upload ",
+  "https://flipbook-1-l2tf.onrender.com/api/books/upload",
   formData
 );
       console.log("UPLOAD SUCCESS:", res.data);
@@ -91,6 +91,7 @@ for (const [key, value] of formData.entries()) {
     console.log("UPLOAD ERROR:", error.response?.data || error.message);
     alert("Upload Failed ❌");
   }
+
 };
   return (
   <div
