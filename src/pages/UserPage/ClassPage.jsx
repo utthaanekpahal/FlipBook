@@ -117,7 +117,7 @@ const ClassPage = () => {
                       navigate("/flipPage", {
                         state: {
                           title: item.title,
-                          pdf: item.fileUrl,
+                          fileUrl: item.fileUrl, 
                         },
                       })
                     }

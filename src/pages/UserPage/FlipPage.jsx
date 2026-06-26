@@ -11,8 +11,10 @@ function FlipPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { loading, execute } = useApiLoader();
+const { fileUrl } = location.state || {};
+const BASE_URL = import.meta.env.VITE_API_URL;
 
-  const { pdf } = location.state || {};
+const pdfUrl = fileUrl ? `${BASE_URL}${fileUrl}` : null;
 
   const [pages, setPages] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -22,23 +24,22 @@ function FlipPage() {
   // 🎧 SINGLE SOUND FOR ALL FLIPS
   const flipSoundRef = useRef(null);
 
-  useEffect(() => {
-    flipSoundRef.current = new Audio("/oxidvideos-page-flip-1-178322.mp3");
-    flipSoundRef.current.volume = 0.6;
+ useEffect(() => {
+  flipSoundRef.current = new Audio("/oxidvideos-page-flip-1-178322.mp3");
+  flipSoundRef.current.volume = 0.6;
 
-    if (pdf) loadPDF();
+  if (pdfUrl) loadPDF();
 
-    return () => {
-      flipSoundRef.current?.pause();
-    };
-  }, [pdf]);
+  return () => {
+    flipSoundRef.current?.pause();
+  };
+}, [pdfUrl]);
 
   // 🚀 LOAD PDF
   const loadPDF = async () => {
     try {
       await execute(async () => {
-        const pdfDoc = await pdfjsLib.getDocument(pdf).promise;
-
+        const pdfDoc = await pdfjsLib.getDocument(pdfUrl).promise;
         // MAX 30 PAGES
         const totalPages = Math.min(pdfDoc.numPages, 30);
 

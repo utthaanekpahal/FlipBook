@@ -2,8 +2,6 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 
-console.log("UPLOAD PDF MIDDLEWARE LOADED");
-
 // 📁 ensure uploads folder exists
 const uploadDir = "uploads";
 if (!fs.existsSync(uploadDir)) {
@@ -15,7 +13,6 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
   },
-
   filename: (req, file, cb) => {
     const cleanName = file.originalname.replace(/\s+/g, "-");
     const uniqueName = Date.now() + "-" + cleanName;
@@ -23,17 +20,10 @@ const storage = multer.diskStorage({
   },
 });
 
-// 🔥 flexible PDF filter (IMPORTANT FIX)
+// 🔥 PDF filter
 const fileFilter = (req, file, cb) => {
-  console.log("FILE TYPE:", file.mimetype);
-
-  const allowedMimeTypes = [
-    "application/pdf",
-    "application/octet-stream", // some browsers send this
-  ];
-
   const isPdf =
-    allowedMimeTypes.includes(file.mimetype) ||
+    file.mimetype === "application/pdf" ||
     file.originalname.toLowerCase().endsWith(".pdf");
 
   if (isPdf) {
@@ -48,7 +38,7 @@ const uploadPdf = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 20 * 1024 * 1024, // 20MB limit (optional safety)
+    fileSize: 20 * 1024 * 1024, // 20MB
   },
 });
 

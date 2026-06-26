@@ -21,13 +21,13 @@ const router = express.Router();
 
 
 // =========================
-// UPLOAD BOOK (IMAGE + PDF BOTH SUPPORT)
+// UPLOAD BOOK (PDF + IMAGE)
 // =========================
 router.post(
   "/upload",
   uploadPdf.fields([
-    { name: "file", maxCount: 1 },
-    { name: "img", maxCount: 1 }
+    { name: "file", maxCount: 1 }, // PDF
+    { name: "img", maxCount: 1 }   // Image
   ]),
   uploadBooks
 );
