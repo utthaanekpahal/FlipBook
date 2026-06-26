@@ -12,7 +12,7 @@ import {
   getAgents,
   agentupdate,
   deleteAgent,
-} from "../controllers/signupController.js";
+} from "../controllers/SignupController.js";
 
 import uploadPdf from "../middleware/uploadPdf.js";
 import uploadImage from "../middleware/uploadImage.js";
