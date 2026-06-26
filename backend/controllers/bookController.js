@@ -26,16 +26,12 @@ export const getBooks = async (req, res) => {
 // =========================
 export const uploadBooks = async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      category,
-      className,
-      subject,
-      type,
-    } = req.body;
+    const { title, description, category, className, subject, type } =
+      req.body;
 
-    // validation
+    // -------------------------
+    // VALIDATION (TEXT FIELDS)
+    // -------------------------
     if (!title || !category || !className || !subject || !type) {
       return res.status(400).json({
         success: false,
@@ -43,26 +39,39 @@ export const uploadBooks = async (req, res) => {
       });
     }
 
-    if (!req.file) {
+    // -------------------------
+    // FILE CHECK (IMPORTANT FIX)
+    // multer.fields() → req.files
+    // -------------------------
+    if (!req.files || !req.files.file || !req.files.file[0]) {
       return res.status(400).json({
         success: false,
         message: "PDF file is required",
       });
     }
 
-    // PDF URL
-    const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    const pdfFile = req.files.file[0];
 
+    // -------------------------
+    // FILE URL
+    // -------------------------
+    // const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${
+    //   pdfFile.filename
+    // }`;
+
+    const fileUrl = `${process.env.BACKEND_URL}/uploads/${pdfFile.filename}`;
+    // -------------------------
+    // CREATE BOOK
+    // -------------------------
     const newBook = new Book({
       title: title.trim(),
       description: description || "",
       category: category.trim(),
       className: className.trim(),
-      subject: subject.toLowerCase().trim(), // IMPORTANT FIX
-      type,
-
+      subject: subject.toLowerCase().trim(),
+      type: type.trim(),
       fileUrl,
-      img: "", // optional (not used now)
+      img: "",
     });
 
     const saved = await newBook.save();
@@ -98,9 +107,15 @@ export const updateBooks = async (req, res) => {
       type: req.body.type,
     };
 
-    // if new PDF uploaded
-    if (req.file) {
-      updateData.fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    // -------------------------
+    // OPTIONAL NEW FILE UPDATE
+    // -------------------------
+    if (req.files && req.files.file && req.files.file[0]) {
+      const pdfFile = req.files.file[0];
+
+      updateData.fileUrl = `${req.protocol}://${req.get(
+        "host"
+      )}/uploads/${pdfFile.filename}`;
     }
 
     const updated = await Book.findByIdAndUpdate(id, updateData, {

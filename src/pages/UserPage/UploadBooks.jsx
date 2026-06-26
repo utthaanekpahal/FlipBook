@@ -46,7 +46,7 @@ const [subject, setSubject] = useState("");
 
   // =========================
   // SAVE + UPLOAD
- const saveBook = async () => {
+const saveBook = async () => {
   try {
     if (!category || !book || !className || !subject || !pdfFile || !type) {
       alert("Please fill all fields and upload PDF");
@@ -57,24 +57,21 @@ const [subject, setSubject] = useState("");
       const formData = new FormData();
 
       formData.append("file", pdfFile);
-
-      // 🔥 IMPORTANT FIX
       formData.append("title", book);
-
       formData.append("description", "Book uploaded via system");
       formData.append("category", category);
       formData.append("className", className);
-
-      // 🔥 schema expects lowercase
       formData.append("subject", subject.toLowerCase());
-
       formData.append("type", type);
+console.log("PDF:", pdfFile);
 
-      const res = await axios.post(
-        "https://flipbook-1-l2tf.onrender.com/api/books/upload",
-        formData
-      );
-
+for (const [key, value] of formData.entries()) {
+  console.log(key, value);
+}
+   const res = await axios.post(
+  "https://flipbook-1-l2tf.onrender.com/api/books/upload" ||"http://localhost:3000/api/books/upload ",
+  formData
+);
       console.log("UPLOAD SUCCESS:", res.data);
 
       alert("Book Uploaded Successfully ✅");
@@ -86,13 +83,15 @@ const [subject, setSubject] = useState("");
       setClassName("");
       setSubject("");
       setPdfFile(null);
+      setType("");
+
+      return res;
     });
   } catch (error) {
     console.log("UPLOAD ERROR:", error.response?.data || error.message);
     alert("Upload Failed ❌");
   }
 };
-
   return (
   <div
   className="

@@ -227,66 +227,7 @@ const booksData = [
     subject: "Social Science",
     fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/socialscience4.pdf",
   },
- {
-    img: "/nursery.jpg",
-    title: "Buddy",
-    description: "Alphabet, numbers, colors and basic learning for nursery kids.",
-    className: "Nursery",
-    type: "Semester",
-    category: "Gyanbodh",
-    subject: "Rhymes",
-    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/nursery.pdf"
-  },
-  {
-    img: "/hindi1.jpg",
-    title: "Buddy",
-    description: "Hindi vowels, consonants, words and sentences practice.",
-    className: "Class 1",
-    type: "Semester",
-    category: "Gyanbodh",
-    subject: "Hindi",
-    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/hindi.pdf"
-  },
-  {
-    img: "/gk1.jpg",
-    title: "Deep Dives",
-    description: "India, world facts, important days and basic awareness.",
-    className: "Class 1",
-    type: "Semester",
-    category: "Gyanbodh",
-    subject: "General knowledge",
-    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/gk.pdf"
-  },
-  {
-    img: "/maths1.jpg",
-    title: "Gyanbodh",
-    description: "Number system, addition, subtraction and tables.",
-    className: "Class 1",
-    type: "Semester",
-    category: "Navbodh",
-    subject: "Maths",
-    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/maths1.pdf"
-  },
-  {
-    img: "/drawing1.jpg",
-    title:"buddy",
-    description: "Shapes, animals, fruits and creative drawing practice.",
-    className: "LKG",
-    type: "Semester",
-    category: "Gyanbodh",
-    subject: "Drawing",
-    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/drawing.pdf"
-  },
-  {
-    img: "/coding1.jpg",
-    title: "litle buddy",
-    description: "Introduction to HTML, CSS, JavaScript and logic building.",
-    className: "UKg",
-    type: "Semester",
-    category: "Navbodh",
-    subject: "Coding",
-    fileUrl: "https://flipbook-1-l2tf.onrender.com/uploads/coding.pdf"
-  }
+
 ];
 
 export default booksData;
