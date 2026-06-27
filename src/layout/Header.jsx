@@ -1,69 +1,105 @@
 import React from "react";
-import {
-  FaBookOpen,
-  FaSearch,
-  FaUser,
-  FaBars,
-} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaBookOpen, FaBars, FaPlus } from "react-icons/fa";
 import { IoNotificationsOutline } from "react-icons/io5";
 
 const Header = ({ setOpen }) => {
+  const navigate = useNavigate();
+
   return (
-    <header className="sticky top-0 z-50 bg-[#F5F5F5] px-4 py-3 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#EDE4DB] px-3 py-2 shadow-md">
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-4">
 
-        {/* Mobile Menu Button */}
-        <button
-          className="lg:hidden text-[#572C10]"
-          onClick={() => setOpen(true)}
-        >
-          <FaBars size={22} />
-        </button>
+        {/* Left */}
+        <div className="flex items-center gap-3">
 
-        {/* Logo */}
-        <div className="flex items-center gap-2 font-bold text-[#572C10] text-lg md:text-xl">
-          <FaBookOpen size={22} />
-          <span>Digital Book Library</span>
-        </div>
+          {/* Mobile Menu */}
+          <button
+            className="lg:hidden text-[#572C10] hover:bg-[#FAF7F4] p-2 rounded-lg transition"
+            onClick={() => setOpen(true)}
+          >
+            <FaBars size={22} />
+          </button>
 
-        {/* Search Desktop */}
-        <div className="hidden md:block relative w-[350px] lg:w-[600px]">
-          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A77F60]" />
+          {/* Logo */}
+          <div className="flex items-center gap-3 font-extrabold text-[#572C10] text-lg md:text-xl tracking-tight">
 
-          <input
-            type="text"
-            placeholder="Search Book, Categories"
-            className="w-full pl-12 pr-4 py-2 rounded-full border-2 border-[#A77F60] outline-none text-[#A77F60] font-bold"
-          />
-        </div>
+            <div className="p-2 rounded-xl bg-[#FAF7F4] shadow-sm border border-[#E9E1D8]">
+              <FaBookOpen size={22} />
+            </div>
 
-        {/* Right Side */}
-        <div className="flex items-center gap-4">
-          <IoNotificationsOutline
-            size={24}
-            color="#572C10"
-          />
-
-          <div className="flex items-center gap-2">
-            <FaUser size={20} color="#572C10" />
-            <span className="font-bold text-[#572C10]">
-              Welcome Admin
+            <span className="bg-gradient-to-r from-[#572C10] to-[#A77F60] bg-clip-text text-transparent">
+              Digital Book Library
             </span>
+
+          </div>
+
+        </div>
+
+        {/* Center Status (EXPANDED ONLY) */}
+        <div className="flex flex-1 justify-center items-center gap-3 hidden md:flex">
+
+          {/* Brand Section */}
+          <div className="flex items-center lg:w-[45%] lg:gap-[15px] gap-[15px] bg-[#FAF7F4] px-3 py-2 rounded-2xl border border-[#E9E1D8] shadow-sm">
+
+            {/* Logo */}
+            <div className="w-11 h-11 rounded-full overflow-hidden border border-[#E9E1D8] shadow-md bg-white flex items-center justify-center hover:scale-105 transition">
+              <img
+                src="/nav.png"
+                alt="Navbodh Prakashan"
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            {/* Company Name */}
+            <div className="leading-tight hidden sm:block">
+
+              <h1 className="lg:text-[25px] text-[10px] font-extrabold  text-[#572C10] tracking-wide">
+                Navbodh Prakashan
+              </h1>
+
+              <p className="text-[11px] text-[#A77F60] font-medium">
+                Publishing Company Dashboard
+              </p>
+
+            </div>
+
           </div>
         </div>
 
-      </div>
+        {/* Right */}
+        <div className="flex items-center gap-3">
 
-      {/* Mobile Search */}
-      <div className="relative mt-3 md:hidden">
-        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[#A77F60]" />
+          {/* Notifications */}
+          <div className="relative cursor-pointer p-2 rounded-full hover:bg-[#FAF7F4] transition">
+            <IoNotificationsOutline size={24} className="text-[#572C10]" />
+            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+          </div>
 
-        <input
-          type="text"
-          placeholder="Search Book, Categories"
-          className="w-full pl-12 pr-4 py-2 rounded-full border-2 border-[#A77F60] outline-none text-[#A77F60] font-bold"
-        />
+          {/* Divider */}
+          <div className="w-px h-6 bg-[#E9E1D8]"></div>
+
+          {/* Profile */}
+          <div className="flex items-center gap-2 cursor-pointer hover:bg-[#FAF7F4] px-3 py-1.5 rounded-xl transition-all border border-transparent hover:border-[#E9E1D8]">
+
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#572C10] to-[#A77F60] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              A
+            </div>
+
+            <div className="hidden sm:block leading-tight">
+              <p className="text-sm font-bold text-[#572C10]">
+                Admin
+              </p>
+              <p className="text-[11px] text-[#A77F60]">
+                Super Admin
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
 
     </header>

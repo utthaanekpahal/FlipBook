@@ -54,7 +54,7 @@ export default function Login() {
 
   try {
     const response = await execute(() => axios.post(
-      "http://localhost:3000/api/books/login",
+      "https://flipbook-1-l2tf.onrender.com/api/books/login",
       {
         username: data.username,
         password: data.password,
@@ -103,26 +103,43 @@ export default function Login() {
     );
   }
 };
-  return (
-    <div
-  className="min-h-screen w-full flex items-center justify-center bg-cover bg-center relative px-3 py-6"
-      style={{ backgroundImage: `url(${bgimg})` }}
-    >
-      <div className="absolute inset-0 "></div>
+ return (
+  <div
+    className="min-h-screen w-full flex items-center justify-center relative overflow-hidden px-4 py-10 bg-cover bg-center"
+    style={{ backgroundImage: `url(${bgimg})` }}
+  >
+    {/* Softer overlay (NOT too dark) */}
+    <div className="absolute inset-0 bg-black/30"></div>
 
-      <div className="relative w-full max-w-md mx-4 p-5 sm:p-8 bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl">
-        <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800">
+    {/* Subtle gradient wash (premium soft effect) */}
+    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-black/10 to-black/30"></div>
+
+    {/* Light floating blobs */}
+    <div className="absolute w-[350px] h-[350px] bg-[#99582A] opacity-10 blur-3xl rounded-full top-[-80px] left-[-80px] animate-pulse"></div>
+    <div className="absolute w-[300px] h-[300px] bg-blue-400 opacity-10 blur-3xl rounded-full bottom-[-100px] right-[-100px] animate-pulse"></div>
+
+    {/* Card (lighter glass) */}
+    <div
+      className="relative w-full max-w-md p-8 rounded-3xl
+      bg-white/75 backdrop-blur-xl border border-white/40
+      shadow-[0_15px_50px_rgba(0,0,0,0.25)]"
+    >
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">
           Welcome Back
         </h1>
 
-       
-       <p className="text-center text-xs sm:text-sm text-gray-600 mt-2 mb-6">
-          Log in to continue your reading journey with Book Flip
+        <p className="text-sm text-gray-600 mt-2">
+          Sign in to continue your Book Flip journey
         </p>
+      </div>
 
-        <form onSubmit={handleSubmit} >
-          {/* Username */}
-          <div className="relative mb-[5%] ">
+      <form onSubmit={handleSubmit} className="space-y-5">
+
+        {/* Username */}
+        <div>
+          <div className="relative">
             <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
 
             <input
@@ -131,20 +148,21 @@ export default function Login() {
               placeholder="Username"
               value={data.username}
               onChange={handleChange}
-              className="w-full h-11 border rounded-lg pl-10 pr-3 outline-none focus:ring-2 focus:ring-[#99582A]"
+              className="w-full h-12 bg-white/80 text-gray-900 placeholder-gray-500
+              border border-gray-200 rounded-xl pl-10 pr-3
+              outline-none focus:ring-2 focus:ring-[#99582A] transition"
               required
             />
           </div>
 
-          {/* Username Error */}
-          {errors.username && (
-            <p className="text-red-500 text-sm mt-[-2%] mb-[3%] transition-all">
-              {errors.username}
-            </p>
+          {errors?.username && (
+            <p className="text-red-500 text-xs mt-1">{errors.username}</p>
           )}
+        </div>
 
-          {/* Password */}
-          <div className="relative mb-4">
+        {/* Password */}
+        <div>
+          <div className="relative">
             <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
 
             <input
@@ -153,49 +171,58 @@ export default function Login() {
               placeholder="Password"
               value={data.password}
               onChange={handleChange}
-              className="w-full h-11 border rounded-lg pl-10 pr-10 outline-none focus:ring-2 focus:ring-[#99582A]"
+              className="w-full h-12 bg-white/80 text-gray-900 placeholder-gray-500
+              border border-gray-200 rounded-xl pl-10 pr-10
+              outline-none focus:ring-2 focus:ring-[#99582A] transition"
               required
             />
 
-           <span
-  onClick={() => setShowPassword(!showPassword)}
-  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
->
-  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
-</span>
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
+            >
+              {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+            </span>
           </div>
 
-          {/* Password Error */}
-          {errors.password && (
-            <p className="text-red-500 text-sm mb-2">
-              {errors.password}
-            </p>
+          {errors?.password && (
+            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
           )}
-          {/* Login Error */}
-          {error && (
-            <p className="text-red-500 text-xs sm:text-sm mb-3">{error}</p>
-          )}
+        </div>
 
-          {/* Button */}
-          <button
-  type="submit"
-  disabled={loading}
-  className="w-full bg-[#99582A] text-white py-2 rounded-lg font-semibold flex justify-center items-center"
->
-{loading ? (
-  <>
-    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-    <span className="ml-2">Logging in...</span>
-  </>
-) : (
-  "Log In"
-)}
-</button>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2 mt-6 text-center">
-            <span>If you don't have an account ? Contact your Admin </span>
+        {/* Error */}
+        {error && (
+          <div className="bg-red-100 border border-red-200 text-red-600 text-xs p-2 rounded-lg text-center">
+            {error}
           </div>
-        </form>
-      </div>
+        )}
+
+        {/* Button */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full h-12 rounded-xl font-semibold text-white
+          bg-gradient-to-r from-[#99582A] to-[#7a431f]
+          shadow-md hover:shadow-lg
+          hover:scale-[1.02] active:scale-[0.98]
+          transition-all duration-200 flex items-center justify-center"
+        >
+          {loading ? (
+            <>
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span className="ml-2">Logging in...</span>
+            </>
+          ) : (
+            "Log In"
+          )}
+        </button>
+
+        {/* Footer */}
+        <p className="text-center text-xs text-gray-500 pt-2">
+          Don’t have an account? Contact your Admin
+        </p>
+      </form>
     </div>
-  );
+  </div>
+);
 }

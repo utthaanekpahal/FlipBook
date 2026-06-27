@@ -15,15 +15,27 @@ const app = express();
 // =========================
 // CORS
 // =========================
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:4173",
+  process.env.FRONTEND_URL,
+];
+
 app.use(
   cors({
-    origin:[ "http://localhost:5173",
-            "http://localhost:4173",],
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
-
 // =========================
 // BODY PARSER
 // =========================
@@ -36,7 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // 👇 THIS IS REQUIRED
 app.use("/uploads", express.static("uploads"));
-
+app.set("trust proxy", 1);
 // =========================
 // DATABASE CONNECT
 // =========================
@@ -65,3 +77,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
+
+

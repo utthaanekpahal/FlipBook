@@ -19,7 +19,7 @@ const FollowUp = () => {
   const fetchVisits = async () => {
     try {
      const res = await execute(() =>
-  axios.get("http://localhost:3000/api/visits")
+  axios.get("https://flipbook-1-l2tf.onrender.com/api/visits")
 );
 
       setVisits(res.data.data);
@@ -49,7 +49,7 @@ const FollowUp = () => {
     try {
       await execute(() =>
   axios.delete(
-    `http://localhost:3000/api/visits/${id}`
+    `https://flipbook-1-l2tf.onrender.com/api/visits/${id}`
   )
 );
 
@@ -86,7 +86,7 @@ const FollowUp = () => {
     try {
       const res = await execute(() =>
   axios.put(
-        `http://localhost:3000/api/visits/${editData._id}`,
+        `https://flipbook-1-l2tf.onrender.com/api/visits/${editData._id}`,
         {
           schoolName: editData.schoolName,
           teacher: editData.teacher,
@@ -97,6 +97,7 @@ const FollowUp = () => {
           outcome: editData.outcome,
           notes: editData.notes,
           visitedBy: editData.visitedBy,
+          location: editData.location,
         }
       ))
 
@@ -134,7 +135,7 @@ const FollowUp = () => {
   };
 
   return (
-<div className="min-h-screen lg:ml-[15px] rounded-xl bg-gradient-to-br from-[#F8F4F0] via-[#F5EFE8] to-[#EFE6DD] px-4 sm:px-6 lg:px-8 py-6">
+<div className="min-h-screen lg:ml-[35px] rounded-xl bg-gradient-to-br from-[#F8F4F0] via-[#F5EFE8] to-[#EFE6DD] px-4 sm:px-6 lg:px-8 py-6">
       {/* TITLE */}
 
       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-[#572C10] mb-8 tracking-tight">
@@ -213,6 +214,17 @@ const FollowUp = () => {
 
             <p>
               <b>Phone:</b> {v.phone}
+            </p>
+
+            <p>
+              <b>Visit Date:</b>{" "}
+              {new Date(v.visitDate).toLocaleDateString()}
+            </p>
+            <p>
+              <b>Loaction:</b> {v.location}
+            </p>
+            <p>
+              <b>Notes:</b> {v.notes}
             </p>
 
             <p className="mt-3">

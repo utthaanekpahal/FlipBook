@@ -25,11 +25,16 @@ const VisitForm = () => {
     outcome: "",
     notes: "",
     location:"",
+     latitude: "",
+  longitude: "",
   
   });
-  const [location, setLocation] = useState("");
+const [location, setLocation] = useState("");
 const [loading, setLoading] = useState(false);
+const [coords, setCoords] = useState(null);
 const getCurrentLocation = () => {
+  console.log("Button Clicked");
+
   if (!navigator.geolocation) {
     alert("Geolocation not supported");
     return;
@@ -42,30 +47,58 @@ const getCurrentLocation = () => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
 
+      console.log("Lat:", lat);
+      console.log("Lon:", lon);
+          setCoords({ lat, lon });
       const address = await getAddressFromCoords(lat, lon);
 
-      setForm((prev) => ({
-        ...prev,
-        location: address,   // ✅ store in form
-      }));
+     setForm((prev) => ({
+  ...prev,
+  location: address,
+  latitude: lat,
+  longitude: lon,
+}));
 
       setLoading(false);
     },
     (error) => {
-      console.error(error);
-      alert("Location permission denied or error");
+      console.log(error);
+      alert("Location permission denied");
       setLoading(false);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0,
     }
   );
 };
 const getAddressFromCoords = async (lat, lon) => {
   try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&addressdetails=1`
     );
 
-    const data = await res.json();
-    return data.display_name;
+    const data = await response.json();
+
+    console.log(data);
+
+    const a = data.address || {};
+
+    const readableAddress = [
+      a.house_number,
+      a.road,
+      a.neighbourhood,
+      a.suburb,
+      a.village,
+      a.town,
+      a.city,
+      a.state,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    return readableAddress || data.display_name;
   } catch (err) {
     console.log(err);
     return `${lat}, ${lon}`;
@@ -136,61 +169,56 @@ const startListening = () => {
     }
   };
 
-  const submit = async () => {
-    try {
-      if (
-        !form.schoolName ||
-        !form.teacher ||
-        !form.phone ||
-        !photo
-      ) {
-        alert(
-          "School Name, Teacher, Phone and Photo are required"
-        );
-        return;
-      }
+ const submit = async () => {
+  setLoading(true);
 
-      const data = new FormData();
-
-      Object.keys(form).forEach((key) => {
-        data.append(key, form[key]);
-      });
-
-      data.append("photo", photo);
-
-      const res = await axios.post(
-        "http://localhost:3000/api/visits/create",
-        data
-      );
-
-      console.log(res.data);
-
-      alert("Visit Saved Successfully ✔");
-
-      setForm({
-        schoolName: "",
-        teacher: "",
-        principal: "",
-        designation: "",
-        phone: "",
-        visitDate: "",
-        outcome: "",
-        notes: "",
-      
-      });
-
-      setPhoto(null);
-      setPreview(null);
-    } catch (error) {
-      console.log(error);
-
-      alert(
-        error.response?.data?.message ||
-          "Error saving visit"
-      );
+  try {
+    if (!form.schoolName || !form.teacher || !form.phone || !photo) {
+      alert("School Name, Teacher, Phone and Photo are required");
+      return;
     }
-  };
 
+    const data = new FormData();
+
+    Object.keys(form).forEach((key) => {
+      data.append(key, form[key]);
+    });
+
+    data.append("photo", photo);
+
+    const res = await axios.post(
+      "https://flipbook-1-l2tf.onrender.com/api/visits/create",
+      data
+    );
+
+    alert("Visit Saved Successfully ✔");
+
+    setForm({
+      schoolName: "",
+      teacher: "",
+      principal: "",
+      designation: "",
+      phone: "",
+      visitDate: "",
+      outcome: "",
+      notes: "",
+      location: "",
+      latitude: "",
+      longitude: "",
+    });
+
+    setPhoto(null);
+    setPreview(null);
+
+  } catch (error) {
+    console.log(error);
+    alert(error.response?.data?.message || "Error saving visit");
+
+  } finally {
+    // 🔥 ALWAYS RUNS (MOST IMPORTANT FIX)
+    setLoading(false);
+  }
+};
 return (
   <div className="min-h-screen lg:ml-[15px] mt-[25%] sm:mt-[30px] lg:mt-[30px] bg-gradient-to-br  py-10 px-4">
 
@@ -475,20 +503,87 @@ return (
   )}
 
 </div>
-{/* location */}
-<div>
- <input
-  type="text"
-  value={form.location}
-  onChange={(e) =>
-    setForm({ ...form, location: e.target.value })
-  }
-  placeholder="Enter location"
-/>
 
-<button onClick={getCurrentLocation}>
-  {loading ? "Fetching..." : "Use current location"}
-</button>
+{/* location */}
+<div className="mt-5">
+  <label className="font-semibold text-gray-700 text-sm sm:text-base">
+    Location
+  </label>
+
+  <div className="flex flex-col sm:flex-row gap-2 mt-2">
+
+    <input
+      type="text"
+      value={form.location}
+      onChange={(e) =>
+        setForm({
+          ...form,
+          location: e.target.value,
+        })
+      }
+      placeholder="Your location will appear here"
+      className="
+        flex-1
+        border
+        border-gray-300
+        p-3
+        rounded-xl
+        text-sm
+        outline-none
+        focus:border-[#572C10]
+        focus:ring-1
+        focus:ring-[#572C10]
+      "
+    />
+
+    <button
+      type="button"
+      onClick={getCurrentLocation}
+      className="
+        bg-[#572C10]
+        text-white
+        px-4
+        py-3
+        rounded-xl
+        whitespace-nowrap
+        hover:bg-[#3f1f0b]
+        transition
+        font-medium
+      "
+    >
+      {loading ? "Loading..." : "📍 GPS"}
+    </button>
+
+  </div>
+
+  {coords && (
+    <div className="mt-3">
+      <a
+        href={`https://www.google.com/maps?q=${coords.lat},${coords.lon}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="
+          inline-flex
+          items-center
+          justify-center
+          gap-2
+          bg-green-600
+          hover:bg-green-700
+          text-white
+          px-4
+          py-3
+          rounded-xl
+          text-sm
+          font-medium
+          transition
+          w-full
+          sm:w-auto
+        "
+      >
+        📍 Open in Google Maps
+      </a>
+    </div>
+  )}
 </div>
 {/* Selfie Upload */}
 
@@ -583,6 +678,8 @@ return (
                 visitDate: "",
                 outcome: "",
                 notes: "",
+                 latitude: "",
+  longitude: "",
               });
 
               setPhoto(null);
@@ -605,22 +702,22 @@ return (
           </button>
 
           <button
-            onClick={submit}
-            className="
-              flex-1
-              py-3
-              rounded-xl
-              bg-[#572C10]
-              text-white
-              font-bold
-              hover:bg-[#3f1f0b]
-              shadow-lg
-            "
-          >
+  onClick={submit}
+  disabled={loading}
+  className="flex-1 py-3 rounded-xl bg-[#572C10] text-white font-bold hover:bg-[#3f1f0b] shadow-lg flex items-center justify-center"
+>
+  {loading ? (
+    <div className="flex items-center gap-2">
+      <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+      <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+      <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce"></span>
 
-            Save Visit
-
-          </button>
+      <span className="ml-2 text-sm">Saving...</span>
+    </div>
+  ) : (
+    "Save Visit"
+  )}
+</button>
 
         </div>
 

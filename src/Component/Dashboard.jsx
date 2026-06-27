@@ -7,8 +7,55 @@ import {FaBook,} from 'react-icons/fa';
 import { FiSearch } from "react-icons/fi";
 import axios from 'axios';
 import useApiLoader from "../hook/useApiLoader";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+
+function PdfCover({ pdfUrl, title }) {
+  const [cover, setCover] = useState("");
+
+  useEffect(() => {
+    const loadCover = async () => {
+      try {
+        const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+        const page = await pdf.getPage(1);
+
+        const viewport = page.getViewport({ scale: 0.8 });
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+        }).promise;
+
+        setCover(canvas.toDataURL("image/jpeg"));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (pdfUrl) {
+      loadCover();
+    }
+  }, [pdfUrl]);
+
+  return (
+    <img
+      src={cover || "/book1.jpg"}
+      alt={title}
+      className="w-full h-[240px] object-cover"
+    />
+  );
+}
+
 function Dashboard() {
   const navigate = useNavigate();
+  const [saveLoading, setSaveLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [agents, setAgents] = useState([]);
   const { loading, execute } = useApiLoader();
@@ -27,7 +74,7 @@ useEffect(() => {
 const fetchAgents = async () => {
   try {
    const response = await agentLoader.execute(() =>
-      axios.get("http://localhost:3000/api/books/agents")
+      axios.get("https://flipbook-1-l2tf.onrender.com/api/books/agents")
     );
 
     setAgents(response.data.agents);
@@ -43,7 +90,7 @@ useEffect(()=>{
 const fetchTicket=async ()=>{
   try{
     const res = await ticketLoader.execute(() =>
-      axios.get("http://localhost:3000/api/tickets/all")
+      axios.get("https://flipbook-1-l2tf.onrender.com/api/tickets/all")
     );
 
     setTicketdata(res.data.tickets)
@@ -72,12 +119,11 @@ const passwordRegex =
     updatedstatus: isActive ? "Active" : "Deactivated",
   }));
 }, [isActive]);
- const updateagentchanges = async (id) => {
+const updateagentchanges = async (id) => {
   const payload = {
     status: selectedAgent.updatedstatus,
   };
 
-  // password only if user typed it
   if (selectedAgent.updateagentpass) {
     if (!passwordRegex.test(selectedAgent.updateagentpass)) {
       setPasswordError(
@@ -92,19 +138,23 @@ const passwordRegex =
   setPasswordError("");
 
   try {
+    setSaveLoading(true);
+
     await axios.put(
-      `http://localhost:3000/api/books/agents/${id}`,
+      `https://flipbook-1-l2tf.onrender.com/api/books/agents/${id}`,
       payload
     );
 
     setagenteditpop(false);
   } catch (error) {
     console.log(error);
+  } finally {
+    setSaveLoading(false);
   }
 };
 const deleteAgent = async (id) => {
   try {
-    await axios.delete(`http://localhost:3000/api/books/agents/${id}`);
+    await axios.delete(`https://flipbook-1-l2tf.onrender.com/api/books/agents/${id}`);
 
     // UI update without refresh
     setAgents((prev) => prev.filter((a) => a._id !== id));
@@ -124,7 +174,7 @@ const deleteAgent = async (id) => {
 const fetchBooks = async () => {
   try {
     const res = await axios.get(
-      "https://flipbook-lw1b.onrender.com/api/books"
+      "https://flipbook-1-l2tf.onrender.com/api/books"
     );
 
     if (res.data.success) {
@@ -145,211 +195,404 @@ const fetchBooks = async () => {
 
   }
 };
+
   return (
-    <div className=''>
+    <div>
 
       {/* BODY */}
       <div className='flex flex-col  lg:flex-row gap-5  p-[20px]'>
 
-        {/* SIDEBAR */}
-
         {/* MAIN CONTENT */}
-        <main className="flex-1 flex mt-[-16px] flex-col gap-[20px] ">
+        <main className="flex-1 flex mt-[-16px] lg:ml-[20px] flex-col gap-[20px] ">
 
           {/* TOP BOXES */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 ">
-            <div
-              className="min-h-[150px] w-full bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
-              <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
-                <FaBook className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
-              </div>
-              <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[20px] text-black '>Total Books</span>
-                <span className='font-bold text-[18px] text-[#572C10]'>{books.length}</span>
-                
-              </div>
-            </div>
-            <div
-              className="min-h-[150px] w-full bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
-              <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
-                <FaThList className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
-              </div>
-              <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[20px] text-black '>Total Categories</span>
-                <span className='font-bold text-[18px] text-[#572C10]'>2</span>
-               
-              </div>
-            </div>
-            <div
-              className="min-h-[150px] w-full bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
-              <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
-                <FaUserTie className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
-              </div>
-              <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[20px] text-black '>Active Agents</span>
-                <span className='font-bold text-[18px] text-[#572C10]'>{agents.length}</span>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
-              </div>
-            </div>
-            <div
-              className="min-h-[150px] w-full bg-[#F5F5F5] rounded-[10px] flex justify-center gap-[15px] items-center text-[20px]">
-              <div className="w-[60px] h-[65px] bg-[#FFDBB5] rounded-[25px] flex items-center justify-center">
-                <FaEye className="text-2xl text-[#572C10] w-[25px] h-[45px]" />
-              </div>
-              <div className='flex flex-col justify-center gap-[5px]'>
-                <span className='font-bold text-[20px] text-black '>Total views</span>
-                <span className='font-bold text-[18px] text-[#572C10]'>{totalViews}</span>
-                
-              </div>
-            </div>
+  {/* Total Books */}
+  <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-100 p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300">
+    <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-amber-400 to-orange-500" />
 
+    <div className="flex items-center justify-between mb-5">
+      <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center">
+        <FaBook className="text-[#572C10] text-lg" />
+      </div>
+
+      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+        Library
+      </span>
+    </div>
+
+    <h2 className="text-[30px] font-bold text-gray-900 tracking-tight">
+      {books.length}
+    </h2>
+
+    <p className="mt-1 text-sm font-medium text-gray-500">
+      Total Books
+    </p>
+  </div>
+
+  {/* Categories */}
+  <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-100 p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300">
+    <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-blue-400 to-indigo-500" />
+
+    <div className="flex items-center justify-between mb-5">
+      <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center">
+        <FaThList className="text-blue-600 text-lg" />
+      </div>
+
+      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+        Catalog
+      </span>
+    </div>
+
+    <h2 className="text-[30px] font-bold text-gray-900 tracking-tight">
+      2
+    </h2>
+
+    <p className="mt-1 text-sm font-medium text-gray-500">
+      Total Categories
+    </p>
+  </div>
+
+  {/* Agents */}
+  <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-100 p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300">
+    <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-emerald-400 to-green-500" />
+
+    <div className="flex items-center justify-between mb-5">
+      <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
+        <FaUserTie className="text-emerald-600 text-lg" />
+      </div>
+
+      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+        Team
+      </span>
+    </div>
+
+    <h2 className="text-[30px] font-bold text-gray-900 tracking-tight">
+      {agents.length}
+    </h2>
+
+    <p className="mt-1 text-sm font-medium text-gray-500">
+      Active Agents
+    </p>
+  </div>
+
+  {/* Views */}
+  <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-100 p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300">
+    <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-purple-400 to-violet-500" />
+
+    <div className="flex items-center justify-between mb-5">
+      <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center">
+        <FaEye className="text-purple-600 text-lg" />
+      </div>
+
+      <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+        Analytics
+      </span>
+    </div>
+
+    <h2 className="text-[30px] font-bold text-gray-900 tracking-tight">
+      {totalViews}
+    </h2>
+
+    <p className="mt-1 text-sm font-medium text-gray-500">
+      Total Views
+    </p>
+  </div>
+
+</div>
+          {/* RECENT BOOK */}
+        <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+
+  {/* Header */}
+  <div className="flex items-center justify-between mb-6">
+    <div>
+      <h2 className="text-xl font-bold text-[#572C10]">
+        Recent Books
+      </h2>
+      <p className="text-sm text-[#572C10] mt-1">
+        Latest books added to your library
+      </p>
+    </div>
+  </div>
+
+  {/* Books Grid */}
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+
+  {books
+    .slice() // avoid mutation
+    .reverse() // 🔥 newest books first (if backend pushes new at end)
+    .slice(0, 5)
+    .map((book) => (
+
+      <div
+        key={book._id}
+        className="group cursor-pointer"
+        onClick={() => navigate("/FlipPage")}
+      >
+
+        {/* Book Cover */}
+        <div
+          className="
+            relative
+            overflow-hidden
+            rounded-2xl
+            bg-gray-100
+            border border-gray-100
+            shadow-sm
+            transition-all duration-300
+            group-hover:shadow-lg
+            group-hover:-translate-y-1
+          "
+        >
+
+          <PdfCover
+  pdfUrl={book.file}
+  title={book.title}
+/>
+
+          {/* Subject Badge */}
+          <div className="absolute top-3 left-3">
+            <span
+              className="
+                px-3 py-1
+                rounded-full
+                bg-white/95
+                backdrop-blur-sm
+                text-[11px]
+                font-bold
+                text-gray-700
+                shadow-sm
+              "
+            >
+              {book.subject || "Subject"}
+            </span>
           </div>
 
+        </div>
 
-          {/* RECENT BOOK */}
-          <div className="bg-[#F5F5F5] rounded-[10px] p-[10px]">
+        {/* Book Info */}
+        <div className="mt-3 px-1">
 
-            <div className='text-center mb-[20px] '>
+          <h3
+            className="
+              font-bold
+              text-[15px]
+              text-gray-900
+              line-clamp-1
+            "
+          >
+            {book.title}
+          </h3>
 
-              <h2 className="font-bold text-black text-[20px]">
-                Recent Book
-              </h2>
+          <p
+            className="
+              mt-1
+              text-[13px]
+              font-medium
+              text-gray-500
+            "
+          >
+            {book.className}
+          </p>
 
-            </div>
-
-         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-
-  {books.slice(0, 6).map((book) => (
-
-    <div
-      key={book._id}
-      className="flex flex-col items-center gap-[5px]"
-    >
-
-      <div className="w-full max-w-[120px] h-[160px] bg-[#FFDBB5] rounded flex items-center justify-center">
-
-        <img
-          onClick={() => navigate("/FlipPage")}
-          src={book.img}
-          alt={book.title}
-          className="w-full h-full object-cover rounded cursor-pointer"
-          onError={(e) => {
-            e.target.src = "/book1.jpg";
-          }}
-        />
+        </div>
 
       </div>
 
-      <span className="text-[18px] font-bold text-center">
-        {book.title}
-      </span>
+    ))}
 
-      <span className="text-[14px] font-bold text-purple-700 t">
-        {book.className}
-      </span>
-
-      
-      <span className="text-[16px] font-bold text-blue-900">
-        {book.subject || "Subject"}
-      </span>
-
-    </div>
-
-  ))}
 </div>
 </div>
-
           {/* TABLE + CARD */}
           <div className='flex flex-col xl:flex-row gap-2'>
 
             {/* TABLE */}
-            <div className="flex-1 bg-[#F5F5F5] rounded-[10px] p-[20px]">
+  <div className="flex-1 bg-white rounded-2xl border border-[#E9E1D8] shadow-sm overflow-hidden">
 
-              <div className='flex justify-between mb-[20px]'>
+  {/* Header */}
+  <div className="flex items-center justify-between px-5 py-4 border-b border-[#F1E8DF]">
+    <div>
+      <h4 className="text-lg font-extrabold text-[#572C10]">
+        Active Agents
+      </h4>
+      <p className="text-xs font-semibold text-[#A77F60] mt-1">
+        Recently active team members
+      </p>
+    </div>
 
-                <h4 className='font-bold text-black text-[20px]'>
-                  Active Agent
-                </h4>
-
-                <button className='border px-[10px] py-[5px] text-black border-[#EFE6DD] font-bold  rounded'
-                 onClick={()=>{setagentpop(!agentpop)}}>
-                  View all
-                </button>
-
-              </div>
-              <div className='overflow-x-auto'>
-                <table className='w-full min-w-[700px]'>
-
-                  <thead>
-
-                    <tr className='bg-gray-200'>
-
-                      <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Agent Name</th>
-                      <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Email</th>
-                      <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Status</th>
-                      <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Last login</th>
-                      <th className='p-[10px] text-[#A77F60] bg-[#EFE6DD]'>Edit</th>
-                    </tr>
-
-                  </thead>
-
-                              <tbody>
-               {agentLoader.loading ? (
-    <tr>
-      <td colSpan="5" className="text-center py-8">
-        <div className="flex justify-center items-center gap-2">
-          <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
-          <span>Loading Agents...</span>
-        </div>
-      </td>
-    </tr>
-  ) :  agentError ? (
- <tr>
-    <td colSpan="5" className="text-center py-8 text-red-500 font-medium">
-        {agentError}
-
-    </td>
-  </tr>
-):( agents.slice(-2)
-  .reverse().map((value, index) => (
-                      <tr key={index}>
-                        <td className="text-center p-[12px] border-b border-amber-50">
-                          {value.name}
-                        </td>
-
-                        <td className="text-center p-[12px] border-b border-amber-50 break-all">
-                          {value.email}
-                        </td>
-
-                        <td className="text-center p-[12px] border-b border-amber-50">
-                          {value.status}
-                        </td>
-                         <td className="text-center p-[12px] border-b border-amber-50">
-                          {value.lastLogin
-                           ? new Date(value.lastLogin).toLocaleDateString("en-GB")
-                           : "No Login"}
-                        </td>
-                        <td className="text-center flex ml-[5%] gap-[15px]  p-[12px] border-b border-amber-50">
-                        <button className='bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold'
-                          onClick={()=>{setagenteditpop(true);
-                             setSelectedAgent(value);
-                          }}>Action</button>
-                          <button
-      className="bg-red-500 text-white py-[5px] px-[10px] rounded-2xl font-bold"
-      onClick={() => deleteAgent(value._id)}
+    <button
+      className="px-4 py-2 text-sm font-bold text-[#572C10] border border-[#E7DDD4] rounded-lg hover:bg-[#FAF7F4] transition-all"
+      onClick={() => {
+        setagentpop(!agentpop);
+      }}
     >
-      Delete
+      View All
     </button>
-                        </td>
-                      </tr>
-                    ))
-                      )}
-            </tbody>
+  </div>
 
-                </table>
+  {/* Table */}
+  <div className="overflow-x-auto">
+    <table className="w-full min-w-[560px]">
+
+      <thead>
+        <tr className="bg-[#FAF8F6]">
+
+          <th className="px-5 py-3 text-left text-xs font-extrabold tracking-wider text-[#8A6B52] uppercase">
+            Agent
+          </th>
+
+          <th className="px-4 py-3 text-left text-xs font-extrabold tracking-wider text-[#8A6B52] uppercase">
+            Email
+          </th>
+
+          <th className="px-4 py-3 text-center text-xs font-extrabold tracking-wider text-[#8A6B52] uppercase">
+            Status
+          </th>
+
+          <th className="px-4 py-3 text-center text-xs font-extrabold tracking-wider text-[#8A6B52] uppercase">
+            Last Login
+          </th>
+
+          <th className="px-4 py-3 text-center text-xs font-extrabold tracking-wider text-[#8A6B52] uppercase">
+            Actions
+          </th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {agentLoader.loading ? (
+          <tr>
+            <td colSpan="5" className="py-10">
+
+              <div className="flex justify-center items-center gap-3">
+
+                <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+
+                <span className="font-bold text-[#572C10]">
+                  Loading Agents...
+                </span>
 
               </div>
-            </div>
+
+            </td>
+          </tr>
+        ) : agentError ? (
+
+          <tr>
+            <td
+              colSpan="5"
+              className="text-center py-10 text-red-500 font-bold"
+            >
+              {agentError}
+            </td>
+          </tr>
+
+        ) : (
+
+          agents
+            .slice(-2)
+            .reverse()
+            .map((value, index) => (
+
+              <tr
+                key={index}
+                className="hover:bg-[#FCFBFA] transition-colors"
+              >
+
+                {/* Agent */}
+                <td className="px-5 py-4 border-t border-[#F3ECE5]">
+
+                  <div className="flex items-center gap-3">
+
+                    <div className="w-9 h-9 rounded-full bg-[#572C10] text-white flex items-center justify-center text-sm font-extrabold">
+                      {value.name?.charAt(0)?.toUpperCase()}
+                    </div>
+
+                    <div>
+                      <p className="font-bold text-[#572C10]">
+                        {value.name}
+                      </p>
+                    </div>
+
+                  </div>
+
+                </td>
+
+                {/* Email */}
+                <td className="px-4 py-4 border-t border-[#F3ECE5]">
+                  <p className="font-semibold text-gray-700 text-sm break-all">
+                    {value.email}
+                  </p>
+                </td>
+
+                {/* Status */}
+                <td className="px-4 py-4 border-t border-[#F3ECE5] text-center">
+
+                  <span
+                    className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-bold
+                    ${
+                      value.status === "Active"
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : value.status === "Inactive"
+                        ? "bg-red-50 text-red-700 border border-red-200"
+                        : "bg-yellow-50 text-yellow-700 border border-yellow-200"
+                    }`}
+                  >
+                    {value.status}
+                  </span>
+
+                </td>
+
+                {/* Last Login */}
+                <td className="px-4 py-4 border-t border-[#F3ECE5] text-center">
+
+                  <span className="font-semibold text-sm text-gray-700">
+                    {value.lastLogin
+                      ? new Date(value.lastLogin).toLocaleDateString("en-GB")
+                      : "No Login"}
+                  </span>
+
+                </td>
+
+                {/* Actions */}
+                <td className="px-4 py-4 border-t border-[#F3ECE5]">
+
+                  <div className="flex justify-center gap-2">
+
+                    <button
+                      className="px-3 py-2 bg-[#572C10] text-white rounded-lg text-xs font-bold hover:bg-[#6D3817] transition-all"
+                      onClick={() => {
+                        setagenteditpop(true);
+                        setSelectedAgent(value);
+                      }}
+                    >
+                      Action
+                    </button>
+
+                    <button
+                      className="px-3 py-2 bg-white border border-red-200 text-red-600 rounded-lg text-xs font-bold hover:bg-red-50 transition-all"
+                      onClick={() => deleteAgent(value._id)}
+                    >
+                      Delete
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            ))
+        )}
+
+      </tbody>
+
+    </table>
+  </div>
+</div>
                 <div>
                  {
   agenteditpop && (
@@ -469,13 +712,32 @@ const fetchBooks = async () => {
             Cancel
           </button>
 
-          <button
-            className="w-full bg-[#572C10] text-white py-2 rounded-lg"
-             disabled={passwordError !== ""}
-            onClick={() => updateagentchanges(selectedAgent?._id)}
-          >
-            Save Changes
-          </button>
+         <button
+  className="relative w-full bg-[#572C10] text-white py-2 rounded-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden transition-all"
+  disabled={saveLoading || passwordError !== ""}
+  onClick={() => updateagentchanges(selectedAgent?._id)}
+>
+  {/* shimmer effect */}
+  {saveLoading && (
+    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_1.2s_infinite]"></span>
+  )}
+
+  {/* spinner */}
+  {saveLoading && (
+    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+  )}
+
+  <span className="relative z-10">
+    {saveLoading ? "Saving Changes..." : "Save Changes"}
+  </span>
+
+  <style>{`
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+  `}</style>
+</button>
         </div>
       </div>
     </div>
@@ -484,115 +746,195 @@ const fetchBooks = async () => {
                 </div>
               <div>
  {agentpop && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 p-3">
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
 
-    <div className="bg-white w-full sm:w-[90%] md:w-[80%] lg:w-[70%] h-[85vh] sm:h-[80vh] rounded-lg shadow-lg relative flex flex-col">
+  <div className="bg-white w-full max-w-6xl h-[85vh] rounded-2xl border border-[#E9E1D8] shadow-xl flex flex-col overflow-hidden">
 
-      {/* Close Button */}
+    {/* Header */}
+    <div className="flex items-center justify-between px-6 py-5 border-b border-[#F2E8DF]">
+
+      <div>
+        <h2 className="text-xl font-extrabold text-[#572C10]">
+          Active Agents
+        </h2>
+
+        <p className="text-sm font-medium text-[#A77F60] mt-1">
+          Manage and monitor all registered agents
+        </p>
+      </div>
+
       <button
-        className="absolute top-2 right-3 text-xl font-bold"
         onClick={() => setagentpop(false)}
+        className="w-9 h-9 rounded-lg hover:bg-[#F8F5F2] flex items-center justify-center text-gray-500 text-xl font-bold transition-all"
       >
         ×
       </button>
 
-      {/* Header */}
-      <div className="p-3 sm:p-4 font-semibold text-[#572C10] text-sm sm:text-base">
-        Agents Table
+    </div>
+
+    {/* Search */}
+    <div className="px-6 py-4 border-b border-[#F2E8DF]">
+
+      <div className="relative max-w-md">
+
+        <FiSearch
+          size={18}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+        />
+
+        <input
+          type="text"
+          placeholder="Search agents..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full h-11 pl-11 pr-4 rounded-xl border border-[#E6DDD5] bg-white font-semibold text-sm focus:outline-none focus:border-[#572C10]"
+        />
+
       </div>
 
-      {/* SEARCH BAR ADDED */}
-   {/* SEARCH BAR WITH ICON */}
-<div className="p-3 mt-[-10px]">
-  <div className="relative">
-    
-    {/* Search Icon */}
-    <FiSearch
-      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-      size={18}
-    />
+    </div>
 
-    <input
-      type="text"
-      placeholder="Please Search Agents..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 focus:outline-none"
-    />
-    
-  </div>
-</div>
-      {/* Table Wrapper */}
-      <div className="p-2 sm:p-4 overflow-y-auto">
+    {/* Table */}
+    <div className="flex-1 overflow-auto">
 
-        <table className="w-full min-w-[600px] text-xs sm:text-sm md:text-base border-collapse">
+      <table className="w-full min-w-[750px]">
 
-          <thead>
-            <tr className="bg-[#EFE6DD]">
-              <th className="p-2 sm:p-3 text-[#A77F60]">Agent Name</th>
-              <th className="p-2 sm:p-3 text-[#A77F60]">Email</th>
-              <th className="p-2 sm:p-3 text-[#A77F60]">Status</th>
-              <th className="p-[10px] text-[#A77F60] bg-[#EFE6DD]">
-                Last login
-              </th>
-              <th className="p-2 sm:p-3 text-[#A77F60]">Edit</th>
+        <thead className="sticky top-0 bg-[#FAF8F6] z-10">
+
+          <tr>
+
+            <th className="px-6 py-4 text-left text-xs uppercase tracking-wider font-extrabold text-[#8A6B52]">
+              Agent
+            </th>
+
+            <th className="px-4 py-4 text-left text-xs uppercase tracking-wider font-extrabold text-[#8A6B52]">
+              Email
+            </th>
+
+            <th className="px-4 py-4 text-center text-xs uppercase tracking-wider font-extrabold text-[#8A6B52]">
+              Status
+            </th>
+
+            <th className="px-4 py-4 text-center text-xs uppercase tracking-wider font-extrabold text-[#8A6B52]">
+              Last Login
+            </th>
+
+            <th className="px-4 py-4 text-center text-xs uppercase tracking-wider font-extrabold text-[#8A6B52]">
+              Actions
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          {agentLoader.loading ? (
+            <tr>
+              <td colSpan="5" className="py-16">
+
+                <div className="flex justify-center items-center gap-3">
+
+                  <div className="w-6 h-6 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+
+                  <span className="font-bold text-[#572C10]">
+                    Loading Agents...
+                  </span>
+
+                </div>
+
+              </td>
             </tr>
-          </thead>
+          ) : agentError ? (
+            <tr>
+              <td
+                colSpan="5"
+                className="text-center py-16 text-red-500 font-bold"
+              >
+                {agentError}
+              </td>
+            </tr>
+          ) : filteredAgents.length === 0 ? (
+            <tr>
+              <td
+                colSpan="5"
+                className="text-center py-16 text-gray-500 font-semibold"
+              >
+                No Agent Found
+              </td>
+            </tr>
+          ) : (
+            filteredAgents.map((value, index) => (
 
-          <tbody>
-            {agentLoader.loading ? (
-              <tr>
-                <td colSpan="5" className="text-center py-8">
-                  <div className="flex justify-center items-center gap-2">
-                    <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
-                    <span>Loading Agents...</span>
+              <tr
+                key={index}
+                className="hover:bg-[#FCFBFA] transition-colors"
+              >
+
+                {/* Agent */}
+                <td className="px-6 py-4 border-t border-[#F3ECE5]">
+
+                  <div className="flex items-center gap-3">
+
+                    <div className="w-10 h-10 rounded-full bg-[#572C10] text-white flex items-center justify-center font-extrabold">
+                      {value.name?.charAt(0)?.toUpperCase()}
+                    </div>
+
+                    <div>
+                      <p className="font-bold text-[#572C10]">
+                        {value.name}
+                      </p>
+                    </div>
+
                   </div>
-                </td>
-              </tr>
-            ) : agentError ? (
-              <tr>
-                <td
-                  colSpan="5"
-                  className="text-center py-8 text-red-500 font-medium"
-                >
-                  {agentError}
-                </td>
-              </tr>
-            ) : filteredAgents.length === 0 ? (
-              // NO RESULT MESSAGE ADDED
-              <tr>
-                <td
-                  colSpan="5"
-                  className="text-center py-8 text-gray-500"
-                >
-                  No Agent Found
-                </td>
-              </tr>
-            ) : (
-              // SEARCH FILTER APPLIED
-              filteredAgents.map((value, index) => (
-                <tr key={index}>
-                  <td className="text-center p-[12px] border-b border-amber-50">
-                    {value.name}
-                  </td>
 
-                  <td className="text-center p-[12px] border-b border-amber-50 break-all">
+                </td>
+
+                {/* Email */}
+                <td className="px-4 py-4 border-t border-[#F3ECE5]">
+
+                  <p className="font-semibold text-gray-700 break-all">
                     {value.email}
-                  </td>
+                  </p>
 
-                  <td className="text-center p-[12px] border-b border-amber-50">
+                </td>
+
+                {/* Status */}
+                <td className="px-4 py-4 border-t border-[#F3ECE5] text-center">
+
+                  <span
+                    className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-bold
+                    ${
+                      value.status === "Active"
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : value.status === "Inactive"
+                        ? "bg-red-50 text-red-700 border border-red-200"
+                        : "bg-yellow-50 text-yellow-700 border border-yellow-200"
+                    }`}
+                  >
                     {value.status}
-                  </td>
+                  </span>
 
-                  <td className="text-center p-[12px] border-b border-amber-50">
+                </td>
+
+                {/* Last Login */}
+                <td className="px-4 py-4 border-t border-[#F3ECE5] text-center">
+
+                  <span className="font-semibold text-gray-700">
                     {value.lastLogin
                       ? new Date(value.lastLogin).toLocaleDateString("en-GB")
                       : "No Login"}
-                  </td>
+                  </span>
 
-                  <td className="text-center flex ml-[15%] gap-[15px] p-[12px] border-b border-amber-50">
+                </td>
+
+                {/* Actions */}
+                <td className="px-4 py-4 border-t border-[#F3ECE5]">
+
+                  <div className="flex justify-center gap-2">
+
                     <button
-                      className="bg-[#572C10] text-white py-[5px] px-[10px] rounded-2xl font-bold"
+                      className="px-4 py-2 bg-[#572C10] text-white rounded-lg text-xs font-bold hover:bg-[#6D3817] transition-all"
                       onClick={() => {
                         setagenteditpop(true);
                         setSelectedAgent(value);
@@ -602,109 +944,206 @@ const fetchBooks = async () => {
                     </button>
 
                     <button
-                      className="bg-red-500 text-white py-[5px] px-[10px] rounded-2xl font-bold"
+                      className="px-4 py-2 border border-red-200 text-red-600 rounded-lg text-xs font-bold hover:bg-red-50 transition-all"
                       onClick={() => deleteAgent(value._id)}
                     >
                       Delete
                     </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
 
-        </table>
+                  </div>
 
-      </div>
+                </td>
+
+              </tr>
+
+            ))
+          )}
+
+        </tbody>
+
+      </table>
+
     </div>
+
   </div>
+
+</div>
 )}
 </div>
             {/* CARD */}
-            <div className="w-full  h-[258px] xl:w-[300px]  bg-[#F5F5F5] overflow-y-auto rounded-[10px] p-[20px]">
-              <div className='text-[#572C10] font-bold '>Recent Ticket</div>
-              <div>
-                    <div className="hidden md:grid grid-cols-3 gap-4 pb-3 font-medium mt-[10px]">
-    <span>Agents</span>
-    <span className="text-center">Date</span>
-    <span className="text-right">Detail</span>
+          <div className="w-full xl:w-[300px] h-[285px] bg-white rounded-2xl border border-[#E9E1D8] shadow-sm overflow-hidden flex flex-col">
+
+  {/* Header */}
+  <div className="px-4 py-3 border-b border-[#F2E8DF]">
+
+    <h3 className="text-[#572C10] text-base font-extrabold">
+      Recent Tickets
+    </h3>
+
+    <p className="text-xs text-[#A77F60] font-medium mt-1">
+      Latest support requests
+    </p>
+
   </div>
 
-  {/* Rows */}
-  {ticketLoader.loading ? (
-  <div className="flex justify-center py-8">
-    <div className="flex items-center gap-2">
-      <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
-      <span className="text-[#572C10] font-medium">
-        Loading Tickets...
+  {/* Content */}
+  <div className="flex-1 overflow-y-auto">
+
+    {/* Desktop Header */}
+    <div className="hidden md:grid grid-cols-3 px-4 py-3 bg-[#FAF8F6] border-b border-[#F2E8DF] sticky top-0 z-10">
+
+      <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#8A6B52]">
+        Agent
       </span>
+
+      <span className="text-center text-[11px] font-extrabold uppercase tracking-wider text-[#8A6B52]">
+        Date
+      </span>
+
+      <span className="text-right text-[11px] font-extrabold uppercase tracking-wider text-[#8A6B52]">
+        Action
+      </span>
+
     </div>
-  </div>
-): ticketError ? (
-  <div className="text-center py-6 text-red-500">
-    {ticketError}
-  </div>
-) :(Ticketdata?.map((data, index) => {
-    return (
-      <div
-        key={index}
-        className="
-          py-3
-          flex flex-col gap-3
-          md:grid md:grid-cols-3 md:items-center
-        "
-      >
-        {/* Mobile Agent */}
-        <div className="flex justify-between md:hidden">
-          <span className="text-gray-500 text-sm">Agent</span>
-          <span className="font-medium">{data?.Agentname}</span>
-        </div>
 
-        {/* Desktop Agent */}
-        <span className="hidden md:block font-medium truncate">
-          {data?.Agentname}
-        </span>
+    {ticketLoader.loading ? (
 
-        {/* Mobile Date */}
-        <div className="flex justify-between md:hidden">
-          <span className="text-gray-500 text-sm">Date</span>
-          <span className="text-sm">
-            {new Date(data?.createdAt).toLocaleDateString("en-GB")}
+      <div className="flex justify-center py-10">
+
+        <div className="flex items-center gap-3">
+
+          <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+
+          <span className="font-bold text-[#572C10]">
+            Loading Tickets...
           </span>
+
         </div>
 
-        {/* Desktop Date */}
-        <span className="hidden md:block text-center text-sm whitespace-nowrap">
-          {new Date(data?.createdAt).toLocaleDateString("en-GB")}
-        </span>
-
-        {/* Button */}
-        <div className="flex justify-end md:justify-end">
-          <button
-            className="
-              bg-[#572C10]
-              text-white
-              font-bold
-              px-4
-              py-2
-              rounded-[10px]
-              w-full md:w-auto
-            "
-            onClick={() =>
-              navigate("/ticket", {
-                state: { role: "user" },
-              })
-            }
-          >
-            Click
-          </button>
-        </div>
       </div>
-    );
-  })
-  )}
+
+    ) : ticketError ? (
+
+      <div className="text-center py-10 text-red-500 font-bold">
+        {ticketError}
+      </div>
+
+    ) : (
+
+      Ticketdata?.map((data, index) => {
+        return (
+          <div
+            key={index}
+            className="
+              px-4 py-3
+              border-b border-[#F3ECE5]
+              hover:bg-[#FCFBFA]
+              transition-colors
+            "
+          >
+
+            {/* Desktop Layout */}
+            <div className="hidden md:grid md:grid-cols-3 md:items-center">
+
+              <div>
+                <p className="font-bold text-[#572C10] truncate">
+                  {data?.Agentname}
+                </p>
               </div>
+
+              <div className="text-center">
+
+                <span className="text-sm font-semibold text-gray-600">
+                  {new Date(data?.createdAt).toLocaleDateString("en-GB")}
+                </span>
+
+              </div>
+
+              <div className="flex justify-end">
+
+                <button
+                  className="
+                    px-3 py-2
+                    bg-[#572C10]
+                    text-white
+                    rounded-lg
+                    text-xs
+                    font-bold
+                    hover:bg-[#6D3817]
+                    transition-all
+                  "
+                  onClick={() =>
+                    navigate("/ticket", {
+                      state: { role: "user" },
+                    })
+                  }
+                >
+                  View
+                </button>
+
+              </div>
+
             </div>
+
+            {/* Mobile Layout */}
+            <div className="md:hidden space-y-2">
+
+              <div className="flex justify-between">
+
+                <span className="text-xs font-semibold text-gray-500">
+                  Agent
+                </span>
+
+                <span className="font-bold text-[#572C10]">
+                  {data?.Agentname}
+                </span>
+
+              </div>
+
+              <div className="flex justify-between">
+
+                <span className="text-xs font-semibold text-gray-500">
+                  Date
+                </span>
+
+                <span className="text-sm font-semibold text-gray-700">
+                  {new Date(data?.createdAt).toLocaleDateString("en-GB")}
+                </span>
+
+              </div>
+
+              <button
+                className="
+                  w-full
+                  py-2
+                  bg-[#572C10]
+                  text-white
+                  rounded-lg
+                  text-sm
+                  font-bold
+                  hover:bg-[#6D3817]
+                  transition-all
+                "
+                onClick={() =>
+                  navigate("/ticket", {
+                    state: { role: "user" },
+                  })
+                }
+              >
+                View Ticket
+              </button>
+
+            </div>
+
+          </div>
+        );
+      })
+
+    )}
+
+  </div>
+
+</div>
 
           </div>
 

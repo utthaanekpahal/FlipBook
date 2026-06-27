@@ -8,7 +8,7 @@ import useApiLoader from "../../hook/useApiLoader";
 
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
- const API = "http://localhost:3000/api/books";;
+ const API = "https://flipbook-1-l2tf.onrender.com/api/books";;
  function PdfCover({ pdfUrl, title }) {
   const [cover, setCover] = useState("");
 
@@ -112,7 +112,7 @@ const handleUpdate = async () => {
 
     const res = await execute(() =>
   fetch(
-    `http://localhost:3000/api/books/${editBook._id}`,
+    `https://flipbook-1-l2tf.onrender.com/api/books/${editBook._id}`,
     {
       method: "PUT",
       body: formData,
@@ -178,7 +178,7 @@ useEffect(() => {
   const fetchBooks = async () => {
     try {
       const res = await execute(() =>
-        fetch("https://flipbook-lw1b.onrender.com/api/books")
+        fetch("https://flipbook-1-l2tf.onrender.com/api/books")
       );
 
       const data = await res.json();

@@ -51,6 +51,18 @@ const visitSchema = new mongoose.Schema(
       type: String,
     },
 
+     location: {
+  type: String,
+  required: true,
+},
+latitude: {
+  type: Number,
+},
+
+longitude: {
+  type: Number,
+},
+
     // Selfie / proof image
     photo: {
       type: String, // Cloudinary or AWS S3 image URL

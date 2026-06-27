@@ -1,61 +1,86 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useApiLoader from "../../hook/useApiLoader";
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
-// =====================
-// PDF COVER FUNCTION
-// =====================
-const getPdfCover = async (pdfUrl) => {
-  try {
-    const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
-    const page = await pdf.getPage(1);
+// ===================== PDF COVER =====================
+function PdfCover({ pdfUrl, title }) {
+  const [cover, setCover] = useState("");
 
-    const viewport = page.getViewport({ scale: 0.7 });
+  useEffect(() => {
+    let isMounted = true;
 
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const loadCover = async () => {
+      try {
+        setCover("");
 
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
+        const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+        const page = await pdf.getPage(1);
 
-    await page.render({
-      canvasContext: ctx,
-      viewport,
-    }).promise;
+        const viewport = page.getViewport({ scale: 0.5 });
 
-    return canvas.toDataURL("image/jpeg");
-  } catch (err) {
-    console.log("PDF COVER ERROR:", err);
-    return "/book1.jpg";
-  }
-};
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        if (isMounted) {
+          setCover(canvas.toDataURL("image/jpeg"));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (pdfUrl) loadCover();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [pdfUrl]);
+
+  return (
+    <img
+      src={cover || "/book1.jpg"}
+      alt={title}
+      className="w-full h-full object-cover"
+    />
+  );
+}
 
 const Books = () => {
   const navigate = useNavigate();
-  const { loading, execute } = useApiLoader();
+  const { execute } = useApiLoader();
 
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
-  const [covers, setCovers] = useState({}); //
 
+  // filters
   const [category, setCategory] = useState("");
+  const [selectedBook, setSelectedBook] = useState("");
   const [className, setClassName] = useState("");
   const [type, setType] = useState("");
   const [subject, setSubject] = useState("");
-  const [search, setSearch] = useState("");
 
-  // =====================
-  // FETCH + COVER LOAD
-  // =====================
+  const subjects = [...new Set(books.map((b) => b.subject).filter(Boolean))];
+
+  const booksByCategory = {
+    Navbodh: ["Buddy", "Little Champ"],
+    Gyanbodh: ["Deep Dives", "Hearing Bee"],
+  };
+
+  // ================= FETCH BOOKS =================
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         const res = await execute(() =>
-          fetch("https://flipbook-lw1b.onrender.com/api/books")
+          fetch("https://flipbook-1-l2tf.onrender.com/api/books")
         );
 
         const data = await res.json();
@@ -63,42 +88,33 @@ const Books = () => {
         if (data.success) {
           setBooks(data.data);
           setFilteredBooks(data.data);
-
-          // ✅ GENERATE COVERS
-          const coverMap = {};
-
-          for (let book of data.data) {
-            if (book.fileUrl) {
-              coverMap[book._id] = await getPdfCover(book.fileUrl);
-            }
-          }
-
-          setCovers(coverMap);
         }
-      } catch (error) {
-        console.log("Fetch Error:", error);
+      } catch (err) {
+        console.log(err);
       }
     };
 
     fetchBooks();
   }, []);
 
-  // =====================
-  // SEARCH FILTER
-  // =====================
+  // ================= SEARCH FILTER =================
   const handleSearch = () => {
     const result = books.filter((book) => {
       return (
         (category === "" ||
           book.category?.toLowerCase() === category.toLowerCase()) &&
+
+        (selectedBook === "" ||
+          book.title?.toLowerCase() === selectedBook.toLowerCase()) &&
+
         (className === "" ||
           book.className?.toLowerCase() === className.toLowerCase()) &&
+
         (type === "" ||
           book.type?.toLowerCase() === type.toLowerCase()) &&
+
         (subject === "" ||
-          book.subject?.toLowerCase() === subject.toLowerCase()) &&
-        (search === "" ||
-          book.title?.toLowerCase().includes(search.toLowerCase()))
+          book.subject?.toLowerCase() === subject.toLowerCase())
       );
     });
 
@@ -108,26 +124,100 @@ const Books = () => {
   return (
     <div className="min-h-screen bg-[#EFE6DD] px-4 py-10">
 
-      {/* HEADER */}
-      <div className="text-center mb-10">
+      {/* TITLE */}
+      <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-[#572C10]">
           Explore Books
         </h1>
       </div>
 
-      {/* FILTER */}
-      <div className="max-w-6xl mx-auto bg-white p-6 rounded-2xl shadow-md">
+      {/* FILTER CARD */}
+      <div className="max-w-6xl mx-auto bg-white/70 backdrop-blur-xl p-6 rounded-3xl shadow-xl">
 
-        <div className="flex gap-4 mb-4">
-          <input
-            className="flex-1 border px-4 py-3 rounded-xl"
-            placeholder="Search book..."
-            onChange={(e) => setSearch(e.target.value)}
-          />
+        {/* FILTER GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
 
+          {/* CATEGORY */}
+          <select
+            value={category}
+            onChange={(e) => {
+              setCategory(e.target.value);
+              setSelectedBook("");
+            }}
+            className="border px-4 py-3 rounded-xl"
+          >
+            <option value="">Category</option>
+            <option value="Navbodh">Navbodh</option>
+            <option value="Gyanbodh">Gyanbodh</option>
+          </select>
+
+          {/* BOOK */}
+          <select
+            value={selectedBook}
+            onChange={(e) => setSelectedBook(e.target.value)}
+            disabled={!category}
+            className="border px-4 py-3 rounded-xl"
+          >
+            <option value="">Book Name</option>
+            {category &&
+              booksByCategory[category]?.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+          </select>
+
+          {/* CLASS */}
+          <select
+            onChange={(e) => setClassName(e.target.value)}
+            className="border px-4 py-3 rounded-xl"
+          >
+            <option value="">Class</option>
+            <option value="Class 1">Nursery</option>
+            <option value="Class 1">UKG</option>
+            <option value="Class 1">LKG</option>
+            <option value="Class 1">Class 1</option>
+            <option value="Class 2">Class 2</option>
+            <option value="Class 3">Class 3</option>
+            <option value="Class 4">Class 4</option>
+            <option value="Class 5">Class 5</option>
+            <option value="Class 6">Class 6</option>
+            <option value="Class 7">Class 7</option>
+            <option value="Class 8">Class 8</option>
+            <option value="Class 9">Class 9</option>
+            <option value="Class 10">Class 10</option>
+          </select>
+
+          {/* TYPE */}
+          <select
+            onChange={(e) => setType(e.target.value)}
+            className="border px-4 py-3 rounded-xl"
+          >
+            <option value="">Type</option>
+            <option value="Semester">Semester</option>
+            <option value="Yearly">Yearly</option>
+          </select>
+
+          {/* SUBJECT */}
+          <select
+            onChange={(e) => setSubject(e.target.value)}
+            className="border px-4 py-3 rounded-xl"
+          >
+            <option value="">Subject</option>
+            {subjects.map((s, i) => (
+              <option key={i} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+
+        </div>
+
+        {/* SEARCH BUTTON */}
+        <div className="flex justify-center mt-6">
           <button
             onClick={handleSearch}
-            className="bg-[#572C10] text-white px-6 py-3 rounded-xl"
+            className="bg-[#572C10] text-white px-10 py-3 rounded-xl font-semibold"
           >
             Search
           </button>
@@ -136,56 +226,43 @@ const Books = () => {
       </div>
 
       {/* BOOK GRID */}
-      <div className="max-w-6xl mx-auto mt-12">
+      <div className="max-w-6xl mx-auto mt-10">
 
-        {loading ? (
-          <p className="text-center">Loading...</p>
-        ) : filteredBooks.length > 0 ? (
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {filteredBooks.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
             {filteredBooks.map((book) => (
               <div
                 key={book._id}
-                className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition"
+                className="bg-white rounded-3xl shadow-md overflow-hidden"
               >
 
-                {/* =====================
-                    COVER IMAGE (NEW)
-                ===================== */}
-                <div className="h-[260px] w-full bg-gray-100">
-                  <img
-                    src={covers[book._id] || "/book1.jpg"}
-                    alt={book.title}
-                    className="w-full h-full object-cover hover:scale-105 transition"
-                  />
+                {/* COVER */}
+                <div className="h-64">
+                  <PdfCover pdfUrl={book.fileUrl} title={book.title} />
                 </div>
 
-                {/* CONTENT */}
-                <div className="p-4">
-                  <h2 className="text-lg font-bold text-[#572C10]">
+                {/* INFO */}
+                <div className="p-5">
+                  <h2 className="text-xl font-bold text-[#572C10]">
                     {book.title}
                   </h2>
 
-                  <p className="text-sm font-bold text-gray-600">
-                    {book.className}
-                  </p>
+                  <p className="text-sm mt-2">{book.subject}</p>
 
-                  <p className="text-sm text-green-600 font-semibold mt-2">
-                    {book.subject}
-                  </p>
-
-                  <div className="flex gap-2 mt-3 flex-wrap">
-                    <span className="text-xs bg-[#f3e7dd] px-3 py-1 rounded-full">
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
                       {book.category}
                     </span>
-
+                    <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
+                      {book.className}
+                    </span>
                     <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
                       {book.type}
                     </span>
                   </div>
 
-                  <p className="text-sm mt-3 line-clamp-2 text-gray-600">
+                  <p className="text-sm mt-3 line-clamp-2">
                     {book.description}
                   </p>
                 </div>
@@ -194,9 +271,8 @@ const Books = () => {
             ))}
 
           </div>
-
         ) : (
-          <p className="text-center text-red-500">
+          <p className="text-center text-red-500 mt-10">
             No Books Found
           </p>
         )}

@@ -8,10 +8,10 @@ import {
   FaCloudUploadAlt,
   FaSave,
 } from "react-icons/fa";
-
+import useApiLoader from "../../hook/useApiLoader";
 const UploadBooks = () => {
   const navigate = useNavigate();
-
+  const { loading, execute } = useApiLoader();
 const [pdfFile, setPdfFile] = useState(null);
 
 const [category, setCategory] = useState("");
@@ -63,10 +63,12 @@ const [subject, setSubject] = useState("");
       formData.append("book", book);
       formData.append("type", type);
 
-     const res = await axios.post(
-  "http://localhost:3000/api/books/upload",
-  formData
-);
+  const res = await execute(() =>
+      axios.post(
+        "https://flipbook-1-l2tf.onrender.com/api/books/upload",
+        formData
+      )
+    );
 
     
     console.log("UPLOAD SUCCESS:", res.data);
@@ -400,13 +402,44 @@ navigate("/books");
   )}
 </div>
           {/* SAVE */}
-          <button
-            onClick={saveBook}
-            className="w-full mt-6 bg-[#572C10] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2"
-          >
-            <FaSave />
-            Save Books
-          </button>
+               <button
+  onClick={saveBook}
+  disabled={loading}
+  className={`
+    w-full mt-6 py-4 rounded-xl font-bold
+    flex items-center justify-center gap-3
+    transition-all duration-300
+    ${
+      loading
+        ? "bg-gradient-to-r from-[#8B5A2B] to-[#572C10] cursor-not-allowed"
+        : "bg-[#572C10] hover:bg-[#6b3414] text-white hover:scale-[1.02]"
+    }
+  `}
+>
+  {loading ? (
+    <>
+      <div className="relative">
+        <FaCloudUploadAlt className="text-2xl animate-bounce text-white" />
+
+        <span className="absolute inset-0 rounded-full border-2 border-white/40 animate-ping"></span>
+      </div>
+
+      <div className="flex flex-col items-start leading-tight">
+        <span className="text-white font-bold">
+          Uploading Book...
+        </span>
+        <span className="text-xs text-white/80">
+          Please wait, don't close this page
+        </span>
+      </div>
+    </>
+  ) : (
+    <>
+      <FaSave className="text-lg" />
+      Save Books
+    </>
+  )}
+</button>
 
         </div>
       </div>

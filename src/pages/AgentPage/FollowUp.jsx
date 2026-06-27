@@ -19,7 +19,7 @@ const FollowUp = () => {
   const fetchVisits = async () => {
     try {
      const res = await execute(() =>
-  axios.get("http://localhost:3000/api/visits")
+  axios.get("https://flipbook-1-l2tf.onrender.com/api/visits")
 );
 
       setVisits(res.data.data);
@@ -49,7 +49,7 @@ const FollowUp = () => {
     try {
       await execute(() =>
   axios.delete(
-    `http://localhost:3000/api/visits/${id}`
+    `https://flipbook-1-l2tf.onrender.com/api/visits/${id}`
   )
 );
 
@@ -86,7 +86,7 @@ const FollowUp = () => {
     try {
       const res = await execute(() =>
   axios.put(
-        `http://localhost:3000/api/visits/${editData._id}`,
+        `https://flipbook-1-l2tf.onrender.com/api/visits/${editData._id}`,
         {
           schoolName: editData.schoolName,
           teacher: editData.teacher,
@@ -97,6 +97,7 @@ const FollowUp = () => {
           outcome: editData.outcome,
           notes: editData.notes,
           visitedBy: editData.visitedBy,
+          location: editData.location,
         }
       ))
 
@@ -218,6 +219,9 @@ const FollowUp = () => {
             <p>
               <b>Visit Date:</b>{" "}
               {new Date(v.visitDate).toLocaleDateString()}
+            </p>
+            <p>
+              <b>Loaction:</b> {v.location}
             </p>
             <p>
               <b>Notes:</b> {v.notes}

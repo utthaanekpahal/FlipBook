@@ -8,7 +8,7 @@ const ViewMoreBooks = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/books");
+        const res = await fetch("https://flipbook-1-l2tf.onrender.com/api/books");
         const data = await res.json();
         setBooks(data.data);
       } catch (error) {
@@ -20,7 +20,7 @@ const ViewMoreBooks = () => {
   }, []);
 
   return (
- <div className="min-h-screen lg:mt-[-18px] flex items-center justify-center p-4">
+ <div className="min-h-screen lg:mt-[-18px] lg:ml-[25px] flex items-center justify-center p-4">
 
   {/* OUTER GLASS BACKDROP */}
   <div className="w-full max-w-7xl min-h-[90vh] bg-white/70 backdrop-blur-xl 

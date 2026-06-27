@@ -17,7 +17,7 @@ const AgentDashboard = () => {
   const ticketlength = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/api/tickets/all"
+        "https://flipbook-1-l2tf.onrender.com/api/tickets/all"
       );
 
       setlengths(res.data.tickets);
@@ -30,7 +30,7 @@ const AgentDashboard = () => {
   const getBooks = async () => {
     try {
       const res = await axios.get(
-        "https://flipbook-lw1b.onrender.com/api/books"
+        "https://flipbook-1-l2tf.onrender.com/api/books"
       );
 
       if (res.data.success) {

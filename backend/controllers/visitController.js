@@ -22,6 +22,9 @@ export const createVisit = async (req, res) => {
       outcome,
       notes,
       visitedBy,
+      location,
+       latitude,
+      longitude,
     } = req.body;
 
     // Create visit record
@@ -35,7 +38,9 @@ export const createVisit = async (req, res) => {
       outcome,
       notes,
       visitedBy,
-
+      location,
+latitude: latitude ? Number(latitude) : undefined,
+  longitude: longitude ? Number(longitude) : undefined,
       // Store uploaded photo URL
       photo: `${req.protocol}://${req.get(
         "host"
@@ -119,6 +124,9 @@ export const updateVisit = async (req, res) => {
       outcome: req.body.outcome,
       notes: req.body.notes,
       visitedBy: req.body.visitedBy,
+      location: req.body.location,
+      latitude: req.body.latitude ? Number(req.body.latitude) : undefined,
+  longitude: req.body.longitude ? Number(req.body.longitude) : undefined,
     };
 
     // Update photo if new photo uploaded
