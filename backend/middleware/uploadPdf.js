@@ -3,12 +3,12 @@ import fs from "fs";
 
 console.log("UPLOAD PDF MIDDLEWARE LOADED");
 
-// 📁 Ensure uploads folder exists
+// Ensure uploads folder exists
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
 }
 
-// 📦 Storage config
+//Storage config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -36,7 +36,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// 🚀 Multer instance
+//  Multer instance
 const uploadPdf = multer({
   storage,
   fileFilter,
