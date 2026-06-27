@@ -7,6 +7,52 @@ import {FaBook,} from 'react-icons/fa';
 import { FiSearch } from "react-icons/fi";
 import axios from 'axios';
 import useApiLoader from "../hook/useApiLoader";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+
+function PdfCover({ pdfUrl, title }) {
+  const [cover, setCover] = useState("");
+
+  useEffect(() => {
+    const loadCover = async () => {
+      try {
+        const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+        const page = await pdf.getPage(1);
+
+        const viewport = page.getViewport({ scale: 0.8 });
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+        }).promise;
+
+        setCover(canvas.toDataURL("image/jpeg"));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (pdfUrl) {
+      loadCover();
+    }
+  }, [pdfUrl]);
+
+  return (
+    <img
+      src={cover || "/book1.jpg"}
+      alt={title}
+      className="w-full h-[240px] object-cover"
+    />
+  );
+}
+
 function Dashboard() {
   const navigate = useNavigate();
   const [saveLoading, setSaveLoading] = useState(false);
@@ -149,6 +195,7 @@ const fetchBooks = async () => {
 
   }
 };
+
   return (
     <div>
 
@@ -299,20 +346,10 @@ const fetchBooks = async () => {
           "
         >
 
-          <img
-            src={`/${book.img}`}
-            alt={book.title}
-            className="
-              w-full
-              h-[240px]
-              object-cover
-              transition-transform duration-500
-              group-hover:scale-105
-            "
-            onError={(e) => {
-              e.target.src = "/book1.jpg";
-            }}
-          />
+          <PdfCover
+  pdfUrl={book.file}
+  title={book.title}
+/>
 
           {/* Subject Badge */}
           <div className="absolute top-3 left-3">
