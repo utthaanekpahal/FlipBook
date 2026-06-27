@@ -26,6 +26,7 @@ export const getBooks = async (req, res) => {
 // =========================
 export const uploadBooks = async (req, res) => {
   try {
+    const protocol = req.protocol;
     const {
       title,
       description,
@@ -40,12 +41,13 @@ export const uploadBooks = async (req, res) => {
 
     // ✅ PDF FILE
     if (req.files?.file?.[0]) {
-      pdfUrl = `${req.protocol}://${req.get("host")}/uploads/${req.files.file[0].filename}`;
+   
+pdfUrl = `${protocol}://${req.get("host")}/uploads/${req.files.file[0].filename}`;;
     }
 
     // ✅ IMAGE FILE
     if (req.files?.img?.[0]) {
-      imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.files.img[0].filename}`;
+     `${protocol}://${req.get("host")}/uploads/${req.files.img[0].filename}`;
     }
 
     const newBook = new Book({
@@ -95,7 +97,7 @@ export const updateBooks = async (req, res) => {
     // ✅ IMAGE UPDATE (multer fields => req.files)
     if (req.files?.img?.[0]) {
       updateData.img =
-        `${req.protocol}://${req.get("host")}/uploads/${req.files.img[0].filename}`;
+  `https://${req.get("host")}/uploads/${req.files.img[0].filename}`;;
     }
 
     const updated = await Book.findByIdAndUpdate(id, updateData, {

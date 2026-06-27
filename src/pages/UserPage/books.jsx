@@ -178,7 +178,7 @@ useEffect(() => {
   const fetchBooks = async () => {
     try {
       const res = await execute(() =>
-        fetch("https://flipbook-lw1b.onrender.com/api/books")
+        fetch("https://flipbook-1-l2tf.onrender.com/api/books")
       );
 
       const data = await res.json();
