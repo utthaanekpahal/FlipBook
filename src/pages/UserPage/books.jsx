@@ -8,7 +8,7 @@ import useApiLoader from "../../hook/useApiLoader";
 
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
- const API = "https://flipbook-1-l2tf.onrender.com/api/books";;
+ const API = "https://flipbook-production.up.railway.app/api/books";;
  function PdfCover({ pdfUrl, title }) {
   const [cover, setCover] = useState("");
 
@@ -112,7 +112,7 @@ const handleUpdate = async () => {
 
     const res = await execute(() =>
   fetch(
-    `https://flipbook-1-l2tf.onrender.com/api/books/${editBook._id}`,
+    `https://flipbook-production.up.railway.app/api/books/${editBook._id}`,
     {
       method: "PUT",
       body: formData,
@@ -178,7 +178,7 @@ useEffect(() => {
   const fetchBooks = async () => {
     try {
       const res = await execute(() =>
-        fetch("https://flipbook-1-l2tf.onrender.com/api/books")
+        fetch("flipbook-production.up.railway.app/api/books")
       );
 
       const data = await res.json();
@@ -233,8 +233,7 @@ useEffect(() => {
 };
 
   return (
-  <div className="min-h-screen mt-[-35px] bg-gradient-to-br from-[#EFE6DD] px-4 sm:px-6 py-10">
-
+<div className="min-h-screen mt-[-35px] lg:ml-[15px] bg-gradient-to-br from-[#EFE6DD] px-4 sm:px-6 py-10">
   {/* TOP BAR */}
   <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 

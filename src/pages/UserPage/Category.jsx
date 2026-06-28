@@ -39,7 +39,7 @@ const Category = () => {
   const fetchBooks = async () => {
     try {
       const res = await execute(() =>
-        axios.get("https://flipbook-1-l2tf.onrender.com/api/books")
+        axios.get("https://flipbook-production.up.railway.app/api/books")
       );
 
       const books = res.data.data;
@@ -90,7 +90,7 @@ const Category = () => {
 }, []);
 
   return (
-    <div className="min-h-screen lg:ml-[15px] rounded-xl w-full lg:w-[99%] flex bg-[#faf6f2]">
+   <div className="min-h-screen lg:ml-[35px] rounded-xl w-full lg:w-[97%] flex bg-[#faf6f2]">
 
       {/* MAIN CONTENT */}
       <div className="flex-1 flex flex-col items-center px-4 sm:px-6 lg:px-10 py-10">

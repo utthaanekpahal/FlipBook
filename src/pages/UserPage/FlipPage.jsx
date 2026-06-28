@@ -23,6 +23,7 @@ function FlipPage() {
   const flipSoundRef = useRef(null);
 
   useEffect(() => {
+  
     flipSoundRef.current = new Audio("/oxidvideos-page-flip-1-178322.mp3");
     flipSoundRef.current.volume = 0.6;
 
@@ -38,7 +39,6 @@ function FlipPage() {
     try {
       await execute(async () => {
         const pdfDoc = await pdfjsLib.getDocument(pdf).promise;
-
         // MAX 30 PAGES
         const totalPages = Math.min(pdfDoc.numPages, 30);
 
@@ -66,7 +66,6 @@ function FlipPage() {
 
           tempPages.push(canvas.toDataURL("image/webp", 0.9));
         }
-
         setPages(tempPages);
       });
     } catch (err) {
@@ -94,8 +93,7 @@ function FlipPage() {
       : 0;
 
   return (
-    <div className="lg:h-[84.5vh] sm:h-[75vh] h-[75vh] flex flex-col lg:ml-[15px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
-
+ <div className="lg:h-[82.5vh] sm:h-[75vh] h-[75vh] flex flex-col lg:ml-[30px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
       {/* LOADER */}
       {loading ? (
         <div className="flex justify-center lg:mt-[12%] sm:mt-[43%] mt-[37%] py-20">

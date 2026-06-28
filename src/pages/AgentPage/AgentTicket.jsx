@@ -48,7 +48,7 @@ useEffect(() => {
   const fetchTickets = async () => {
     try {
       const res = await execute(()=> axios.get(
-        "https://flipbook-1-l2tf.onrender.com/api/tickets/all"
+        "https://flipbook-production.up.railway.app/api/tickets/all"
       ))
       setAdminUpdates(res.data.tickets);
     } catch (error) {
@@ -79,7 +79,7 @@ useEffect(() => {
 
     try {
       const response = await execute(()=>  axios.post(
-        "https://flipbook-1-l2tf.onrender.com/api/tickets/create",
+        "https://flipbook-production.up.railway.app/api/tickets/create",
         upload
       ))
 
@@ -113,7 +113,7 @@ useEffect(() => {
   const deleteUpdate = async (id) => {
     try {
       await axios.delete(
-        `https://flipbook-1-l2tf.onrender.com/api/tickets/delete/${id}`
+        `https://flipbook-production.up.railway.app/api/tickets/delete/${id}`
       );
 
       setAdminUpdates((prev) =>

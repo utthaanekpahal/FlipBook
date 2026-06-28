@@ -46,7 +46,7 @@ const [submitLoading, setSubmitLoading] = useState(false);
     setLoading(true);
 
     const res = await axios.get(
-      "https://flipbook-1-l2tf.onrender.com/api/tickets/all"
+      "https://flipbook-production.up.railway.app/api/tickets/all"
     );
 
     setAdminUpdates(res.data.tickets);
@@ -67,7 +67,7 @@ const [submitLoading, setSubmitLoading] = useState(false);
     setSubmitLoading(true);
 
     await axios.put(
-      `https://flipbook-1-l2tf.onrender.com/api/tickets/reply/${selectedTicket._id}`,
+      `https://flipbook-production.up.railway.app/api/tickets/reply/${selectedTicket._id}`,
       {
         status: replyData.status,
         message: replyData.message,
@@ -97,7 +97,7 @@ const [submitLoading, setSubmitLoading] = useState(false);
   const deleteUpdate = async (id) => {
     try {
       await axios.delete(
-        `https://flipbook-1-l2tf.onrender.com/api/tickets/delete/${id}`
+        `https://flipbook-production.up.railway.app/api/tickets/delete/${id}`
       );
 
       setAdminUpdates((prev) =>

@@ -65,7 +65,7 @@ const [subject, setSubject] = useState("");
 
   const res = await execute(() =>
       axios.post(
-        "https://flipbook-1-l2tf.onrender.com/api/books/upload",
+        "https://flipbook-production.up.railway.app/api/books/upload",
         formData
       )
     );
@@ -93,10 +93,10 @@ navigate("/books");
   };
 
   return (
-  <div
+ <div
   className="
     min-h-screen
-    ml-[15px]
+    lg:ml-[35px]
     rounded-xl
     bg-cover
     bg-center
@@ -302,14 +302,14 @@ navigate("/books");
       <option value="English">English</option>
       <option value="Hindi">Hindi</option>
       <option value="Maths">Maths</option>
-      <option value="Sanskrit">Sanskrit</option>
-    
+      <option value="Rhymes">Rhymes</option>
+      <option value="Drawing">Drawing</option>
       <option value="Science">Science</option>
       <option value="Social Studies">Social Studies</option>
       <option value="Sanskrit">Sanskrit</option>
       <option value="EVS">EVS</option>
       
-      <option value="Computer ">Computer </option>
+      <option value="Computer Science">Computer </option>
       <option value="Physics">Physics</option>
       <option value="Chemistry">Chemistry</option>
            <option value="Biology">Biology</option>
@@ -402,7 +402,7 @@ navigate("/books");
   )}
 </div>
           {/* SAVE */}
-               <button
+     <button
   onClick={saveBook}
   disabled={loading}
   className={`
