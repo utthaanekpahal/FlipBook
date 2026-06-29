@@ -233,8 +233,7 @@ useEffect(() => {
 };
 
   return (
-  <div className="min-h-screen mt-[-35px] bg-gradient-to-br from-[#EFE6DD] px-4 sm:px-6 py-10">
-
+<div className="min-h-screen mt-[-35px] lg:ml-[15px] bg-gradient-to-br from-[#EFE6DD] px-4 sm:px-6 py-10">
   {/* TOP BAR */}
   <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 

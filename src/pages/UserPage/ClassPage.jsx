@@ -79,8 +79,7 @@ const ClassPage = () => {
   }, [category, className]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7] px-4 py-10">
-
+ <div className="min-h-screen lg:ml-[35px] rounded-xl bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7] px-4 py-10">
       {/* HEADER */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-extrabold text-[#3b2414]">
