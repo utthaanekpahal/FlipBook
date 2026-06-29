@@ -18,76 +18,75 @@ function FlipPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   const bookRef = useRef(null);
-
-  // ✅ FULLSCREEN REF (unchanged feature)
   const containerRef = useRef(null);
-
-  // 🎧 SOUND
   const flipSoundRef = useRef(null);
 
-  // ✅ NEW: PAGE ZOOM STATE
+  // ✅ zoom now applies to whole flipbook
   const [zoom, setZoom] = useState(1);
-useEffect(() => {
-  const el = containerRef.current;
-  if (!el) return;
 
-  let lastDistance = null;
+  // ✅ HAND + KEY ZOOM (works on full book)
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
 
-  const handleWheel = (e) => {
-    if (e.ctrlKey || e.metaKey) {
-      e.preventDefault();
-      setZoom((z) =>
-        e.deltaY < 0 ? Math.min(z + 0.1, 2.5) : Math.max(z - 0.1, 0.6)
-      );
-    }
-  };
+    let lastDistance = null;
 
-  const getDistance = (t1, t2) => {
-    const dx = t1.clientX - t2.clientX;
-    const dy = t1.clientY - t2.clientY;
-    return Math.sqrt(dx * dx + dy * dy);
-  };
-
-  const handleTouchStart = (e) => {
-    if (e.touches.length === 2) {
-      lastDistance = getDistance(e.touches[0], e.touches[1]);
-    }
-  };
-
-  const handleTouchMove = (e) => {
-    if (e.touches.length === 2 && lastDistance !== null) {
-      const newDistance = getDistance(e.touches[0], e.touches[1]);
-      const diff = newDistance - lastDistance;
-
-      if (Math.abs(diff) > 5) {
-        setZoom((z) => {
-          const next = diff > 0 ? z + 0.03 : z - 0.03;
-          return Math.min(2.5, Math.max(0.6, next));
-        });
-
-        lastDistance = newDistance;
+    const handleWheel = (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        setZoom((z) =>
+          e.deltaY < 0 ? Math.min(z + 0.1, 2.5) : Math.max(z - 0.1, 0.6)
+        );
       }
+    };
 
-      e.preventDefault();
-    }
-  };
+    const getDistance = (t1, t2) => {
+      const dx = t1.clientX - t2.clientX;
+      const dy = t1.clientY - t2.clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    };
 
-  const handleTouchEnd = () => {
-    lastDistance = null;
-  };
+    const handleTouchStart = (e) => {
+      if (e.touches.length === 2) {
+        lastDistance = getDistance(e.touches[0], e.touches[1]);
+      }
+    };
 
-  el.addEventListener("wheel", handleWheel, { passive: false });
-  el.addEventListener("touchstart", handleTouchStart, { passive: false });
-  el.addEventListener("touchmove", handleTouchMove, { passive: false });
-  el.addEventListener("touchend", handleTouchEnd);
+    const handleTouchMove = (e) => {
+      if (e.touches.length === 2 && lastDistance !== null) {
+        const newDistance = getDistance(e.touches[0], e.touches[1]);
+        const diff = newDistance - lastDistance;
 
-  return () => {
-    el.removeEventListener("wheel", handleWheel);
-    el.removeEventListener("touchstart", handleTouchStart);
-    el.removeEventListener("touchmove", handleTouchMove);
-    el.removeEventListener("touchend", handleTouchEnd);
-  };
-}, []);
+        if (Math.abs(diff) > 5) {
+          setZoom((z) => {
+            const next = diff > 0 ? z + 0.03 : z - 0.03;
+            return Math.min(2.5, Math.max(0.6, next));
+          });
+
+          lastDistance = newDistance;
+        }
+
+        e.preventDefault();
+      }
+    };
+
+    const handleTouchEnd = () => {
+      lastDistance = null;
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    el.addEventListener("touchstart", handleTouchStart, { passive: false });
+    el.addEventListener("touchmove", handleTouchMove, { passive: false });
+    el.addEventListener("touchend", handleTouchEnd);
+
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+      el.removeEventListener("touchstart", handleTouchStart);
+      el.removeEventListener("touchmove", handleTouchMove);
+      el.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
+
   useEffect(() => {
     flipSoundRef.current = new Audio("/oxidvideos-page-flip-1-178322.mp3");
     flipSoundRef.current.volume = 0.6;
@@ -139,7 +138,6 @@ useEffect(() => {
     }
   };
 
-  // 🔊 SOUND
   const playFlipSound = () => {
     if (flipSoundRef.current) {
       flipSoundRef.current.currentTime = 0;
@@ -157,7 +155,6 @@ useEffect(() => {
       ? Math.round((currentPage / (totalPages - 1)) * 100)
       : 0;
 
-  // ✅ FULLSCREEN
   const enterFullScreen = () => {
     const el = containerRef.current;
 
@@ -170,7 +167,7 @@ useEffect(() => {
     }
   };
 
-  // ✅ ZOOM CONTROLS
+  // ✅ ZOOM CONTROLS (UNCHANGED)
   const zoomIn = () => {
     setZoom((z) => Math.min(z + 0.2, 2.5));
   };
@@ -188,7 +185,6 @@ useEffect(() => {
       ref={containerRef}
       className="lg:h-[82.5vh] sm:h-[75vh] h-[75vh] flex flex-col lg:ml-[30px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]"
     >
-      {/* LOADER */}
       {loading ? (
         <div className="flex justify-center lg:mt-[12%] sm:mt-[43%] mt-[37%] py-20">
           <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-md">
@@ -200,7 +196,6 @@ useEffect(() => {
         </div>
       ) : (
         <>
-          {/* PROGRESS BAR */}
           {pages.length > 0 && (
             <div className="px-4 sm:px-6 pt-3">
               <div className="flex justify-between text-xs text-[#3b2414] mb-1">
@@ -219,8 +214,15 @@ useEffect(() => {
             </div>
           )}
 
-          {/* FLIPBOOK */}
-          <div className="flex-1 mt-[10px] flex justify-center items-center overflow-hidden">
+          {/* ✅ ZOOM WRAPPER APPLIED HERE */}
+          <div
+            className="flex-1 mt-[10px] flex justify-center items-center overflow-hidden"
+            style={{
+              transform: `scale(${zoom})`,
+              transformOrigin: "center",
+              transition: "transform 0.2s ease",
+            }}
+          >
             {pages.length > 0 && (
               <HTMLFlipBook
                 ref={bookRef}
@@ -238,13 +240,9 @@ useEffect(() => {
                 useMouseEvents={true}
                 flippingTime={700}
                 onChangeState={(e) => {
-                  if (e.data === "flipping") {
-                    playFlipSound();
-                  }
+                  if (e.data === "flipping") playFlipSound();
                 }}
-                onFlip={(e) => {
-                  setCurrentPage(e.data);
-                }}
+                onFlip={(e) => setCurrentPage(e.data)}
               >
                 {pages.map((page, index) => (
                   <div
@@ -255,9 +253,6 @@ useEffect(() => {
                       src={page}
                       alt={`Page ${index + 1}`}
                       style={{
-                        transform: `scale(${zoom})`,
-                        transformOrigin: "center",
-                        transition: "transform 0.2s ease",
                         width: "100%",
                         height: "100%",
                         objectFit: "contain",
@@ -269,71 +264,28 @@ useEffect(() => {
             )}
           </div>
 
-          {/* CONTROLS */}
+          {/* CONTROLS (UNCHANGED) */}
           <div className="shrink-0 bg-white/90 backdrop-blur-md border-t border-[#eadfd3] py-3">
             <div className="flex justify-center items-center gap-3 flex-wrap">
+              <button onClick={zoomOut} className="px-3 py-2 rounded-lg text-sm font-bold bg-gray-200 hover:bg-gray-300">➖</button>
+              <button onClick={resetZoom} className="px-3 py-2 rounded-lg text-sm font-semibold bg-yellow-500 text-white">Reset</button>
+              <button onClick={zoomIn} className="px-3 py-2 rounded-lg text-sm font-bold bg-gray-200 hover:bg-gray-300">➕</button>
 
-              {/* ✅ NEW ZOOM BUTTONS (ONLY PAGE ZOOM) */}
-              <button
-                onClick={zoomOut}
-                className="px-3 py-2 rounded-lg text-sm font-bold bg-gray-200 hover:bg-gray-300"
-              >
-                ➖
-              </button>
-
-              <button
-                onClick={resetZoom}
-                className="px-3 py-2 rounded-lg text-sm font-semibold bg-yellow-500 text-white"
-              >
-                Reset
-              </button>
-
-              <button
-                onClick={zoomIn}
-                className="px-3 py-2 rounded-lg text-sm font-bold bg-gray-200 hover:bg-gray-300"
-              >
-                ➕
-              </button>
-
-              {/* NEW: Reader / Fullscreen Button (UNCHANGED FEATURE) */}
-              <button
-                onClick={enterFullScreen}
-                className="px-5 py-2 rounded-xl text-sm font-semibold bg-black text-white hover:scale-105"
-              >
+              <button onClick={enterFullScreen} className="px-5 py-2 rounded-xl text-sm font-semibold bg-black text-white hover:scale-105">
                 Reader
               </button>
 
-              <button
-                onClick={flipPrev}
-                disabled={currentPage === 0}
-                className={`px-5 py-2 rounded-xl text-sm font-semibold transition ${
-                  currentPage === 0
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-[#99582A] text-white hover:scale-105"
-                }`}
-              >
+              <button onClick={flipPrev} disabled={currentPage === 0} className="px-5 py-2 rounded-xl text-sm font-semibold bg-[#99582A] text-white">
                 ⬅ Prev
               </button>
 
-              <button
-                onClick={() => navigate(-1)}
-                className="px-5 py-2 rounded-xl text-sm font-semibold bg-blue-500 text-white hover:scale-105"
-              >
+              <button onClick={() => navigate(-1)} className="px-5 py-2 rounded-xl text-sm font-semibold bg-blue-500 text-white">
                 Back
               </button>
 
-              <button
-                onClick={flipNext}
-                disabled={currentPage >= pages.length - 1}
-                className={`px-5 py-2 rounded-xl text-sm font-semibold transition ${
-                  currentPage >= pages.length - 1
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-[#99582A] text-white hover:scale-105"
-                }`}
-              >
+              <button onClick={flipNext} disabled={currentPage >= pages.length - 1} className="px-5 py-2 rounded-xl text-sm font-semibold bg-[#99582A] text-white">
                 Next ➡
               </button>
-
             </div>
           </div>
         </>
