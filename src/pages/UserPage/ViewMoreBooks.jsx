@@ -8,7 +8,7 @@ const ViewMoreBooks = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await fetch("https://flipbook-production.up.railway.app/api/books");
+        const res = await fetch("https://flipbook-production-b71a.up.railway.app/api/books");
         const data = await res.json();
         setBooks(data.data);
       } catch (error) {

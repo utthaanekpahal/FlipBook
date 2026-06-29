@@ -187,7 +187,7 @@ const startListening = () => {
     data.append("photo", photo);
 
     const res = await axios.post(
-      "https://flipbook-production.up.railway.app/api/visits/create",
+      "https://flipbook-production-b71a.up.railway.app/api/visits/create",
       data
     );
 

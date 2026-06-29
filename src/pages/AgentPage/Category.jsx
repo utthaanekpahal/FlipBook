@@ -39,7 +39,7 @@ const Category = () => {
   const fetchBooks = async () => {
     try {
       const res = await execute(() =>
-        axios.get("https://flipbook-production.up.railway.app/api/books")
+        axios.get("https://flipbook-production-b71a.up.railway.app/api/books")
       );
 
       const books = res.data.data;

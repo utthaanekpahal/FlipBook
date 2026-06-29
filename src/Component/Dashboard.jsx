@@ -74,7 +74,7 @@ useEffect(() => {
 const fetchAgents = async () => {
   try {
    const response = await agentLoader.execute(() =>
-      axios.get("https://flipbook-production.up.railway.app/api/books/agents")
+      axios.get("https://flipbook-production-b71a.up.railway.app/api/books/agents")
     );
 
     setAgents(response.data.agents);
@@ -90,7 +90,7 @@ useEffect(()=>{
 const fetchTicket=async ()=>{
   try{
     const res = await ticketLoader.execute(() =>
-      axios.get("https://flipbook-production.up.railway.app/api/tickets/all")
+      axios.get("https://flipbook-production-b71a.up.railway.app/api/tickets/all")
     );
 
     setTicketdata(res.data.tickets)
@@ -141,7 +141,7 @@ const updateagentchanges = async (id) => {
     setSaveLoading(true);
 
     await axios.put(
-      `https://flipbook-production.up.railway.app/api/books/agents/${id}`,
+      `https://flipbook-production-b71a.up.railway.app/api/books/agents/${id}`,
       payload
     );
 
@@ -154,7 +154,7 @@ const updateagentchanges = async (id) => {
 };
 const deleteAgent = async (id) => {
   try {
-    await axios.delete(`https://flipbook-production.up.railway.app/api/books/agents/${id}`);
+    await axios.delete(`https://flipbook-production-b71a.up.railway.app/api/books/agents/${id}`);
 
     // UI update without refresh
     setAgents((prev) => prev.filter((a) => a._id !== id));
@@ -174,7 +174,7 @@ const deleteAgent = async (id) => {
 const fetchBooks = async () => {
   try {
     const res = await axios.get(
-      "https://flipbook-production.up.railway.app/api/books"
+      "https://flipbook-production-b71a.up.railway.app/api/books"
     );
 
     if (res.data.success) {

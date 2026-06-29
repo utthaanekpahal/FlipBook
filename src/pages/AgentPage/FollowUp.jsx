@@ -19,7 +19,7 @@ const FollowUp = () => {
   const fetchVisits = async () => {
     try {
      const res = await execute(() =>
-  axios.get("https://flipbook-production.up.railway.app/api/visits")
+  axios.get("https://flipbook-production-b71a.up.railway.app/api/visits")
 );
 
       setVisits(res.data.data);
@@ -49,7 +49,7 @@ const FollowUp = () => {
     try {
       await execute(() =>
   axios.delete(
-    `https://flipbook-production.up.railway.app/api/visits/${id}`
+    `https://flipbook-production-b71a.up.railway.app/api/visits/${id}`
   )
 );
 
@@ -86,7 +86,7 @@ const FollowUp = () => {
     try {
       const res = await execute(() =>
   axios.put(
-        `https://flipbook-production.up.railway.app/api/visits/${editData._id}`,
+        `https://flipbook-production-b71a.up.railway.app/api/visits/${editData._id}`,
         {
           schoolName: editData.schoolName,
           teacher: editData.teacher,

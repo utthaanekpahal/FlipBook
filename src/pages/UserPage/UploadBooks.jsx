@@ -65,7 +65,7 @@ const [subject, setSubject] = useState("");
 
   const res = await execute(() =>
       axios.post(
-        "https://flipbook-production.up.railway.app/api/books/upload",
+        "https://flipbook-production-b71a.up.railway.app/api/books/upload",
         formData
       )
     );

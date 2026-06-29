@@ -80,7 +80,7 @@ const Books = () => {
     const fetchBooks = async () => {
       try {
         const res = await execute(() =>
-          fetch("https://flipbook-production.up.railway.app/api/books")
+          fetch("https://flipbook-production-b71a.up.railway.app/api/books")
         );
 
         const data = await res.json();

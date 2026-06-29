@@ -49,7 +49,7 @@ const ClassPage = () => {
       try {
         setLoading(true);
 
-        const res = await axios.get("https://flipbook-production.up.railway.app/api/books");
+        const res = await axios.get("https://flipbook-production-b71a.up.railway.app/api/books");
 
         const filtered = res.data.data.filter(
           (item) =>
