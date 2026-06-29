@@ -19,11 +19,76 @@ function FlipPage() {
 
   const bookRef = useRef(null);
 
-  // 🎧 SINGLE SOUND FOR ALL FLIPS
+  // ✅ FULLSCREEN REF (unchanged feature)
+  const containerRef = useRef(null);
+
+  // 🎧 SOUND
   const flipSoundRef = useRef(null);
 
+  // ✅ NEW: PAGE ZOOM STATE
+  const [zoom, setZoom] = useState(1);
+useEffect(() => {
+  const el = containerRef.current;
+  if (!el) return;
+
+  let lastDistance = null;
+
+  const handleWheel = (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      setZoom((z) =>
+        e.deltaY < 0 ? Math.min(z + 0.1, 2.5) : Math.max(z - 0.1, 0.6)
+      );
+    }
+  };
+
+  const getDistance = (t1, t2) => {
+    const dx = t1.clientX - t2.clientX;
+    const dy = t1.clientY - t2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      lastDistance = getDistance(e.touches[0], e.touches[1]);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches.length === 2 && lastDistance !== null) {
+      const newDistance = getDistance(e.touches[0], e.touches[1]);
+      const diff = newDistance - lastDistance;
+
+      if (Math.abs(diff) > 5) {
+        setZoom((z) => {
+          const next = diff > 0 ? z + 0.03 : z - 0.03;
+          return Math.min(2.5, Math.max(0.6, next));
+        });
+
+        lastDistance = newDistance;
+      }
+
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    lastDistance = null;
+  };
+
+  el.addEventListener("wheel", handleWheel, { passive: false });
+  el.addEventListener("touchstart", handleTouchStart, { passive: false });
+  el.addEventListener("touchmove", handleTouchMove, { passive: false });
+  el.addEventListener("touchend", handleTouchEnd);
+
+  return () => {
+    el.removeEventListener("wheel", handleWheel);
+    el.removeEventListener("touchstart", handleTouchStart);
+    el.removeEventListener("touchmove", handleTouchMove);
+    el.removeEventListener("touchend", handleTouchEnd);
+  };
+}, []);
   useEffect(() => {
-  
     flipSoundRef.current = new Audio("/oxidvideos-page-flip-1-178322.mp3");
     flipSoundRef.current.volume = 0.6;
 
@@ -39,7 +104,6 @@ function FlipPage() {
     try {
       await execute(async () => {
         const pdfDoc = await pdfjsLib.getDocument(pdf).promise;
-        // MAX 30 PAGES
         const totalPages = Math.min(pdfDoc.numPages, 30);
 
         if (totalPages < 2) {
@@ -66,6 +130,7 @@ function FlipPage() {
 
           tempPages.push(canvas.toDataURL("image/webp", 0.9));
         }
+
         setPages(tempPages);
       });
     } catch (err) {
@@ -74,7 +139,7 @@ function FlipPage() {
     }
   };
 
-  // 🔊 PLAY SOUND
+  // 🔊 SOUND
   const playFlipSound = () => {
     if (flipSoundRef.current) {
       flipSoundRef.current.currentTime = 0;
@@ -92,8 +157,37 @@ function FlipPage() {
       ? Math.round((currentPage / (totalPages - 1)) * 100)
       : 0;
 
+  // ✅ FULLSCREEN
+  const enterFullScreen = () => {
+    const el = containerRef.current;
+
+    if (!el) return;
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen?.();
+    } else {
+      el.requestFullscreen?.().catch(() => {});
+    }
+  };
+
+  // ✅ ZOOM CONTROLS
+  const zoomIn = () => {
+    setZoom((z) => Math.min(z + 0.2, 2.5));
+  };
+
+  const zoomOut = () => {
+    setZoom((z) => Math.max(z - 0.2, 0.6));
+  };
+
+  const resetZoom = () => {
+    setZoom(1);
+  };
+
   return (
- <div className="lg:h-[82.5vh] sm:h-[75vh] h-[75vh] flex flex-col lg:ml-[30px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]">
+    <div
+      ref={containerRef}
+      className="lg:h-[82.5vh] sm:h-[75vh] h-[75vh] flex flex-col lg:ml-[30px] rounded-xl overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]"
+    >
       {/* LOADER */}
       {loading ? (
         <div className="flex justify-center lg:mt-[12%] sm:mt-[43%] mt-[37%] py-20">
@@ -127,53 +221,87 @@ function FlipPage() {
 
           {/* FLIPBOOK */}
           <div className="flex-1 mt-[10px] flex justify-center items-center overflow-hidden">
-
             {pages.length > 0 && (
               <HTMLFlipBook
-  ref={bookRef}
-  width={340}
-  height={460}
-  minWidth={280}
-  maxWidth={380}
-  minHeight={380}
-  maxHeight={520}
-  size="stretch"
-  showCover={true}
-  drawShadow={true}
-  maxShadowOpacity={0.5}
-  mobileScrollSupport={true}
-  useMouseEvents={true}
-  flippingTime={700}
-  onChangeState={(e) => {
-    if (e.data === "flipping") {
-      playFlipSound();
-    }
-  }}
-  onFlip={(e) => {
-    setCurrentPage(e.data);
-  }}
->
+                ref={bookRef}
+                width={340}
+                height={460}
+                minWidth={280}
+                maxWidth={380}
+                minHeight={380}
+                maxHeight={520}
+                size="stretch"
+                showCover={true}
+                drawShadow={true}
+                maxShadowOpacity={0.5}
+                mobileScrollSupport={true}
+                useMouseEvents={true}
+                flippingTime={700}
+                onChangeState={(e) => {
+                  if (e.data === "flipping") {
+                    playFlipSound();
+                  }
+                }}
+                onFlip={(e) => {
+                  setCurrentPage(e.data);
+                }}
+              >
                 {pages.map((page, index) => (
                   <div
                     key={index}
-                    className="bg-white flex items-center justify-center border border-[#eadfd3]"
+                    className="bg-white flex items-center justify-center border border-[#eadfd3] overflow-hidden"
                   >
                     <img
                       src={page}
-                      className="w-full h-full object-contain"
                       alt={`Page ${index + 1}`}
+                      style={{
+                        transform: `scale(${zoom})`,
+                        transformOrigin: "center",
+                        transition: "transform 0.2s ease",
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
                     />
                   </div>
                 ))}
               </HTMLFlipBook>
             )}
-
           </div>
 
           {/* CONTROLS */}
           <div className="shrink-0 bg-white/90 backdrop-blur-md border-t border-[#eadfd3] py-3">
+            <div className="flex justify-center items-center gap-3 flex-wrap">
 
-            <div className="flex justify-center items-center gap-4">
+              {/* ✅ NEW ZOOM BUTTONS (ONLY PAGE ZOOM) */}
+              <button
+                onClick={zoomOut}
+                className="px-3 py-2 rounded-lg text-sm font-bold bg-gray-200 hover:bg-gray-300"
+              >
+                ➖
+              </button>
+
+              <button
+                onClick={resetZoom}
+                className="px-3 py-2 rounded-lg text-sm font-semibold bg-yellow-500 text-white"
+              >
+                Reset
+              </button>
+
+              <button
+                onClick={zoomIn}
+                className="px-3 py-2 rounded-lg text-sm font-bold bg-gray-200 hover:bg-gray-300"
+              >
+                ➕
+              </button>
+
+              {/* NEW: Reader / Fullscreen Button (UNCHANGED FEATURE) */}
+              <button
+                onClick={enterFullScreen}
+                className="px-5 py-2 rounded-xl text-sm font-semibold bg-black text-white hover:scale-105"
+              >
+                Reader
+              </button>
 
               <button
                 onClick={flipPrev}
@@ -207,7 +335,6 @@ function FlipPage() {
               </button>
 
             </div>
-
           </div>
         </>
       )}
