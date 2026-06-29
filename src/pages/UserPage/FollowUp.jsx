@@ -8,19 +8,33 @@ const FollowUp = () => {
   const [filtered, setFiltered] = useState([]);
   const [activeFilter, setActiveFilter] = useState("All");
   const [editData, setEditData] = useState(null);
-    const { loading, execute } = useApiLoader();
+  const { loading, execute } = useApiLoader();
 
+  const [schoolSearch, setSchoolSearch] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
 
   // FETCH DATA
   useEffect(() => {
     fetchVisits();
   }, []);
+  useEffect(() => {
+  const result = applyFilters(
+    visits,
+    activeFilter,
+    schoolSearch,
+    dateFilter
+  );
+
+  setFiltered(result);
+}, [visits, activeFilter, schoolSearch, dateFilter]);
 
   const fetchVisits = async () => {
     try {
-     const res = await execute(() =>
-  axios.get("https://flipbook-production-b71a.up.railway.app/api/visits")
-);
+      const res = await execute(() =>
+        axios.get(
+          "https://flipbook-production-b71a.up.railway.app/api/visits"
+        )
+      );
 
       setVisits(res.data.data);
       setFiltered(res.data.data);
@@ -29,45 +43,64 @@ const FollowUp = () => {
     }
   };
 
-  // FILTER
-  const handleFilter = (status) => {
+  // ✅ APPLY FILTER (MAIN FIX)
+  const applyFilters = (data, status, school, date) => {
+    let result = [...data];
+
+    // STATUS FILTER
+    if (status !== "All") {
+      result = result.filter((v) => v.outcome === status);
+    }
+
+    // SCHOOL FILTER
+    if (school.trim() !== "") {
+      result = result.filter((v) =>
+        v.schoolName?.toLowerCase().includes(school.toLowerCase())
+      );
+    }
+
+    // DATE FILTER
+    if (date !== "") {
+      result = result.filter((v) => {
+        const visitDate = new Date(v.visitDate)
+          .toISOString()
+          .split("T")[0];
+        return visitDate === date;
+      });
+    }
+
+    return result;
+  };
+
+  // FILTER HANDLER
+  const handleFilter = (status = activeFilter) => {
     setActiveFilter(status);
 
-    if (status === "All") {
-      setFiltered(visits);
-    } else {
-      const data = visits.filter(
-        (v) => v.outcome === status
-      );
+    const result = applyFilters(
+      visits,
+      status,
+      schoolSearch,
+      dateFilter
+    );
 
-      setFiltered(data);
-    }
+    setFiltered(result);
   };
 
   // DELETE
   const handleDelete = async (id) => {
     try {
       await execute(() =>
-  axios.delete(
-    `https://flipbook-production-b71a.up.railway.app/api/visits/${id}`
-  )
-);
-
-      const updated = visits.filter(
-        (v) => v._id !== id
+        axios.delete(
+          `https://flipbook-production-b71a.up.railway.app/api/visits/${id}`
+        )
       );
 
+      const updated = visits.filter((v) => v._id !== id);
       setVisits(updated);
 
-      if (activeFilter === "All") {
-        setFiltered(updated);
-      } else {
-        setFiltered(
-          updated.filter(
-            (v) => v.outcome === activeFilter
-          )
-        );
-      }
+      setFiltered(
+        applyFilters(updated, activeFilter, schoolSearch, dateFilter)
+      );
 
       alert("Visit deleted successfully");
     } catch (err) {
@@ -76,7 +109,7 @@ const FollowUp = () => {
     }
   };
 
-  // OPEN EDIT POPUP
+  // EDIT
   const handleEdit = (visit) => {
     setEditData({ ...visit });
   };
@@ -85,55 +118,42 @@ const FollowUp = () => {
   const handleSave = async () => {
     try {
       const res = await execute(() =>
-  axios.put(
-        `https://flipbook-production-b71a.up.railway.app/api/visits/${editData._id}`,
-        {
-          schoolName: editData.schoolName,
-          teacher: editData.teacher,
-          principal: editData.principal,
-          designation: editData.designation,
-          phone: editData.phone,
-          visitDate: editData.visitDate,
-          outcome: editData.outcome,
-          notes: editData.notes,
-          visitedBy: editData.visitedBy,
-          location: editData.location,
-        }
-      ))
+        axios.put(
+          `https://flipbook-production-b71a.up.railway.app/api/visits/${editData._id}`,
+          {
+            schoolName: editData.schoolName,
+            teacher: editData.teacher,
+            principal: editData.principal,
+            designation: editData.designation,
+            phone: editData.phone,
+            visitDate: editData.visitDate,
+            outcome: editData.outcome,
+            notes: editData.notes,
+            visitedBy: editData.visitedBy,
+            location: editData.location,
+          }
+        )
+      );
 
       const updatedVisit = res.data.data;
 
       const updated = visits.map((v) =>
-        v._id === updatedVisit._id
-          ? updatedVisit
-          : v
+        v._id === updatedVisit._id ? updatedVisit : v
       );
 
       setVisits(updated);
 
-      if (activeFilter === "All") {
-        setFiltered(updated);
-      } else {
-        setFiltered(
-          updated.filter(
-            (v) => v.outcome === activeFilter
-          )
-        );
-      }
+      setFiltered(
+        applyFilters(updated, activeFilter, schoolSearch, dateFilter)
+      );
 
       setEditData(null);
-
       alert("Visit updated successfully");
     } catch (err) {
       console.log(err);
-
-      alert(
-        err.response?.data?.message ||
-          "Update failed"
-      );
+      alert(err.response?.data?.message || "Update failed");
     }
   };
-
   return (
 <div className="min-h-screen lg:ml-[35px] rounded-xl bg-gradient-to-br from-[#F8F4F0] via-[#F5EFE8] to-[#EFE6DD] px-4 sm:px-6 lg:px-8 py-6">
       {/* TITLE */}
@@ -171,6 +191,77 @@ const FollowUp = () => {
       {status}
     </button>
   ))}
+</div>
+{/* SEARCH FILTERS */}
+<div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
+
+  {/* SCHOOL SEARCH */}
+  <input
+    type="text"
+    placeholder="Search by School Name..."
+    value={schoolSearch}
+    onChange={(e) => setSchoolSearch(e.target.value)}
+    className="
+      px-4 py-2
+      rounded-xl
+      border border-gray-300
+      focus:outline-none
+      focus:ring-2
+      focus:ring-[#572C10]/30
+      w-full sm:w-64
+    "
+  />
+
+  {/* DATE FILTER */}
+  <input
+    type="date"
+    value={dateFilter}
+    onChange={(e) => setDateFilter(e.target.value)}
+    className="
+      px-4 py-2
+      rounded-xl
+      border border-gray-300
+      focus:outline-none
+      focus:ring-2
+      focus:ring-[#572C10]/30
+      w-full sm:w-52
+    "
+  />
+    <button
+    onClick={() => handleFilter(activeFilter)}
+    className="
+      px-6 py-2
+      bg-[#572C10]
+      text-white
+      rounded-xl
+      hover:bg-[#3f1f0b]
+      transition
+      w-full sm:w-auto
+    "
+  >
+    Search
+  </button>
+
+  {/* CLEAR BUTTON */}
+  <button
+    onClick={() => {
+      setSchoolSearch("");
+      setDateFilter("");
+      setActiveFilter("All");
+      setFiltered(visits);
+    }}
+    className="
+      px-4 py-2
+      bg-gray-200
+      rounded-xl
+      hover:bg-gray-300
+      transition
+      w-full sm:w-auto
+    "
+  >
+    Clear
+  </button>
+
 </div>
 
       {/* CARDS */}
@@ -216,10 +307,12 @@ const FollowUp = () => {
               <b>Phone:</b> {v.phone}
             </p>
 
-            <p>
-              <b>Visit Date:</b>{" "}
-              {new Date(v.visitDate).toLocaleDateString()}
-            </p>
+           <p>
+  <b>Visit Date:</b>{" "}
+  {v.visitDate
+    ? new Date(v.visitDate).toLocaleDateString("en-GB")
+    : "N/A"}
+</p>
             <p>
               <b>Loaction:</b> {v.location}
             </p>

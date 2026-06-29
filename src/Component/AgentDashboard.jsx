@@ -30,7 +30,7 @@ const AgentDashboard = () => {
   const getBooks = async () => {
     try {
       const res = await axios.get(
-        "flipbook-production.up.railway.app/api/books"
+        "https://flipbook-production-b71a.up.railway.app/api/books"
       );
 
       if (res.data.success) {
