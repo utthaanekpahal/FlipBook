@@ -39,7 +39,6 @@ app.use(
 );
 
 // Handle preflight requests
-app.options("*", cors());
 // =========================
 // BODY PARSER
 // =========================
