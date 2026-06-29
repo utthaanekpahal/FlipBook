@@ -10,17 +10,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 function FlipPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [readerMode, setReaderMode] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
-
-useEffect(() => {
-  const handleResize = () => {
-    setIsDesktop(window.innerWidth >= 1024);
-  };
-
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
   const { loading, execute } = useApiLoader();
 
   const { pdf } = location.state || {};
