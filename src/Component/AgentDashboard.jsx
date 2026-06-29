@@ -17,7 +17,7 @@ const AgentDashboard = () => {
   const ticketlength = async () => {
     try {
       const res = await axios.get(
-        "https://flipbook-production.up.railway.app/api/tickets/all"
+        "https://flipbook-production-b71a.up.railway.app/api/tickets/all"
       );
 
       setlengths(res.data.tickets);

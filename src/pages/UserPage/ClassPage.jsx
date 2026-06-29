@@ -1,212 +1,222 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import HTMLFlipBook from "react-pageflip";
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import useApiLoader from "../../hook/useApiLoader";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
-// =====================
-// PDF COVER GENERATOR
-// =====================
-const getPdfCover = async (pdfUrl) => {
-  try {
-    const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
-    const page = await pdf.getPage(1);
-
-    const viewport = page.getViewport({ scale: 0.7 });
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-
-    await page.render({
-      canvasContext: ctx,
-      viewport,
-    }).promise;
-
-    return canvas.toDataURL("image/jpeg");
-  } catch (err) {
-    console.log(err);
-    return "/default.jpg";
-  }
-};
-
-const ClassPage = () => {
+function FlipPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { execute } = useApiLoader();
 
-  const { className, category } = location.state || {};
+  const { pdf } = location.state || {};
 
-  const [mongoBooks, setMongoBooks] = useState([]);
-  const [covers, setCovers] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [pages, setPages] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // ✅ ZOOM STATE
+  const [zoom, setZoom] = useState(1);
+
+  const bookRef = useRef(null);
+  const containerRef = useRef(null);
+  const flipSoundRef = useRef(null);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        setLoading(true);
+    flipSoundRef.current = new Audio("/oxidvideos-page-flip-1-178322.mp3");
+    flipSoundRef.current.volume = 0.6;
 
-        const res = await axios.get("https://flipbook-production.up.railway.app/api/books");
+    if (pdf) loadPDF();
 
-        const filtered = res.data.data.filter(
-          (item) =>
-            item.category === category &&
-            item.className === className
-        );
+    return () => flipSoundRef.current?.pause();
+  }, [pdf]);
 
-        setMongoBooks(filtered);
+  useEffect(() => {
+    const onChange = () =>
+      setIsFullscreen(!!document.fullscreenElement);
 
-        // generate covers
-        const coverMap = {};
-        for (let book of filtered) {
-          if (book.fileUrl) {
-            coverMap[book._id] = await getPdfCover(book.fileUrl);
-          }
+    document.addEventListener("fullscreenchange", onChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+
+  // =========================
+  // ZOOM BUTTONS
+  // =========================
+  const zoomIn = () => setZoom((z) => Math.min(z + 0.2, 3));
+  const zoomOut = () => setZoom((z) => Math.max(z - 0.2, 1));
+
+  // =========================
+  // FULLSCREEN
+  // =========================
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  // =========================
+  // LOAD PDF
+  // =========================
+  const loadPDF = async () => {
+    try {
+      await execute(async () => {
+        const pdfDoc = await pdfjsLib.getDocument(pdf).promise;
+        const totalPages = Math.min(pdfDoc.numPages, 30);
+
+        const tempPages = [];
+
+        for (let i = 1; i <= totalPages; i++) {
+          const page = await pdfDoc.getPage(i);
+          const viewport = page.getViewport({ scale: 1.2 });
+
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+
+          await page.render({
+            canvasContext: context,
+            viewport,
+          }).promise;
+
+          tempPages.push(canvas.toDataURL("image/webp", 0.9));
         }
 
-        setCovers(coverMap);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+        setPages(tempPages);
+      });
+    } catch (err) {
+      console.log(err);
+      alert("Unable to load PDF");
+    }
+  };
 
-    if (category && className) fetchBooks();
-  }, [category, className]);
+  const playFlipSound = () => {
+    if (flipSoundRef.current) {
+      flipSoundRef.current.currentTime = 0;
+      flipSoundRef.current.play().catch(() => {});
+    }
+  };
+
+  const flipPrev = () => bookRef.current?.pageFlip()?.flipPrev();
+  const flipNext = () => bookRef.current?.pageFlip()?.flipNext();
 
   return (
- <div className="min-h-screen lg:ml-[35px] rounded-xl bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7] px-4 py-10">
-      {/* HEADER */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-extrabold text-[#3b2414]">
-          📚 {className}
-        </h1>
-        <p className="text-[#7a4a2a] font-semibold mt-2">
-          {category}
-        </p>
-      </div>
-
-      {/* LOADER */}
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="text-[#7a4a2a] font-semibold">
-            Loading Books...
-          </div>
-        </div>
-      ) : (
-        <>
-          {/* GRID CENTER WRAPPER */}
-          <div className="flex justify-center">
-            <div className="w-full max-w-7xl">
-
-              {/* BOOK GRID */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-
-                {mongoBooks.map((item) => (
-                  <div
-                    key={item._id}
-                    onClick={() =>
-                      navigate("/flipPage", {
-                        state: {
-                          title: item.title,
-                          pdf: item.fileUrl,
-                        },
-                      })
-                    }
-                    className="
-                      bg-white
-                      rounded-3xl
-                      overflow-hidden
-                      shadow-lg
-                      hover:shadow-2xl
-                      cursor-pointer
-                      transition-all duration-300
-                      hover:-translate-y-2
-                    "
-                  >
-
-                    {/* COVER IMAGE BIGGER */}
-                    <div className="relative w-full h-[400px] overflow-hidden">
-                      <img
-                        src={covers[item._id] || "/default.jpg"}
-                        alt={item.title}
-                        className="w-full h-full object-cover transform hover:scale-110 transition duration-500"
-                      />
-                    </div>
-
-                   {/* CONTENT */}
-<div className="p-5 space-y-4">
-
-  {/* TOP 3 BOX ROW */}
-  <div className="grid grid-cols-2 gap-2">
-
-   
-
-    {/* SUBJECT BOX */}
-    <div className="bg-[#eaf4ff] border border-[#cfe3ff] rounded-xl px-2 py-2 text-center">
-     
-      <p className="text-xl font-bold text-blue-700 truncate">
-        {item.subject}
-      </p>
-    </div>
-
-    {/* TYPE BOX */}
     <div
-      className={`rounded-xl px-2 py-2 text-center border ${
-        item.type === "Semester"
-          ? "bg-blue-100 border-blue-200 text-blue-700"
-          : item.type === "Yearly"
-          ? "bg-purple-100 border-purple-200 text-purple-700"
-          : "bg-green-100 border-green-200 text-green-700"
-      }`}
+      ref={containerRef}
+      className="h-[82vh] flex flex-col overflow-hidden bg-gradient-to-br from-[#fff7f0] via-[#fffaf5] to-[#f7efe7]"
     >
-     
-      <p className="text-xl font-bold truncate">{item.type}</p>
-    </div>
 
-  </div>
-
-  {/* DESCRIPTION */}
-  <div className="bg-gradient-to-r from-[#fff7f0] to-[#fff1e6] border border-[#f3d5c0] rounded-xl p-3">
-    <p className="text-2xl font-bold text-pink-700 leading-relaxed line-clamp-3">
-      {item.description || "No description available"}
-    </p>
-  </div>
-
-</div>
-                  </div>
-                ))}
-
-              </div>
-
-            </div>
-          </div>
-
-          {/* NO DATA */}
-          {mongoBooks.length === 0 && (
-            <p className="text-center text-red-500 mt-10 font-semibold">
-              No Books Found
-            </p>
-          )}
-        </>
-      )}
-
-      {/* BACK BUTTON */}
-      <div className="flex justify-center mt-12">
+      {/* TOP BAR */}
+      <div className="flex justify-between items-center px-4 pt-3">
         <button
-          onClick={() => navigate(-1)}
-          className="bg-[#99582A] hover:bg-[#7a421f] text-white px-10 py-3 rounded-2xl font-semibold shadow-lg transition"
+          onClick={toggleFullscreen}
+          className="px-4 py-2 bg-green-600 text-white rounded"
         >
-          Back
+          {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
         </button>
       </div>
 
+      {/* BOOK AREA */}
+      <div className="flex-1 flex justify-center items-center">
+
+        {/* OUTER STABLE BOX */}
+        <div className="w-full h-full lg:w-[98vw] lg:h-[88vh] flex justify-center items-center bg-white shadow-2xl rounded-xl overflow-hidden">
+
+          {/* ZOOM LAYER (SAFE) */}
+          <div
+            style={{
+              transform: `scale(${zoom})`,
+              transformOrigin: "center",
+            }}
+            className="flex justify-center items-center"
+          >
+            {pages.length > 0 && (
+              <HTMLFlipBook
+                ref={bookRef}
+                width={340}
+                height={460}
+                size="stretch"
+                showCover
+                drawShadow
+                maxShadowOpacity={0.5}
+                useMouseEvents
+                flippingTime={700}
+                onChangeState={(e) => {
+                  if (e.data === "flipping") playFlipSound();
+                }}
+                onFlip={(e) => setCurrentPage(e.data)}
+              >
+                {pages.map((page, index) => (
+                  <div
+                    key={index}
+                    className="bg-white flex items-center justify-center"
+                  >
+                    <img
+                      src={page}
+                      className="w-full h-full object-contain"
+                      alt={`Page ${index + 1}`}
+                    />
+                  </div>
+                ))}
+              </HTMLFlipBook>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* CONTROLS */}
+      <div className="flex justify-center gap-3 py-3 bg-white/90 border-t flex-wrap">
+
+        <button
+          onClick={zoomOut}
+          className="px-4 py-2 bg-gray-700 text-white rounded"
+        >
+          −
+        </button>
+
+        <span className="px-4 py-2 font-bold">
+          {Math.round(zoom * 100)}%
+        </span>
+
+        <button
+          onClick={zoomIn}
+          className="px-4 py-2 bg-gray-700 text-white rounded"
+        >
+          +
+        </button>
+
+        <button
+          onClick={flipPrev}
+          className="px-4 py-2 bg-[#99582A] text-white rounded"
+        >
+          Prev
+        </button>
+
+        <button
+          onClick={() => navigate(-1)}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Back
+        </button>
+
+        <button
+          onClick={flipNext}
+          className="px-4 py-2 bg-[#99582A] text-white rounded"
+        >
+          Next
+        </button>
+
+      </div>
     </div>
   );
-};
+}
 
-export default ClassPage;
+export default FlipPage;
