@@ -17,7 +17,7 @@ const AgentDashboard = () => {
   const ticketlength = async () => {
     try {
       const res = await axios.get(
-        "https://flipbook-1-l2tf.onrender.com/api/tickets/all"
+        "https://flipbook-production.up.railway.app/api/tickets/all"
       );
 
       setlengths(res.data.tickets);
@@ -30,7 +30,7 @@ const AgentDashboard = () => {
   const getBooks = async () => {
     try {
       const res = await axios.get(
-        "https://flipbook-1-l2tf.onrender.com/api/books"
+        "flipbook-production.up.railway.app/api/books"
       );
 
       if (res.data.success) {
