@@ -193,7 +193,7 @@ const getTicketsByStatus = (status) => {
   });
 };
   return (
-<div className="w-full min-h-screen bg-[#EFE6DD] lg:mt-[4%] sm:mt-[6%] mt-[33%] p-3 sm:p-4 md:p-5 overflow-x-hidden">
+<div className="w-full min-h-screen bg-[#EFE6DD] lg:mt-[5%] sm:mt-[7%] mt-[35%] p-3 sm:p-4 md:p-5 overflow-x-hidden">
       {/* HEADER */}
 
       <div className="flex items-center justify-between gap-2 p-3 mb-4">

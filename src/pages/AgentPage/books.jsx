@@ -9,7 +9,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 // ===================== PDF COVER =====================
 function PdfCover({ pdfUrl, title }) {
   const [cover, setCover] = useState("");
-
   useEffect(() => {
     let isMounted = true;
 
@@ -60,7 +59,8 @@ const Books = () => {
 
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
-
+// 👇 ADD THIS
+const [loading, setLoading] = useState(false);
   // filters
   const [category, setCategory] = useState("");
   const [selectedBook, setSelectedBook] = useState("");
@@ -77,52 +77,57 @@ const Books = () => {
 
   // ================= FETCH BOOKS =================
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const res = await execute(() =>
-          fetch("https://flipbook-production-b71a.up.railway.app/api/books")
-        );
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
 
-        const data = await res.json();
+      const res = await execute(() =>
+        fetch("https://flipbook-production-b71a.up.railway.app/api/books")
+      );
 
-        if (data.success) {
-          setBooks(data.data);
-          setFilteredBooks(data.data);
-        }
-      } catch (err) {
-        console.log(err);
+      const data = await res.json();
+
+      if (data.success) {
+        setBooks(data.data);
+        setFilteredBooks(data.data);
       }
-    };
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchBooks();
-  }, []);
+  fetchBooks();
+}, []);
 
   // ================= SEARCH FILTER =================
   const handleSearch = () => {
+  setLoading(true);
+
+  setTimeout(() => {
     const result = books.filter((book) => {
       return (
         (category === "" ||
           book.category?.toLowerCase() === category.toLowerCase()) &&
-
         (selectedBook === "" ||
           book.title?.toLowerCase() === selectedBook.toLowerCase()) &&
-
         (className === "" ||
           book.className?.toLowerCase() === className.toLowerCase()) &&
-
         (type === "" ||
           book.type?.toLowerCase() === type.toLowerCase()) &&
-
         (subject === "" ||
           book.subject?.toLowerCase() === subject.toLowerCase())
       );
     });
 
     setFilteredBooks(result);
-  };
+    setLoading(false);
+  }, 300);
+};
 
   return (
-    <div className="min-h-screen mt-[40%] lg:mt-[4%] sm:mt-[5%] bg-[#EFE6DD] px-4 py-10">
+    <div className="min-h-screen mt-[36%] lg:mt-[4%] sm:mt-[5%] bg-[#EFE6DD] px-4 py-10">
 
       {/* TITLE */}
       <div className="text-center mb-8">
@@ -228,56 +233,58 @@ const Books = () => {
       {/* BOOK GRID */}
       <div className="max-w-6xl mx-auto mt-10">
 
-        {filteredBooks.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            {filteredBooks.map((book) => (
-              <div
-                key={book._id}
-                className="bg-white rounded-3xl shadow-md overflow-hidden"
-              >
-
-                {/* COVER */}
-                <div className="h-64">
-                  <PdfCover pdfUrl={book.fileUrl} title={book.title} />
-                </div>
-
-                {/* INFO */}
-                <div className="p-5">
-                  <h2 className="text-xl font-bold text-[#572C10]">
-                    {book.title}
-                  </h2>
-
-                  <p className="text-sm mt-2">{book.subject}</p>
-
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
-                      {book.category}
-                    </span>
-                    <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
-                      {book.className}
-                    </span>
-                    <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
-                      {book.type}
-                    </span>
-                  </div>
-
-                  <p className="text-sm mt-3 line-clamp-2">
-                    {book.description}
-                  </p>
-                </div>
-
-              </div>
-            ))}
-
+  {loading ? (
+   <div className="flex justify-center  py-20">
+    <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-md">
+      <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
+      <span className="text-[#572C10] font-medium">
+        Loading Books...
+      </span>
+    </div>
+  </div>
+  ) : filteredBooks.length > 0 ? (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {filteredBooks.map((book) => (
+        <div
+          key={book._id}
+          className="bg-white rounded-3xl shadow-md overflow-hidden"
+        >
+          <div className="h-64">
+            <PdfCover pdfUrl={book.fileUrl} title={book.title} />
           </div>
-        ) : (
-          <p className="text-center text-red-500 mt-10">
-            No Books Found
-          </p>
-        )}
 
-      </div>
+          <div className="p-5">
+            <h2 className="text-xl font-bold text-[#572C10]">
+              {book.title}
+            </h2>
+
+            <p className="text-sm mt-2">{book.subject}</p>
+
+            <div className="flex flex-wrap gap-2 mt-3">
+              <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
+                {book.category}
+              </span>
+              <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
+                {book.className}
+              </span>
+              <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">
+                {book.type}
+              </span>
+            </div>
+
+            <p className="text-sm mt-3 line-clamp-2">
+              {book.description}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-center text-red-500 mt-10">
+      No Books Found
+    </p>
+  )}
+</div>
 
     </div>
   );

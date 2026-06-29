@@ -155,7 +155,7 @@ const FollowUp = () => {
     }
   };
   return (
-<div className="min-h-screen lg:ml-[35px] rounded-xl bg-gradient-to-br from-[#F8F4F0] via-[#F5EFE8] to-[#EFE6DD] px-4 sm:px-6 lg:px-8 py-6">
+<div className="min-h-screen lg:ml-[22px] mt-[40%] lg:mt-[8%] sm:mt-[8%] rounded-xl bg-gradient-to-br from-[#F8F4F0] via-[#F5EFE8] to-[#EFE6DD] px-4 sm:px-6 lg:px-8 py-6">
       {/* TITLE */}
 
       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-[#572C10] mb-8 tracking-tight">
