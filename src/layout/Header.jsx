@@ -6,7 +6,8 @@ import { useEffect,useRef,useState } from "react";
 const Header = ({ setOpen }) => {
   const navigate = useNavigate();
    const [ticketCount, setTicketCount] = useState(0);
-  const soundRef = useRef(null);
+const prevCountRef = useRef(0);
+const soundRef = useRef(null);
   useEffect(() => {
     soundRef.current = new Audio("/NOTIFICATIONBEEL.mp3");
   }, []);
@@ -18,38 +19,22 @@ useEffect(() => {
       );
 
       const data = await res.json();
-
       const tickets = data?.tickets || [];
 
-      // Sirf unread notifications
-      const newTickets = tickets.filter(
-        (ticket) => !ticket.notificationShown
+      const pendingTickets = tickets.filter(
+        (ticket) => ticket.replies.length === 0
       );
 
-      if (newTickets.length > 0) {
+      const count = pendingTickets.length;
+
+      // Bell sirf tab bajegi jab pending tickets badhen
+      if (count > prevCountRef.current) {
         soundRef.current?.play().catch(() => {});
-        setTicketCount(newTickets.length);
-
-       setTimeout(async () => {
-  setTicketCount(0);
-
-  await Promise.all(
-    newTickets.map(async (ticket) => {
-      const res = await fetch(
-        `https://flipbook-production-b71a.up.railway.app/api/tickets/notification/${ticket._id}`,
-        {
-          method: "PATCH",
-        }
-      );
-
-      console.log("PATCH Status:", res.status);
-
-      const result = await res.json();
-      console.log("PATCH Response:", result);
-    })
-  );
-}, 10000);
       }
+
+      prevCountRef.current = count;
+      setTicketCount(count);
+
     } catch (err) {
       console.log(err);
     }
