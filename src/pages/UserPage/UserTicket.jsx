@@ -261,7 +261,7 @@ const [submitLoading, setSubmitLoading] = useState(false);
 
   <div className="flex flex-col gap-[20px]">
 {loading ? (
-    <div className="flex justify-center lg:mr-[30%] py-20">
+    <div className="flex justify-center py-20">
     <div className="flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-md">
       <div className="w-5 h-5 border-2 border-[#572C10]/20 border-t-[#572C10] rounded-full animate-spin"></div>
       <span className="text-[#572C10] font-medium">

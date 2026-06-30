@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaBookOpen, FaBars, FaPlus } from "react-icons/fa";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { useEffect,useRef,useState } from "react";
+
 const Header = ({ setOpen }) => {
   const navigate = useNavigate();
    const [ticketCount, setTicketCount] = useState(0);
@@ -112,14 +113,21 @@ useEffect(() => {
         <div className="flex items-center gap-3">
 
           {/* Notifications */}
-          <div className="relative cursor-pointer p-2 rounded-full hover:bg-[#FAF7F4] transition">
-            <IoNotificationsOutline size={24} className="text-[#572C10]" />
-            {ticketCount > 0 && (
-  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-    {ticketCount}
-  </span>
-)}
-          </div>
+         <div
+  onClick={() => {
+    console.log("Notification Click");
+    navigate("/Ticket");
+  }}
+  className="relative cursor-pointer p-2 rounded-full hover:bg-[#FAF7F4] transition"
+>
+  <IoNotificationsOutline size={24} className="text-[#572C10]" />
+
+  {ticketCount > 0 && (
+    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+      {ticketCount}
+    </span>
+  )}
+</div>
 
           {/* Divider */}
           <div className="w-px h-6 bg-[#E9E1D8]"></div>

@@ -275,18 +275,19 @@ navigate("/books");
   </div>
 </div>
           {/* SUBJECT */}
-       <div className="mb-4">
+      <div className="mb-4">
   <label className="block font-semibold text-[#572C10] mb-2">
     Subject
   </label>
 
   <div className="relative">
-
     <FaBook className="absolute left-4 top-1/2 -translate-y-1/2 text-[#572C10] text-lg" />
 
-    <select
+    <input
+      type="text"
       value={subject}
       onChange={(e) => setSubject(e.target.value)}
+      placeholder="Enter Subject"
       className="
         w-full
         p-3
@@ -297,24 +298,7 @@ navigate("/books");
         bg-white
         outline-none
       "
-    >
-      <option value="">Select Subject</option>
-      <option value="English">English</option>
-      <option value="Hindi">Hindi</option>
-      <option value="Maths">Maths</option>
-      <option value="Rhymes">Rhymes</option>
-      <option value="Drawing">Drawing</option>
-      <option value="Science">Science</option>
-      <option value="Social Studies">Social Studies</option>
-      <option value="Sanskrit">Sanskrit</option>
-      <option value="EVS">EVS</option>
-      
-      <option value="Computer Science">Computer </option>
-      <option value="Physics">Physics</option>
-      <option value="Chemistry">Chemistry</option>
-           <option value="Biology">Biology</option>
-    </select>
-
+    />
   </div>
 </div>
 
