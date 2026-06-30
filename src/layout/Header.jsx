@@ -6,48 +6,57 @@ import { useEffect,useRef,useState } from "react";
 const Header = ({ setOpen }) => {
   const navigate = useNavigate();
    const [ticketCount, setTicketCount] = useState(0);
-  const [prevCount, setPrevCount] = useState(0);
-
   const soundRef = useRef(null);
-
   useEffect(() => {
     soundRef.current = new Audio("/NOTIFICATIONBEEL.mp3");
   }, []);
+useEffect(() => {
+  const fetchTickets = async () => {
+    try {
+      const res = await fetch(
+        "https://flipbook-production-b71a.up.railway.app/api/tickets/all"
+      );
 
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const res = await fetch(
-          "https://flipbook-production-b71a.up.railway.app/api/tickets/all"
-        );
-        const data = await res.json();
+      const data = await res.json();
 
-        // ✅ FIX: correct API structure
-        const tickets = data?.tickets || [];
+      const tickets = data?.tickets || [];
 
-        const newCount = tickets.length;
+      // Sirf unread notifications
+      const newTickets = tickets.filter(
+        (ticket) => !ticket.notificationShown
+      );
 
-        // 🔔 PLAY SOUND ONLY WHEN NEW TICKET ARRIVES
-        if (newCount > prevCount) {
-          if (soundRef.current) {
-            soundRef.current.play().catch(() => {});
-          }
-        }
+      if (newTickets.length > 0) {
+        soundRef.current?.play().catch(() => {});
+        setTicketCount(newTickets.length);
 
-        setTicketCount(newCount);
-        setPrevCount(newCount);
+        setTimeout(async () => {
+          setTicketCount(0);
 
-      } catch (err) {
-        console.log(err);
+          // Backend me mark as shown
+          await Promise.all(
+            newTickets.map((ticket) =>
+              fetch(
+                `https://flipbook-production-b71a.up.railway.app/api/tickets/notification/${ticket._id}`,
+                {
+                  method: "PATCH",
+                }
+              )
+            )
+          );
+        }, 10000);
       }
-    };
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-    fetchTickets();
+  fetchTickets();
 
-    const interval = setInterval(fetchTickets, 5000);
-    return () => clearInterval(interval);
-  }, [prevCount]);
+  const interval = setInterval(fetchTickets, 5000);
 
+  return () => clearInterval(interval);
+}, []);
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#EDE4DB] px-3 py-2 shadow-md">
 

@@ -64,7 +64,10 @@ const ticketSchema = new mongoose.Schema(
       enum: ["progress", "resolved", "wait"],
       default: "wait",
     },
-
+    notificationShown: {
+  type: Boolean,
+  default: false,
+},
     replies: [replySchema],
     hiddenForRoles: [
     {

@@ -133,3 +133,29 @@ export const replyTicket = async (req, res) => {
     });
   }
 };
+export const markNotificationShown = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const ticket = await Ticket.findByIdAndUpdate(
+      id,
+      {
+        notificationShown: true,
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      ticket,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
