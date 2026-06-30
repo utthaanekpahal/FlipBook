@@ -3,8 +3,53 @@ import { FaThList, FaEye, FaBook } from "react-icons/fa";
 import { MdConfirmationNumber } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 const AgentDashboard = () => {
+  function PdfCover({ pdfUrl, title }) {
+  const [cover, setCover] = useState("");
+
+  useEffect(() => {
+    const loadCover = async () => {
+      try {
+        const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+        const page = await pdf.getPage(1);
+
+        const viewport = page.getViewport({ scale: 0.8 });
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+        }).promise;
+
+        setCover(canvas.toDataURL("image/jpeg"));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (pdfUrl) {
+      loadCover();
+    }
+  }, [pdfUrl]);
+
+  return (
+    <img
+      src={cover || "/book1.jpg"}
+      alt={title}
+      className="w-full h-[220px] object-cover"
+    />
+  );
+}
   const navigate = useNavigate();
 
   const agenttotalViews =
@@ -224,14 +269,10 @@ const AgentDashboard = () => {
                 className="cursor-pointer rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all bg-white"
               >
 
-                <img
-                  src={book.img}
-                  alt={book.title}
-                  className="w-full h-[220px] object-cover"
-                  onError={(e) => {
-                    e.target.src = "/book1.jpg";
-                  }}
-                />
+               <PdfCover
+  pdfUrl={book.fileUrl}
+  title={book.title}
+/>
 
                 <div className="p-3">
 

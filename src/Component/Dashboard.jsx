@@ -321,7 +321,7 @@ const fetchBooks = async () => {
 
   {books
     .slice() // avoid mutation
-    .reverse() // 🔥 newest books first (if backend pushes new at end)
+    
     .slice(0, 5)
     .map((book) => (
 
@@ -345,9 +345,8 @@ const fetchBooks = async () => {
             group-hover:-translate-y-1
           "
         >
-
-          <PdfCover
-  pdfUrl={book.file}
+<PdfCover
+  pdfUrl={book.fileUrl}
   title={book.title}
 />
 

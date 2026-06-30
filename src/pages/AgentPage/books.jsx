@@ -72,7 +72,7 @@ const [loading, setLoading] = useState(false);
 
   const booksByCategory = {
     Navbodh: ["Buddy", "Little Champ"],
-    Gyanbodh: ["Deep Dives", "Hearing Bee"],
+    Gyanbodh: ["Deep Dives", "Learning Bee"],
   };
 
   // ================= FETCH BOOKS =================

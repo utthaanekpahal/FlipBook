@@ -19,7 +19,7 @@ const [book, setBook] = useState("");
 
 const booksByCategory = {
   Navbodh: ["Buddy", "Little Lamp"],
-  Gyanbodh: ["Deep Dives", "Hearing Bee"],
+  Gyanbodh: ["Deep Dives", "Learning Bee"],
 };
 
 const [type, setType] = useState("");

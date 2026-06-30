@@ -21,10 +21,11 @@ function FlipPage() {
   const containerRef = useRef(null);
   const flipSoundRef = useRef(null);
 
-  // ✅ zoom now applies to whole flipbook
   const [zoom, setZoom] = useState(1);
 
-  // ✅ HAND + KEY ZOOM (works on full book)
+  // =========================
+  // ZOOM + TOUCH HANDLING
+  // =========================
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -87,6 +88,9 @@ function FlipPage() {
     };
   }, []);
 
+  // =========================
+  // LOAD PDF
+  // =========================
   useEffect(() => {
     flipSoundRef.current = new Audio("/oxidvideos-page-flip-1-178322.mp3");
     flipSoundRef.current.volume = 0.6;
@@ -98,7 +102,6 @@ function FlipPage() {
     };
   }, [pdf]);
 
-  // 🚀 LOAD PDF
   const loadPDF = async () => {
     try {
       await execute(async () => {
@@ -167,18 +170,9 @@ function FlipPage() {
     }
   };
 
-  // ✅ ZOOM CONTROLS (UNCHANGED)
-  const zoomIn = () => {
-    setZoom((z) => Math.min(z + 0.2, 2.5));
-  };
-
-  const zoomOut = () => {
-    setZoom((z) => Math.max(z - 0.2, 0.6));
-  };
-
-  const resetZoom = () => {
-    setZoom(1);
-  };
+  const zoomIn = () => setZoom((z) => Math.min(z + 0.2, 2.5));
+  const zoomOut = () => setZoom((z) => Math.max(z - 0.2, 0.6));
+  const resetZoom = () => setZoom(1);
 
   return (
     <div
@@ -214,57 +208,79 @@ function FlipPage() {
             </div>
           )}
 
-          {/* ✅ ZOOM WRAPPER APPLIED HERE */}
+          {/* =========================
+              ZOOM WRAPPER
+          ========================= */}
           <div
             className="flex-1 mt-[10px] flex justify-center items-center overflow-hidden"
             style={{
               transform: `scale(${zoom})`,
               transformOrigin: "center",
               transition: "transform 0.2s ease",
+              touchAction: "pan-y",
             }}
           >
-            {pages.length > 0 && (
-              <HTMLFlipBook
-                ref={bookRef}
-                width={340}
-                height={460}
-                minWidth={280}
-                maxWidth={380}
-                minHeight={380}
-                maxHeight={520}
-                size="stretch"
-                showCover={true}
-                drawShadow={true}
-                maxShadowOpacity={0.5}
-                mobileScrollSupport={true}
-                useMouseEvents={true}
-                flippingTime={700}
-                onChangeState={(e) => {
-                  if (e.data === "flipping") playFlipSound();
-                }}
-                onFlip={(e) => setCurrentPage(e.data)}
-              >
-                {pages.map((page, index) => (
-                  <div
-                    key={index}
-                    className="bg-white flex items-center justify-center border border-[#eadfd3] overflow-hidden"
-                  >
-                    <img
-                      src={page}
-                      alt={`Page ${index + 1}`}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "contain",
-                      }}
-                    />
-                  </div>
-                ))}
-              </HTMLFlipBook>
-            )}
+            <div style={{ touchAction: "pan-y" }}>
+              {pages.length > 0 && (
+               <HTMLFlipBook
+  ref={bookRef}
+  width={340}
+  height={460}
+  minWidth={280}
+  maxWidth={380}
+  minHeight={380}
+  maxHeight={520}
+  size="stretch"
+  showCover={true}
+  drawShadow={true}
+  maxShadowOpacity={0.6}
+  flippingTime={900}
+
+  // ✅ LEFT + RIGHT PAGE VIEW
+  usePortrait={false}
+
+  // ✅ DRAG ONLY FLIP CONTROL
+  useMouseEvents={true}
+  mobileScrollSupport={false}
+  swipeDistance={25}
+
+  // 🔥 IMPORTANT FIX
+  disableFlipByClick={true}
+  clickEventForward={false}
+
+  startPage={0}
+
+  onChangeState={(e) => {
+    if (e.data === "flipping") playFlipSound();
+  }}
+  onFlip={(e) => setCurrentPage(e.data)}
+>
+                  {pages.map((page, index) => (
+                    <div
+                      key={index}
+                      className="bg-white flex items-center justify-center border border-[#eadfd3] overflow-hidden"
+                    >
+                      <img
+                        src={page}
+                        alt={`Page ${index + 1}`}
+                        draggable={false}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          pointerEvents: "none",
+                        }}
+                      />
+                    </div>
+                  ))}
+                </HTMLFlipBook>
+              )}
+            </div>
           </div>
 
-          {/* CONTROLS (UNCHANGED) */}
+          {/* =========================
+              CONTROLS (UNCHANGED)
+          ========================= */}
           <div className="shrink-0 bg-white/90 backdrop-blur-md border-t border-[#eadfd3] py-3">
             <div className="flex justify-center items-center gap-3 flex-wrap">
               <button onClick={zoomOut} className="px-3 py-2 rounded-lg text-sm font-bold bg-gray-200 hover:bg-gray-300">➖</button>

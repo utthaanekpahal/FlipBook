@@ -65,7 +65,7 @@ const Books = () => {
   const categories = [...new Set(books.map((b) => b.category).filter(Boolean))];
   const booksByCategory = {
   Navbodh: ["Buddy", "Little Lamp"],
-  Gyanbodh: ["Deep Dives", "Hearing Bee"],
+  Gyanbodh: ["Deep Dives", "Learning Bee"],
 };
   const totalBooks = books.length;
 const subjects = [...new Set(books.map((b) => b.subject).filter(Boolean))];
@@ -111,13 +111,10 @@ const handleUpdate = async () => {
     }
 
     const res = await execute(() =>
-  fetch(
-    `api/books/${editBook._id}`,
-    {
-      method: "PUT",
-      body: formData,
-    }
-  )
+fetch(`${API}/${editBook._id}`, {
+  method: "PUT",
+  body: formData,
+})
 );
 
     const data = await res.json();

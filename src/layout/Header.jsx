@@ -2,9 +2,51 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBookOpen, FaBars, FaPlus } from "react-icons/fa";
 import { IoNotificationsOutline } from "react-icons/io5";
-
+import { useEffect,useRef,useState } from "react";
 const Header = ({ setOpen }) => {
   const navigate = useNavigate();
+   const [ticketCount, setTicketCount] = useState(0);
+  const [prevCount, setPrevCount] = useState(0);
+
+  const soundRef = useRef(null);
+
+  useEffect(() => {
+    soundRef.current = new Audio("/NOTIFICATIONBEEL.mp3");
+  }, []);
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const res = await fetch(
+          "https://flipbook-production-b71a.up.railway.app/api/tickets/all"
+        );
+        const data = await res.json();
+
+        // ✅ FIX: correct API structure
+        const tickets = data?.tickets || [];
+
+        const newCount = tickets.length;
+
+        // 🔔 PLAY SOUND ONLY WHEN NEW TICKET ARRIVES
+        if (newCount > prevCount) {
+          if (soundRef.current) {
+            soundRef.current.play().catch(() => {});
+          }
+        }
+
+        setTicketCount(newCount);
+        setPrevCount(newCount);
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchTickets();
+
+    const interval = setInterval(fetchTickets, 5000);
+    return () => clearInterval(interval);
+  }, [prevCount]);
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#EDE4DB] px-3 py-2 shadow-md">
@@ -74,7 +116,11 @@ const Header = ({ setOpen }) => {
           {/* Notifications */}
           <div className="relative cursor-pointer p-2 rounded-full hover:bg-[#FAF7F4] transition">
             <IoNotificationsOutline size={24} className="text-[#572C10]" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            {ticketCount > 0 && (
+  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+    {ticketCount}
+  </span>
+)}
           </div>
 
           {/* Divider */}
