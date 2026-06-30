@@ -18,9 +18,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:4173",
-  "https://flip-book-gxli.vercel.app",
-];
-
+   "https://flip-book-gxli.vercel.app",
+].filter(Boolean);
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
@@ -29,7 +28,6 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    console.log("Blocked CORS origin:", origin);
     return callback(new Error("Not allowed by CORS"));
   },
 
@@ -51,9 +49,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// Preflight requests
-app.options("*", cors(corsOptions));
 // Handle preflight requests
 // =========================
 // BODY PARSER
