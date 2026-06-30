@@ -18,24 +18,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:4173",
-   "https://flip-book-gxli.vercel.app",
-].filter(Boolean);
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    console.log("Blocked CORS origin:", origin);
-    return callback(null, false);
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+  "https://flip-book-gxli.vercel.app",
+];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -48,12 +32,28 @@ const corsOptions = {
     console.log("Blocked CORS origin:", origin);
     return callback(new Error("Not allowed by CORS"));
   },
+
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+
+  methods: [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+  ],
+
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+  ],
 };
 
 app.use(cors(corsOptions));
+
+// Preflight requests
+app.options("*", cors(corsOptions));
 // Handle preflight requests
 // =========================
 // BODY PARSER

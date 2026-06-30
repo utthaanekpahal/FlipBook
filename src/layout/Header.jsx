@@ -30,21 +30,25 @@ useEffect(() => {
         soundRef.current?.play().catch(() => {});
         setTicketCount(newTickets.length);
 
-        setTimeout(async () => {
-          setTicketCount(0);
+       setTimeout(async () => {
+  setTicketCount(0);
 
-          // Backend me mark as shown
-          await Promise.all(
-            newTickets.map((ticket) =>
-              fetch(
-                `https://flipbook-production-b71a.up.railway.app/api/tickets/notification/${ticket._id}`,
-                {
-                  method: "PATCH",
-                }
-              )
-            )
-          );
-        }, 10000);
+  await Promise.all(
+    newTickets.map(async (ticket) => {
+      const res = await fetch(
+        `https://flipbook-production-b71a.up.railway.app/api/tickets/notification/${ticket._id}`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      console.log("PATCH Status:", res.status);
+
+      const result = await res.json();
+      console.log("PATCH Response:", result);
+    })
+  );
+}, 10000);
       }
     } catch (err) {
       console.log(err);
