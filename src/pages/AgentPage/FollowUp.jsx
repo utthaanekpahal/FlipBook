@@ -30,11 +30,20 @@ const FollowUp = () => {
 
   const fetchVisits = async () => {
     try {
-      const res = await execute(() =>
-        axios.get(
-          "https://flipbook-production-b71a.up.railway.app/api/visits"
-        )
-      );
+      const role = localStorage.getItem("role");
+const agentName = localStorage.getItem("agentName");
+
+const res = await execute(() =>
+  axios.get(
+    "https://flipbook-production-b71a.up.railway.app/api/visits",
+    {
+      params: {
+        role,
+        agentName,
+      },
+    }
+  )
+);
 
       setVisits(res.data.data);
       setFiltered(res.data.data);
@@ -154,6 +163,17 @@ const FollowUp = () => {
       alert(err.response?.data?.message || "Update failed");
     }
   };
+  // Check if edit is allowed within 24 hours
+const canEdit = (visitDate) => {
+  if (!visitDate) return false;
+
+  const visitTime = new Date(visitDate).getTime();
+  const currentTime = Date.now();
+
+  const hoursPassed = (currentTime - visitTime) / (1000 * 60 * 60);
+
+  return hoursPassed <= 24;
+};
   return (
 <div className="min-h-screen lg:ml-[22px] mt-[40%] lg:mt-[8%] sm:mt-[8%] rounded-xl bg-gradient-to-br from-[#F8F4F0] via-[#F5EFE8] to-[#EFE6DD] px-4 sm:px-6 lg:px-8 py-6">
       {/* TITLE */}
@@ -314,12 +334,14 @@ const FollowUp = () => {
     : "N/A"}
 </p>
             <p>
-              <b>Loaction:</b> {v.location}
+              <b>Location:</b> {v.location}
             </p>
             <p>
               <b>Notes:</b> {v.notes}
             </p>
-
+             <p>
+  <b>Visited By:</b> {v.visitedBy || "N/A"}
+</p>
             <p className="mt-3">
   <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold">
     Status : {v.outcome}
@@ -345,6 +367,7 @@ const FollowUp = () => {
             {/* BUTTONS */}
 
            <div className="flex gap-3 mt-5">
+  {canEdit(v.visitDate) ? (
   <button
     onClick={() => handleEdit(v)}
     className="
@@ -362,7 +385,23 @@ const FollowUp = () => {
     <FaEdit />
     <span>Edit</span>
   </button>
-
+) : (
+  <div
+    className="
+      flex-1
+      flex
+      items-center
+      justify-center
+      py-2.5
+      rounded-xl
+      bg-gray-200
+      text-red-600
+      font-semibold
+    "
+  >
+    Time Out
+  </div>
+)}
   <button
     onClick={() => handleDelete(v._id)}
     className="

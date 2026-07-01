@@ -64,11 +64,21 @@ export default function Login() {
     console.log("Login Response:", response.data);
    
    if (response.data.success) {
-  const userName = data.username.split("@")[0].trim();
-  localStorage.setItem("agentName", userName);
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("role", response.data.role);
-  if (response.data.role === "admin") {
+    localStorage.setItem("isLoggedIn", "true");
+localStorage.setItem("role", response.data.role);
+
+if (response.data.user) {
+  localStorage.setItem(
+    "user",
+    JSON.stringify(response.data.user)
+  );
+
+  localStorage.setItem(
+    "agentName",
+    response.data.user.name
+  );
+}
+    if (response.data.role === "admin") {
        const adminViews =
       Number(localStorage.getItem("adminViews")) || 0;
 

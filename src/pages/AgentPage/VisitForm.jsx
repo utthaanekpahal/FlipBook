@@ -185,7 +185,11 @@ const startListening = () => {
     });
 
     data.append("photo", photo);
+    const user = JSON.parse(localStorage.getItem("user"));
 
+if (user) {
+  data.append("visitedBy", user.name);
+}
     const res = await axios.post(
       "https://flipbook-production-b71a.up.railway.app/api/visits/create",
       data

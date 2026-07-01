@@ -236,7 +236,7 @@ const Category = () => {
                   <div
                     key={cls}
                     onClick={() =>
-                      navigate("/classpage", {
+                      navigate("/agent/classpage", {
                         state: {
                           className: cls,
                           category: selectedBook.category,

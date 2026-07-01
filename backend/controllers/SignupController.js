@@ -41,10 +41,15 @@ export const login = async (req, res) => {
       });
 }
       return res.status(200).json({
-        success: true,
-        role: "agent",
-        message: "Agent Login Successful",
-      });
+  success: true,
+  role: "agent",
+  message: "Agent Login Successful",
+  user: {
+    id: agent._id,
+    name: agent.name,
+    email: agent.email,
+  },
+});
     }
     const user = await User.findOne({ username });
 

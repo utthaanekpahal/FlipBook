@@ -66,9 +66,23 @@ latitude: latitude ? Number(latitude) : undefined,
 // GET ALL VISITS
 export const getVisits = async (req, res) => {
   try {
-    const visits = await Visit.find().sort({
-      createdAt: -1,
-    });
+    const { role, agentName } = req.query;
+
+    let visits;
+
+    if (role === "admin") {
+      // Admin -> All visits
+      visits = await Visit.find().sort({
+        createdAt: -1,
+      });
+    } else {
+      // Agent -> Only own visits
+      visits = await Visit.find({
+        visitedBy: agentName,
+      }).sort({
+        createdAt: -1,
+      });
+    }
 
     res.status(200).json({
       success: true,
@@ -84,7 +98,6 @@ export const getVisits = async (req, res) => {
     });
   }
 };
-
 // GET SINGLE VISIT
 export const getVisitById = async (req, res) => {
   try {
