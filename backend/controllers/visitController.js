@@ -66,8 +66,11 @@ latitude: latitude ? Number(latitude) : undefined,
 // GET ALL VISITS
 export const getVisits = async (req, res) => {
   try {
-    const { role, agentName } = req.query;
+        console.log("QUERY:", req.query);
 
+    const { role, agentName } = req.query;
+ console.log("ROLE:", role);
+    console.log("AGENT:", agent);
     let visits;
 
     if (role === "admin") {

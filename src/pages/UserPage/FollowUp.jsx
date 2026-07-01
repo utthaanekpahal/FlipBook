@@ -30,12 +30,15 @@ const FollowUp = () => {
 
   const fetchVisits = async () => {
     try {
+      console.log(localStorage.getItem("role"));
+console.log(localStorage.getItem("agentName"));
       const res = await execute(() =>
         axios.get(
           "https://flipbook-production-b71a.up.railway.app/api/visits"
         )
       );
-
+console.log("TOTAL VISITS :", res.data.data.length);
+console.log(res.data.data);
       setVisits(res.data.data);
       setFiltered(res.data.data);
     } catch (err) {
