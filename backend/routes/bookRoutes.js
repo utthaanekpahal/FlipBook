@@ -18,11 +18,12 @@ import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
-// =========================
-// UPLOAD BOOK (PDF + IMAGE)
-// =========================
+/* ================= BOOK ROUTES ================= */
+
+router.get("/books", getBooks);
+
 router.post(
-  "/upload",
+  "/books/upload",
   upload.fields([
     { name: "file", maxCount: 1 },
     { name: "img", maxCount: 1 },
@@ -30,16 +31,8 @@ router.post(
   uploadBooks
 );
 
-// =========================
-// GET ALL BOOKS
-// =========================
-router.get("/", getBooks);
-
-// =========================
-// UPDATE BOOK (PDF + IMAGE)
-// =========================
 router.put(
-  "/:id",
+  "/books/:id",
   upload.fields([
     { name: "file", maxCount: 1 },
     { name: "img", maxCount: 1 },
@@ -47,14 +40,10 @@ router.put(
   updateBooks
 );
 
-// =========================
-// DELETE BOOK
-// =========================
-router.delete("/:id", deleteBooks);
+router.delete("/books/:id", deleteBooks);
 
-// =========================
-// AUTH ROUTES
-// =========================
+/* ================= AUTH ROUTES ================= */
+
 router.post("/agentsignup", agentsignup);
 router.post("/login", login);
 router.get("/agents", getAgents);
