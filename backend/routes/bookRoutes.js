@@ -20,10 +20,12 @@ const router = express.Router();
 
 /* ================= BOOK ROUTES ================= */
 
-router.get("/books", getBooks);
+// GET ALL BOOKS
+router.get("/", getBooks);
 
+// UPLOAD BOOK
 router.post(
-  "/books/upload",
+  "/upload",
   upload.fields([
     { name: "file", maxCount: 1 },
     { name: "img", maxCount: 1 },
@@ -31,8 +33,9 @@ router.post(
   uploadBooks
 );
 
+// UPDATE BOOK
 router.put(
-  "/books/:id",
+  "/:id",
   upload.fields([
     { name: "file", maxCount: 1 },
     { name: "img", maxCount: 1 },
@@ -40,7 +43,8 @@ router.put(
   updateBooks
 );
 
-router.delete("/books/:id", deleteBooks);
+// DELETE BOOK
+router.delete("/:id", deleteBooks);
 
 /* ================= AUTH ROUTES ================= */
 
