@@ -69,8 +69,8 @@ export const getVisits = async (req, res) => {
         console.log("QUERY:", req.query);
 
     const { role, agentName } = req.query;
- console.log("ROLE:", role);
-    console.log("AGENT:", agent);
+    console.log("ROLE:", role);
+console.log("AGENT:", agentName);
     let visits;
 
     if (role === "admin") {
