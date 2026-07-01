@@ -28,24 +28,32 @@ const FollowUp = () => {
   setFiltered(result);
 }, [visits, activeFilter, schoolSearch, dateFilter]);
 
-  const fetchVisits = async () => {
-    try {
-      console.log(localStorage.getItem("role"));
-console.log(localStorage.getItem("agentName"));
-      const res = await execute(() =>
-        axios.get(
-          "https://flipbook-production-b71a.up.railway.app/api/visits"
-        )
-      );
-console.log("TOTAL VISITS :", res.data.data.length);
-console.log(res.data.data);
-      setVisits(res.data.data);
-      setFiltered(res.data.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+ const fetchVisits = async () => {
+  try {
+    const role = localStorage.getItem("role");
+    const agentName = localStorage.getItem("agentName");
 
+    const res = await execute(() =>
+      axios.get(
+        "https://flipbook-production-b71a.up.railway.app/api/visits",
+        {
+          params: {
+            role,
+            agentName,
+          },
+        }
+      )
+    );
+
+    console.log("API Response:", res.data);
+    console.log("Visits:", res.data.data);
+
+    setVisits(res.data.data);
+    setFiltered(res.data.data);
+  } catch (err) {
+    console.log(err);
+  }
+};
   // ✅ APPLY FILTER (MAIN FIX)
   const applyFilters = (data, status, school, date) => {
     let result = [...data];

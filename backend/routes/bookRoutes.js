@@ -14,46 +14,43 @@ import {
   deleteAgent,
 } from "../controllers/SignupController.js";
 
-import uploadPdf from "../middleware/uploadPdf.js";
-import uploadImage from "../middleware/uploadImage.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
-
 // =========================
-// UPLOAD BOOK (IMAGE + PDF BOTH SUPPORT)
+// UPLOAD BOOK (PDF + IMAGE)
 // =========================
 router.post(
   "/upload",
-  uploadPdf.fields([
+  upload.fields([
     { name: "file", maxCount: 1 },
-    { name: "img", maxCount: 1 }
+    { name: "img", maxCount: 1 },
   ]),
   uploadBooks
 );
 
-
 // =========================
-// GET BOOKS
+// GET ALL BOOKS
 // =========================
 router.get("/", getBooks);
 
-
 // =========================
-// UPDATE BOOK (IMAGE ONLY)
+// UPDATE BOOK (PDF + IMAGE)
 // =========================
 router.put(
   "/:id",
-  uploadImage.single("img"),
+  upload.fields([
+    { name: "file", maxCount: 1 },
+    { name: "img", maxCount: 1 },
+  ]),
   updateBooks
 );
-
 
 // =========================
 // DELETE BOOK
 // =========================
 router.delete("/:id", deleteBooks);
-
 
 // =========================
 // AUTH ROUTES

@@ -26,7 +26,6 @@ export const getBooks = async (req, res) => {
 // =========================
 export const uploadBooks = async (req, res) => {
   try {
-    const protocol = req.protocol;
     const {
       title,
       description,
@@ -39,15 +38,14 @@ export const uploadBooks = async (req, res) => {
     let pdfUrl = "";
     let imageUrl = "";
 
-    // ✅ PDF FILE
+    // ✅ PDF URL from Cloudinary
     if (req.files?.file?.[0]) {
-   
-pdfUrl = `${protocol}://${req.get("host")}/uploads/${req.files.file[0].filename}`;;
+      pdfUrl = req.files.file[0].path;
     }
 
-    // ✅ IMAGE FILE
+    // ✅ Image URL from Cloudinary
     if (req.files?.img?.[0]) {
-     `${protocol}://${req.get("host")}/uploads/${req.files.img[0].filename}`;
+      imageUrl = req.files.img[0].path;
     }
 
     const newBook = new Book({
@@ -94,10 +92,14 @@ export const updateBooks = async (req, res) => {
       type: req.body.type,
     };
 
-    // ✅ IMAGE UPDATE (multer fields => req.files)
+    // ✅ Update Image
     if (req.files?.img?.[0]) {
-      updateData.img =
-  `https://${req.get("host")}/uploads/${req.files.img[0].filename}`;;
+      updateData.img = req.files.img[0].path;
+    }
+
+    // ✅ Update PDF (optional)
+    if (req.files?.file?.[0]) {
+      updateData.fileUrl = req.files.file[0].path;
     }
 
     const updated = await Book.findByIdAndUpdate(id, updateData, {
